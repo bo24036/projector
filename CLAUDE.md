@@ -56,7 +56,10 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
   - Signature: `(state, action) => { state: nextState, effects: [] }`.
 - Batched Render: Defer DOM updates using `requestAnimationFrame`.
 - Effect Execution: Trigger effects[] via `queueMicrotask`.
-  - Rule: All effects (e.g., API calls, IDB writes) must re-enter the loop by dispatching a new action upon completion.
+  - Rule: Orchestrated effects (cross-domain work, computed UI state) must dispatch a fulfillment action upon completion.
+  - Effect Re-Entry Context: Effects triggered in response to user intent must validate context before dispatching (e.g., has user navigated away? is this query still current?).
+  - Stale Prevention: If multiple similar effects are in-flight, only the most recent result updates state. Cancel or ignore earlier results.
+  - Domain Cache Misses: Automatic cache miss fetches (POJOs loaded from IDB into cache) are internal domain mechanics, not orchestrated effects. They always safely dispatch ENTITY_UPDATED and are not subject to stale-result problems.
 - Change Initiation: Domain object changes must only be initiated by State Handlers or Effects. State Handlers trigger a re-render via the Batch Render cycle; Effects must dispatch a new action to re-enter the loop and trigger a render.
 - 1:1 Handler Mapping: Each Action Type must map to exactly one State Handler.
   - Coordination: If an action affects multiple domains, the designated State Handler is responsible for calling the change functions for all involved domains in the required order.
