@@ -403,10 +403,15 @@ Notes:
 
 ## State Shape (UI State Only)
 
+The app tracks ephemeral UI state (routing, editing modes, modal visibility):
+
 ```javascript
 {
+  // Navigation
   currentPage: 'overview' | 'project',
   currentProjectId: string | null,
+
+  // View preferences
   showArchivedProjects: boolean,
   showSuppressedPeopleModal: boolean,
 
@@ -431,39 +436,7 @@ Notes:
 }
 ```
 
-**Note:** Domain data (projects, tasks, people, notes) is **NOT** stored here. It lives in IndexedDB and the write-through cache, accessed via Repository functions.
-
----
-
-## Data Flow (Expected Behavior)
-
-### User Toggles Task
-1. User clicks checkbox on task
-2. Component dispatches `TASK_TOGGLED` intent with `taskId`
-3. Reducer updates `editingTaskId` in UI state, returns effect intent
-4. Render batched via `requestAnimationFrame`
-5. Orchestrator processes effect intent:
-   - Fetches task from repository
-   - Calls domain mutate function to toggle completion
-   - Saves updated task back to repository (IndexedDB)
-6. Cache dispatches `ENTITY_UPDATED` action
-7. Smart component re-fetches task from cache
-8. Component re-renders with updated checkbox state
-
-### User Creates New Task
-1. User clicks "Click to add task..."
-2. Component dispatches `TASK_CREATE_START` intent
-3. Reducer sets `creatingTask: true` in UI state
-4. Form appears with focus on name input
-5. User enters name and due date, presses Enter
-6. Component dispatches `TASK_CREATE_SUBMITTED` intent
-7. Orchestrator:
-   - Creates task object via domain factory
-   - Validates required fields
-   - Saves to repository (IndexedDB)
-   - Dispatches `ENTITY_UPDATED` action
-8. Smart component re-fetches all tasks for project
-9. Form closes, list updates with new task
+**Important:** Projects, tasks, people, and notes are NOT stored in UI state. They are persisted locally and retrieved as needed for display.
 
 ---
 
@@ -514,24 +487,3 @@ Notes:
 - Rich text for notes (currently markdown links only)
 - Tags/labels for tasks and projects
 
----
-
-## Notes for Implementation
-
-1. **No OOP Classes**: Use functional components and pure functions. Services should be modules with exported functions.
-
-2. **Repositories**: Strict data access layer—all domain data reads/writes go through `Projects`, `Tasks`, `People`, `Notes` repositories.
-
-3. **Write-Through Cache**: Domain data in memory, synced with IndexedDB. Cache automatically dispatches `ENTITY_UPDATED` on mutation.
-
-4. **UDF Dispatcher**: Single source for state mutations. Intent → Reducer → Render (via RAF) → Effects (via microtask).
-
-5. **Orchestrators**: Handle cross-entity logic. Examples:
-   - `onTaskToggled()` → fetch task → domain mutate → save → dispatch entity update
-   - `onProjectArchive()` → fetch project → archive → cascade delete tasks/people/notes → save all
-
-6. **Smart Components**: Read from UI state, fetch domain data from cache, pass as props to dumb components.
-
-7. **Dumb Components**: Pure `lit-html` template functions. No side effects, no direct repository access.
-
-8. **Debouncing**: Project name/description use debounced effect intents (500ms) to avoid excessive saves.
