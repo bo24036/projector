@@ -73,6 +73,8 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
 - Change Initiation: Domain object changes must only be initiated by State Handlers or Effects. State Handlers trigger a re-render via the Batch Render cycle; Effects must dispatch a new action to re-enter the loop and trigger a render.
 - 1:1 Handler Mapping: Each Action Type must map to exactly one State Handler.
   - Coordination: If an action affects multiple domains, the designated State Handler is responsible for calling the change functions for all involved domains in the required order.
+    - All-or-Nothing Semantics: If any domain call fails (throws), the handler does NOT update state and returns no effects. UI remains unchanged.
+    - Call Order: Invoke domains in dependency order (e.g., children before parent if deleting). This minimizes risk if an error occurs mid-sequence.
   - Benefit: Prevents race conditions and ensures a single, traceable "Logic Path" for every user intent.
 
 ## Handlers and Effects (The Verbs)
