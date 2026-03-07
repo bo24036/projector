@@ -183,7 +183,7 @@ Notes:
   - `creatingNewProject: boolean`
   - `showArchivedProjects: boolean`
 
-- **Intents:**
+- **Actions:**
   - `onProjectClick(id)` - Navigate to project
   - `onOverviewClick()` - Navigate to overview
   - `onCreateProjectStart()` - Show new project form

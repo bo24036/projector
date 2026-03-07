@@ -93,7 +93,7 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
 
 - Dumb Components: lit-html templates.
   - Rule: ZERO logic, math, or string manipulation. (No rounding, formatting, or filtering).
-  - Constraint: No this. Event handlers are standalone functions that dispatch Intents.
+  - Constraint: No this. Event handlers are standalone functions that dispatch Actions.
 - Connectors: Domain-aware "Smart" components.
   - Role: They bridge Domain Data (via Domain.get) and UI State (via the Dispatcher/State store) to Dumb Components.
   - Reactivity: They pull fresh state/domain data and re-render their child Dumb Components with fresh props.
