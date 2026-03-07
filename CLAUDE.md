@@ -41,6 +41,7 @@
   - Serialized Persistence (The Guard): Domains must treat IDB writes as Sequential Effects.
     - Writes to the same collection/ID must be queued and executed in order.
     - Debouncing Writes: If multiple mutations happen to the same ID in rapid succession, the Domain should only persist the final state to IDB once the previous write transaction is complete.
+    - Implementation approach is flexible (per-ID queues, transaction logs, etc.). Priority: prevent "last write wins" errors.
 - Cohesion: Domain modules own the coordination of their specific logic and its immediate write-through persistence. They do not rely on state handlers or effects to "remember" to save.
 - Mandatory Factory: Must export a factory (e.g., createActor(id, overrides)) defining mandatory schema and default values.
 - Isolation: Strictly forbidden to import other domains.
@@ -110,7 +111,7 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
 - [ ] Logic-Free UI: Are math/string operations or formatting moved to a Connector or Domain Query instead of the Dumb Component?
 - [ ] CSS Guardrails: Are classes scoped with prefixes? Are skeletons/ghost layouts implemented?
 - [ ] Persistence Guarantee: Does the domain mutation update the cache synchronously and trigger the background save?
-- [ ] Race Condition Check: Does the persistence layer use a Serial Queue for IDB writes to prevent "Last Write Wins" errors?
+- [ ] Race Condition Check: For entities that receive rapid mutations, does the persistence layer queue writes per ID? Does rapid mutation of the same entity result in a single final write (not multiple competing writes)? Are writes deduplicated by debouncing?
 
 ## Implementation Contracts
 
