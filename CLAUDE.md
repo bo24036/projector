@@ -12,7 +12,7 @@
 ## Project Management & Git
 
 - Git Workflows: Small, logical chunks with descriptive conventional commit messages.
-- ADRs: Document any tradeoff made against these rules, especially regarding new library additions. Get approval.
+- ADRs: When adding libraries, using classes, or making other tradeoffs against these rules, document the decision in `docs/adr/NNNN-title.md`. Include: Context (why the decision was needed), Decision (what we chose), Rationale (why), and Consequences (impacts).
 
 ## Core Architectural Constraints
 
