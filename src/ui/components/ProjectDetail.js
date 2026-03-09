@@ -38,7 +38,8 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onDe
           class="project-detail__description"
           placeholder="Enter project description..."
           @change=${handleDescriptionChange}
-        >${project.description}</textarea>
+          .value=${project.description}
+        ></textarea>
       </div>
     </div>
   `;
