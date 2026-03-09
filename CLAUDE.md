@@ -103,13 +103,14 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
 ### Rendering Strategy
 
 - **Single Root Render Pattern:** On state change, trigger a root-level re-render of the entire component tree. Do not manage fine-grained subscriptions per component or per state key.
-- **Mechanism:** Dispatch action → State Handler updates state → rAF batches update → Single watcher notification → Root render function executes.
+- **Mechanism:** Dispatch action → State Handler updates state → rAF batches update → Root render function executes.
+- **Root Render Setup:** Register root renderer via `setRootRenderer(fn)` before initializing routes. Root render function pulls fresh state and calls each connector with state as parameter.
 - **Connector Responsibility:**
-  1. Watch for state changes (ideally at the root level, not per-connector)
-  2. Pull fresh state and domain data
-  3. Render entire subtree with fresh props
+  1. Receive state as a parameter (no subscriptions)
+  2. Call own domain queries to fetch data (e.g., `Project.getAllProjects()`)
+  3. Render with fresh props synchronously
+- **State Consistency:** All connectors in a render cycle receive the same state snapshot, preventing race conditions.
 - **DOM Efficiency:** lit-html's virtual DOM diffing ensures only changed DOM nodes are updated. No manual optimization needed.
-- **Cleanup:** Unsubscribe watchers in destroy/cleanup phase to prevent memory leaks.
 
 ### Styling & Layout
 
