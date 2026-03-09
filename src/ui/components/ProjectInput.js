@@ -1,4 +1,5 @@
-import { html, ref } from 'https://unpkg.com/lit-html@2/lit-html.js';
+import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
+import { ref } from 'https://unpkg.com/lit-html@2/directives/ref.js';
 
 export function ProjectInput({ onSave, onCancel }) {
   let inputValue = '';
