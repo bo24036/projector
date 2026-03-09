@@ -1,16 +1,16 @@
-// Conditional import for idb and dispatch - only available in browser
+// Import dispatch from local module (always available)
+import { dispatch } from '../state.js';
+
+// Dynamically import idb from import map (browser) or fail gracefully (Node.js tests)
 let openDB;
-let dispatch;
-if (typeof window !== 'undefined') {
-  // Browser environment - import from CDN
-  import('https://cdn.jsdelivr.net/npm/idb@7/+esm').then(module => {
+import('idb')
+  .then(module => {
     openDB = module.openDB;
+  })
+  .catch(() => {
+    // Node.js test environment: import map doesn't exist, idb unavailable
+    openDB = undefined;
   });
-  // Import dispatch for cache-miss fulfillment
-  import('../state.js').then(module => {
-    dispatch = module.dispatch;
-  });
-}
 
 const projectCache = new Map();
 const writeQueue = new Map(); // Tracks queued IDs to prevent concurrent writes
@@ -22,10 +22,11 @@ let db = null;
 const ERROR_PROJECT_NOT_FOUND = 'Project not found';
 
 async function getDB() {
-  // Skip IDB in Node.js test environment
+  // If idb is not available (Node.js test environment), return null
   if (!openDB) return null;
 
   if (db) return db;
+
   db = await openDB('projector', 1, {
     upgrade(db) {
       if (!db.objectStoreNames.contains('projects')) {
@@ -221,7 +222,8 @@ export function deleteProject(id) {
 
 // Initialize: Determine nextId from IDB to ensure new projects don't overwrite existing ones
 export async function initializeIdCounter() {
-  if (!openDB) return; // Skip in Node.js test environment
+  // Skip in Node.js test environment (idb not available)
+  if (!openDB) return;
 
   try {
     const database = await getDB();
