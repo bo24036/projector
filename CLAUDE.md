@@ -100,6 +100,17 @@ State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
   - Skeleton Trigger: If domain data is required but get(id) returns undefined, render a Skeleton.
 - Skeletons (Visual Tombstones): Render placeholder fragments for all async/loading states.
 
+### Rendering Strategy
+
+- **Single Root Render Pattern:** On state change, trigger a root-level re-render of the entire component tree. Do not manage fine-grained subscriptions per component or per state key.
+- **Mechanism:** Dispatch action → State Handler updates state → rAF batches update → Single watcher notification → Root render function executes.
+- **Connector Responsibility:**
+  1. Watch for state changes (ideally at the root level, not per-connector)
+  2. Pull fresh state and domain data
+  3. Render entire subtree with fresh props
+- **DOM Efficiency:** lit-html's virtual DOM diffing ensures only changed DOM nodes are updated. No manual optimization needed.
+- **Cleanup:** Unsubscribe watchers in destroy/cleanup phase to prevent memory leaks.
+
 ### Styling & Layout
 
 - Box Model: box-sizing: border-box locked globally.
