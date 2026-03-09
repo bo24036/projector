@@ -213,13 +213,6 @@
 .project-detail__edit-icon {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
-  opacity: 0.6;
-  transition: opacity var(--transition-fast);
-}
-
-.project-detail__name:hover ~ .project-detail__edit-icon,
-.project-detail__name:focus ~ .project-detail__edit-icon {
-  opacity: 1;
 }
 
 .project-detail__delete-button {
