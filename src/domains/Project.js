@@ -1,14 +1,20 @@
-// Conditional import for idb - only available in browser
+// Conditional import for idb and dispatch - only available in browser
 let openDB;
+let dispatch;
 if (typeof window !== 'undefined') {
   // Browser environment - import from CDN
   import('https://cdn.jsdelivr.net/npm/idb@7/+esm').then(module => {
     openDB = module.openDB;
   });
+  // Import dispatch for cache-miss fulfillment
+  import('../state.js').then(module => {
+    dispatch = module.dispatch;
+  });
 }
 
 const projectCache = new Map();
 const writeQueue = new Map(); // Tracks queued IDs to prevent concurrent writes
+const fetchQueue = new Set(); // Tracks IDs currently being fetched (prevents duplicate fetches)
 let nextId = 1;
 let db = null;
 
@@ -103,7 +109,34 @@ export function createProject(overrides = {}) {
 }
 
 export function getProject(id) {
-  return projectCache.get(id);
+  const cached = projectCache.get(id);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  // Cache miss: queue async fetch from IDB (fire-and-forget)
+  if (!fetchQueue.has(id)) {
+    fetchQueue.add(id);
+    queueMicrotask(async () => {
+      try {
+        const project = await getItem(id);
+        if (project) {
+          // Populate cache
+          projectCache.set(id, project);
+          // Dispatch fulfillment action to trigger re-render
+          if (dispatch) {
+            dispatch({ type: 'PROJECT_LOADED', payload: { project } });
+          }
+        }
+      } catch (error) {
+        console.error(`Failed to fetch project ${id}:`, error.message);
+      } finally {
+        fetchQueue.delete(id);
+      }
+    });
+  }
+
+  return undefined;
 }
 
 export function getAllProjects() {

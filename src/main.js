@@ -3,7 +3,6 @@ import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initRouter } from './utils/router.js';
 import { getState, setRootRenderer } from './state.js';
-import { getDB } from './domains/Project.js';
 
 function renderApp() {
   const state = getState();
@@ -12,9 +11,6 @@ function renderApp() {
 }
 
 function initApp() {
-  // Open IndexedDB connection (fire-and-forget, non-blocking)
-  getDB();
-
   // Register root renderer before router init so initial navigation triggers render
   setRootRenderer(renderApp);
 

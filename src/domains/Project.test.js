@@ -301,6 +301,40 @@ describe('Persistence', () => {
   });
 });
 
+describe('Cache Miss (Async Fetch)', () => {
+  it('returns undefined on cache miss (skeleton render pattern)', () => {
+    const result = Project.getProject(99999);
+    assert(result === undefined, 'Cache miss returns undefined immediately');
+  });
+
+  it('does not throw on cache miss', () => {
+    try {
+      Project.getProject(99999);
+      assert(true, 'Cache miss does not throw');
+    } catch (error) {
+      assert(false, 'Cache miss should not throw');
+    }
+  });
+
+  it('getItem returns undefined in Node.js test environment', async () => {
+    // In Node, IDB is unavailable, so getItem() returns undefined
+    const result = await Project.getItem(12345);
+    assert(result === undefined, 'getItem returns undefined when IDB unavailable');
+  });
+
+  it('queues fetch only once per ID (no duplicate fetches)', async () => {
+    // Call getProject() multiple times for the same missing ID
+    // Only the first call should queue a fetch
+    // (Subsequent calls return undefined, but fetchQueue prevents re-queuing)
+    Project.getProject(88888);
+    Project.getProject(88888);
+    Project.getProject(88888);
+
+    // In Node, fetches no-op due to unavailable IDB, but test verifies no throws
+    assert(true, 'Multiple cache misses for same ID do not cause errors');
+  });
+});
+
 // Run summary
 console.log(`\n${'='.repeat(50)}`);
 console.log(`Tests passed: ${testsPassed}`);

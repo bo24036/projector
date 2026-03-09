@@ -95,3 +95,12 @@ registerHandler('CANCEL_CREATE_PROJECT', (state, action) => {
     effects: [],
   };
 });
+
+registerHandler('PROJECT_LOADED', (state) => {
+  // Project is already in cache from domain's cache-miss fetch.
+  // This handler just triggers a re-render via setState.
+  return {
+    state,
+    effects: [],
+  };
+});
