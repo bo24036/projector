@@ -263,6 +263,44 @@ describe('Edge Cases', () => {
   });
 });
 
+describe('Persistence', () => {
+  it('synchronously updates cache on create (write-through)', () => {
+    const project = Project.createProject({ name: 'Cache Update Test' });
+    const retrieved = Project.getProject(project.id);
+
+    assert(retrieved !== undefined, 'Project immediately in cache');
+    assert(retrieved.name === 'Cache Update Test', 'Cache has correct data');
+  });
+
+  it('synchronously updates cache on rename (write-through)', () => {
+    const project = Project.createProject({ name: 'Original' });
+    Project.renameProject(project.id, 'Renamed');
+
+    const retrieved = Project.getProject(project.id);
+    assert(retrieved.name === 'Renamed', 'Renamed project immediately in cache');
+  });
+
+  it('synchronously updates cache on description update (write-through)', () => {
+    const project = Project.createProject({ name: 'Test' });
+    Project.updateDescription(project.id, 'New Description');
+
+    const retrieved = Project.getProject(project.id);
+    assert(retrieved.description === 'New Description', 'Description immediately in cache');
+  });
+
+  it('synchronously removes from cache on delete (write-through)', () => {
+    const project = Project.createProject({ name: 'To Delete' });
+    Project.deleteProject(project.id);
+
+    const retrieved = Project.getProject(project.id);
+    assert(retrieved === undefined, 'Project immediately removed from cache');
+  });
+
+  it('exports getItem function for IDB fetching', () => {
+    assert(typeof Project.getItem === 'function', 'getItem is exported as a function');
+  });
+});
+
 // Run summary
 console.log(`\n${'='.repeat(50)}`);
 console.log(`Tests passed: ${testsPassed}`);
