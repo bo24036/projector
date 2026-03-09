@@ -86,19 +86,18 @@
 
 /* Editing state for project list item */
 .project-list-item--editing {
+  display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-sm);
   background-color: var(--color-surface-hover);
   border-radius: var(--border-radius-md);
-  min-width: 0;
 }
 
 /* Project input */
 .project-input__field {
   flex: 1;
   min-width: 0;
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius-md);
   background-color: var(--color-background);
@@ -109,6 +108,7 @@
   display: flex;
   gap: var(--spacing-2xs);
   flex-shrink: 0;
+  padding-right: var(--spacing-md);
 }
 
 .project-input__ok,
