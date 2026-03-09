@@ -179,27 +179,47 @@
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
 
-  /* Heading appearance by default */
+  /* Heading appearance by default with faint editability cue */
   border: none;
   background-color: transparent;
   padding: var(--spacing-sm) 0;
-
-  /* Subtle hover cue: transparent bottom border that appears on hover */
-  border-bottom: 2px solid transparent;
+  border-bottom: 2px solid var(--color-text-secondary);
+  opacity: 0.6;
   transition: all var(--transition-fast);
   cursor: text;
 }
 
 .project-detail__name:hover {
+  opacity: 1;
   border-bottom-color: var(--color-text-secondary);
 }
 
 .project-detail__name:focus {
   outline: none;
+  opacity: 1;
   background-color: var(--color-surface);
   border-bottom-color: var(--color-primary);
   padding: var(--spacing-sm) var(--spacing-md);
   border-radius: var(--border-radius-md);
+}
+
+.project-detail__name-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.project-detail__edit-icon {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+.project-detail__name:hover ~ .project-detail__edit-icon,
+.project-detail__name:focus ~ .project-detail__edit-icon {
+  opacity: 1;
 }
 
 .project-detail__delete-button {

@@ -18,12 +18,15 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onDe
   return html`
     <div class="project-detail">
       <div class="project-detail__header">
-        <input
-          class="project-detail__name"
-          type="text"
-          value=${project.name}
-          @change=${handleNameChange}
-        />
+        <div class="project-detail__name-wrapper">
+          <input
+            class="project-detail__name"
+            type="text"
+            value=${project.name}
+            @change=${handleNameChange}
+          />
+          <span class="project-detail__edit-icon" aria-hidden="true">✎</span>
+        </div>
         <button class="project-detail__delete-button" @click=${handleDelete}>
           Delete
         </button>
