@@ -17,6 +17,12 @@ export function ProjectInput({ onSave, onCancel }) {
     inputValue = event.target.value;
   }
 
+  function handleBlur() {
+    if (!inputValue.trim()) {
+      onCancel();
+    }
+  }
+
   return html`
     <div class="project-list-item project-list-item--editing">
       <input
@@ -25,6 +31,7 @@ export function ProjectInput({ onSave, onCancel }) {
         placeholder="New project name..."
         @keydown=${handleKeyDown}
         @input=${handleInput}
+        @blur=${handleBlur}
         autofocus
       />
       <div class="project-input__controls">
