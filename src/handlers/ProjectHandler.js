@@ -6,25 +6,16 @@ registerHandler('CREATE_PROJECT', (state, action) => {
 
   try {
     const project = Project.createProject({ name });
-    return {
-      state: { ...state, currentProjectId: project.id, isCreatingProject: false },
-      effects: [],
-    };
+    return { state: { ...state, currentProjectId: project.id, isCreatingProject: false } };
   } catch (error) {
     alert(error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
 registerHandler('SELECT_PROJECT', (state, action) => {
   const { projectId } = action.payload;
-  return {
-    state: { ...state, currentProjectId: projectId },
-    effects: [],
-  };
+  return { state: { ...state, currentProjectId: projectId } };
 });
 
 registerHandler('RENAME_PROJECT', (state, action) => {
@@ -32,16 +23,10 @@ registerHandler('RENAME_PROJECT', (state, action) => {
 
   try {
     Project.renameProject(projectId, newName);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to rename project:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
@@ -50,16 +35,10 @@ registerHandler('UPDATE_DESCRIPTION', (state, action) => {
 
   try {
     Project.updateDescription(projectId, description);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to update description:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
@@ -68,16 +47,10 @@ registerHandler('DELETE_PROJECT', (state, action) => {
 
   try {
     Project.deleteProject(projectId);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to delete project:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
@@ -86,16 +59,10 @@ registerHandler('ARCHIVE_PROJECT', (state, action) => {
 
   try {
     Project.archiveProject(projectId);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to archive project:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
@@ -104,24 +71,15 @@ registerHandler('UNARCHIVE_PROJECT', (state, action) => {
 
   try {
     Project.unarchiveProject(projectId);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to unarchive project:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
 registerHandler('TOGGLE_ARCHIVED_PROJECTS', (state) => {
-  return {
-    state: { ...state, showArchivedProjects: !state.showArchivedProjects },
-    effects: [],
-  };
+  return { state: { ...state, showArchivedProjects: !state.showArchivedProjects } };
 });
 
 registerHandler('TOGGLE_FUNDED', (state, action) => {
@@ -129,47 +87,29 @@ registerHandler('TOGGLE_FUNDED', (state, action) => {
 
   try {
     Project.toggleFunded(projectId);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   } catch (error) {
     console.error('Failed to toggle funded:', error.message);
-    return {
-      state,
-      effects: [],
-    };
+    return { state };
   }
 });
 
 registerHandler('START_CREATE_PROJECT', (state, action) => {
-  return {
-    state: { ...state, isCreatingProject: true },
-    effects: [],
-  };
+  return { state: { ...state, isCreatingProject: true } };
 });
 
 registerHandler('CANCEL_CREATE_PROJECT', (state, action) => {
-  return {
-    state: { ...state, isCreatingProject: false },
-    effects: [],
-  };
+  return { state: { ...state, isCreatingProject: false } };
 });
 
 registerHandler('PROJECT_LOADED', (state) => {
   // Project is already in cache from domain's cache-miss fetch.
   // This handler just triggers a re-render via setState.
-  return {
-    state,
-    effects: [],
-  };
+  return { state };
 });
 
 registerHandler('PROJECTS_LOADED', (state) => {
   // All projects are already in cache from domain's fetch-all.
   // This handler just triggers a re-render via setState.
-  return {
-    state,
-    effects: [],
-  };
+  return { state };
 });
