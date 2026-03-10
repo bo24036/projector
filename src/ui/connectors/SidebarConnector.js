@@ -60,11 +60,13 @@ export function initSidebarConnector(containerSelector, state) {
 
       ${archivedProjects.length > 0
         ? html`
-          <button class="sidebar__archived-subheader" @click=${() => dispatch({ type: 'TOGGLE_ARCHIVED_PROJECTS' })}>
-            <span class="sidebar__archived-indicator">${archivedToggleIndicator}</span>
-            Archived
-          </button>
-          ${archivedSection}
+          <div class="sidebar__archived-section">
+            <button class="sidebar__archived-header" @click=${() => dispatch({ type: 'TOGGLE_ARCHIVED_PROJECTS' })}>
+              <span class="sidebar__archived-indicator">${archivedToggleIndicator}</span>
+              Archived
+            </button>
+            ${archivedSection}
+          </div>
         `
         : html``
       }
