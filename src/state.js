@@ -1,6 +1,7 @@
 const state = {
   currentProjectId: null,
   isCreatingProject: false,
+  showArchivedProjects: false,
 };
 
 let renderScheduled = false;
