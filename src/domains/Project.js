@@ -31,7 +31,7 @@ function serialize(project, operation) {
   // Schedule the actual write as a microtask
   queueMicrotask(async () => {
     const queued = writeQueue.get(id);
-    if (!queued) return; // Should not happen, but safe guard
+    if (!queued) return;
 
     writeQueue.delete(id);
 
@@ -44,22 +44,19 @@ function serialize(project, operation) {
 }
 
 export function createProject(overrides = {}) {
-  const name = overrides.name || '';
+  const name = overrides.name?.trim() || '';
 
-  if (!name.trim()) {
+  if (!name) {
     throw new Error('Project name cannot be empty');
   }
 
-  const trimmedName = name.trim();
-  const allProjects = getAllProjects();
-
-  if (allProjects.some(p => p.name === trimmedName)) {
+  if (getAllProjects().some(p => p.name === name)) {
     throw new Error('Project name already exists');
   }
 
   const project = {
     id: nextId++,
-    name: trimmedName,
+    name,
     description: overrides.description || '',
     createdAt: overrides.createdAt || new Date().toISOString(),
   };
@@ -101,10 +98,13 @@ export function getProject(id) {
 }
 
 export function getAllProjects() {
-  const cached = Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  // If already fetched, return sorted cache; if fetch in progress, return empty
+  if (projectsLoaded) {
+    return Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  }
 
-  // If we already have projects in cache, return them
-  if (cached.length > 0 || projectsLoaded) {
+  const cached = Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  if (cached.length > 0) {
     return cached;
   }
 
@@ -114,9 +114,7 @@ export function getAllProjects() {
     try {
       const allProjects = await getAllProjectsFromIdb();
       if (allProjects && allProjects.length > 0) {
-        // Populate cache with all projects
         allProjects.forEach(project => projectCache.set(project.id, project));
-        // Dispatch fulfillment action to trigger re-render
         if (dispatch) {
           dispatch({ type: 'PROJECTS_LOADED', payload: { projects: allProjects } });
         }
@@ -124,12 +122,11 @@ export function getAllProjects() {
     } catch (error) {
       console.error('Failed to fetch all projects:', error.message);
     } finally {
-      // Reset flag to allow retry if needed
       projectsLoaded = false;
     }
   });
 
-  return cached; // Return empty array initially
+  return cached;
 }
 
 export function renameProject(id, newName) {
