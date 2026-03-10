@@ -10,18 +10,6 @@ export function TaskListConnector({ projectId, state }) {
 
   return html`
     <div class="task-list">
-      ${creatingTask ? TaskInput({
-        onSave: (name, dueDate) => {
-          dispatch({
-            type: 'CREATE_TASK',
-            payload: { projectId, name, dueDate: dueDate || null },
-          });
-        },
-        onCancel: () => {
-          dispatch({ type: 'CANCEL_CREATE_TASK' });
-        },
-      }) : ''}
-
       ${tasks.length > 0
         ? html`
             ${tasks.map(task =>
@@ -53,8 +41,17 @@ export function TaskListConnector({ projectId, state }) {
           `
         : ''}
 
-      ${!creatingTask
-        ? html`
+      ${creatingTask ? TaskInput({
+        onSave: (name, dueDate) => {
+          dispatch({
+            type: 'CREATE_TASK',
+            payload: { projectId, name, dueDate: dueDate || null },
+          });
+        },
+        onCancel: () => {
+          dispatch({ type: 'CANCEL_CREATE_TASK' });
+        },
+      }) : html`
             <div class="task-list-item task-list-item--placeholder">
               <button
                 class="task-list-item__placeholder-button"
@@ -63,8 +60,7 @@ export function TaskListConnector({ projectId, state }) {
                 [Click to add task...]
               </button>
             </div>
-          `
-        : ''}
+          `}
     </div>
   `;
 }
