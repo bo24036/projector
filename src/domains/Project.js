@@ -58,6 +58,7 @@ export function createProject(overrides = {}) {
     id: nextId++,
     name,
     description: overrides.description || '',
+    archived: overrides.archived || false,
     createdAt: overrides.createdAt || new Date().toISOString(),
   };
 
@@ -171,6 +172,28 @@ export function deleteProject(id) {
   projectCache.delete(id);
   serialize(project, 'delete');
   return true;
+}
+
+export function archiveProject(id) {
+  const project = getProject(id);
+  if (!project) {
+    throw new Error(ERROR_PROJECT_NOT_FOUND);
+  }
+
+  project.archived = true;
+  serialize(project, 'put');
+  return project;
+}
+
+export function unarchiveProject(id) {
+  const project = getProject(id);
+  if (!project) {
+    throw new Error(ERROR_PROJECT_NOT_FOUND);
+  }
+
+  project.archived = false;
+  serialize(project, 'put');
+  return project;
 }
 
 // Initialize: Determine nextId from IDB to ensure new projects don't overwrite existing ones

@@ -242,6 +242,87 @@ describe('Delete Project', () => {
   });
 });
 
+describe('Archive / Unarchive Project', () => {
+  it('archives a project successfully', () => {
+    const project = Project.createProject({ name: 'To Archive' });
+    assert(project.archived === false, 'Project initially not archived');
+
+    Project.archiveProject(project.id);
+
+    const archived = Project.getProject(project.id);
+    assert(archived.archived === true, 'Project is archived');
+  });
+
+  it('unarchives a project successfully', () => {
+    const project = Project.createProject({ name: 'To Unarchive' });
+    Project.archiveProject(project.id);
+
+    Project.unarchiveProject(project.id);
+
+    const unarchived = Project.getProject(project.id);
+    assert(unarchived.archived === false, 'Project is unarchived');
+  });
+
+  it('archiveProject throws error for non-existent project', () => {
+    try {
+      Project.archiveProject(999999);
+      assert(false, 'Should throw error for non-existent project');
+    } catch (error) {
+      assert(error.message.includes('not found'), 'Throws error for missing project');
+    }
+  });
+
+  it('unarchiveProject throws error for non-existent project', () => {
+    try {
+      Project.unarchiveProject(999999);
+      assert(false, 'Should throw error for non-existent project');
+    } catch (error) {
+      assert(error.message.includes('not found'), 'Throws error for missing project');
+    }
+  });
+
+  it('allows multiple archive/unarchive cycles', () => {
+    const project = Project.createProject({ name: 'Cycle Test' });
+
+    Project.archiveProject(project.id);
+    assert(Project.getProject(project.id).archived === true, 'First archive works');
+
+    Project.unarchiveProject(project.id);
+    assert(Project.getProject(project.id).archived === false, 'First unarchive works');
+
+    Project.archiveProject(project.id);
+    assert(Project.getProject(project.id).archived === true, 'Second archive works');
+  });
+
+  it('synchronously updates cache on archive (write-through)', () => {
+    const project = Project.createProject({ name: 'Test' });
+    Project.archiveProject(project.id);
+
+    const retrieved = Project.getProject(project.id);
+    assert(retrieved.archived === true, 'Archive immediately in cache');
+  });
+
+  it('synchronously updates cache on unarchive (write-through)', () => {
+    const project = Project.createProject({ name: 'Test' });
+    Project.archiveProject(project.id);
+    Project.unarchiveProject(project.id);
+
+    const retrieved = Project.getProject(project.id);
+    assert(retrieved.archived === false, 'Unarchive immediately in cache');
+  });
+
+  it('getAllProjects includes both archived and active projects', () => {
+    const active = Project.createProject({ name: 'Active Project' });
+    const archived = Project.createProject({ name: 'Archived Project' });
+
+    Project.archiveProject(archived.id);
+
+    const all = Project.getAllProjects();
+    assert(all.some(p => p.id === active.id && !p.archived), 'Contains active project');
+    assert(all.some(p => p.id === archived.id && p.archived), 'Contains archived project');
+  });
+});
+
 describe('Edge Cases', () => {
   it('handles names with special characters', () => {
     const project = Project.createProject({
