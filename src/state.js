@@ -2,6 +2,10 @@ const state = {
   currentProjectId: null,
   isCreatingProject: false,
   showArchivedProjects: false,
+  creatingTask: false,
+  editingTaskId: null,
+  editingTaskName: '',
+  editingTaskDueDate: '',
 };
 
 let renderScheduled = false;
