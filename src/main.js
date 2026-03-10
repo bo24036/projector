@@ -1,4 +1,5 @@
 import './handlers/ProjectHandler.js';
+import './handlers/TaskHandler.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initRouter } from './utils/router.js';
