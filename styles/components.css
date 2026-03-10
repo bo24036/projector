@@ -1,1 +1,57 @@
-/* Component-specific styles - currently empty, reserved for future component styles */
+/* Component-specific styles */
+
+/* Project detail button group */
+.project-detail__button-group {
+  display: flex;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+}
+
+/* Archive/Unarchive buttons */
+.project-detail__archive-button,
+.project-detail__unarchive-button {
+  flex-shrink: 0;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-warning);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-fast);
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+}
+
+.project-detail__archive-button:hover,
+.project-detail__unarchive-button:hover {
+  background-color: #F57C00;
+}
+
+.project-detail__archive-button:disabled,
+.project-detail__unarchive-button:disabled {
+  background-color: var(--color-text-disabled);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Funded checkbox styling */
+.project-detail__funded-checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.project-detail__funded-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.project-detail__funded-label {
+  font-size: var(--font-size-lg);
+  color: var(--color-warning);
+  font-weight: var(--font-weight-bold);
+  margin-left: 4px;
+}
