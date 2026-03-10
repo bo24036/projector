@@ -24,36 +24,34 @@ export function TaskListItem({ task, isEditing, editName, editDueDate, onToggle,
 
     return html`
       <div class="task-list-item task-list-item--editing">
-        <div class="task-list-item__edit-form">
-          <input
-            autofocus
-            class="task-list-item__field task-list-item__field--name"
-            type="text"
-            placeholder="Task name..."
-            .value=${nameValue}
-            @input=${handleNameInput}
-            @keydown=${handleKeyDown}
-          />
-          <input
-            class="task-list-item__field task-list-item__field--due-date"
-            type="text"
-            placeholder="Due date (+5, tomorrow, 2025-02-25)..."
-            .value=${dueDateValue}
-            @input=${handleDueDateInput}
-            @keydown=${handleKeyDown}
-          />
-          <div class="task-list-item__controls">
-            <button
-              class="task-list-item__ok"
-              @click=${() => onSave(nameValue.trim(), dueDateValue.trim())}
-              title="Save"
-            >
-              ✓
-            </button>
-            <button class="task-list-item__cancel" @click=${onCancel} title="Cancel">
-              ✕
-            </button>
-          </div>
+        <input
+          autofocus
+          class="task-input__field task-input__field--name"
+          type="text"
+          placeholder="Task name..."
+          .value=${nameValue}
+          @input=${handleNameInput}
+          @keydown=${handleKeyDown}
+        />
+        <input
+          class="task-input__field task-input__field--due-date"
+          type="text"
+          placeholder="Due date..."
+          .value=${dueDateValue}
+          @input=${handleDueDateInput}
+          @keydown=${handleKeyDown}
+        />
+        <div class="task-input__controls">
+          <button
+            class="task-input__ok"
+            @click=${() => onSave(nameValue.trim(), dueDateValue.trim())}
+            title="Save"
+          >
+            ✓
+          </button>
+          <button class="task-input__cancel" @click=${onCancel} title="Cancel">
+            ✕
+          </button>
         </div>
       </div>
     `;

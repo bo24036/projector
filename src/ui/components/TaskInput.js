@@ -30,35 +30,33 @@ export function TaskInput({ onSave, onCancel }) {
 
   return html`
     <div class="task-list-item task-list-item--creating">
-      <div class="task-list-item__create-form">
-        <input
-          autofocus
-          class="task-list-item__field task-list-item__field--name"
-          type="text"
-          placeholder="[Click to add task...]"
-          @input=${handleNameInput}
-          @keydown=${handleKeyDown}
-          @blur=${handleNameBlur}
-        />
-        <input
-          class="task-list-item__field task-list-item__field--due-date"
-          type="text"
-          placeholder="Due date (+5, tomorrow, 2025-02-25)..."
-          @input=${handleDueDateInput}
-          @keydown=${handleKeyDown}
-        />
-        <div class="task-list-item__controls">
-          <button
-            class="task-list-item__ok"
-            @click=${() => onSave(nameValue.trim(), dueDateValue.trim())}
-            title="Save"
-          >
-            ✓
-          </button>
-          <button class="task-list-item__cancel" @click=${onCancel} title="Cancel">
-            ✕
-          </button>
-        </div>
+      <input
+        autofocus
+        class="task-input__field task-input__field--name"
+        type="text"
+        placeholder="[Click to add task...]"
+        @input=${handleNameInput}
+        @keydown=${handleKeyDown}
+        @blur=${handleNameBlur}
+      />
+      <input
+        class="task-input__field task-input__field--due-date"
+        type="text"
+        placeholder="Due date..."
+        @input=${handleDueDateInput}
+        @keydown=${handleKeyDown}
+      />
+      <div class="task-input__controls">
+        <button
+          class="task-input__ok"
+          @click=${() => onSave(nameValue.trim(), dueDateValue.trim())}
+          title="Save"
+        >
+          ✓
+        </button>
+        <button class="task-input__cancel" @click=${onCancel} title="Cancel">
+          ✕
+        </button>
       </div>
     </div>
   `;
