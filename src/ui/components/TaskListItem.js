@@ -26,6 +26,7 @@ export function TaskListItem({ task, isEditing, editName, editDueDate, onToggle,
       <div class="task-list-item task-list-item--editing">
         <input
           ?autofocus=${true}
+          data-task-autofocus
           class="task-input__field task-input__field--name"
           type="text"
           placeholder="Task name..."

@@ -60,4 +60,14 @@ export function initProjectDetailConnector(containerSelector, state) {
   `;
 
   render(template, container);
+
+  // Explicitly focus task input when creation form or edit form is shown
+  queueMicrotask(() => {
+    if (state.creatingTask || state.editingTaskId) {
+      const taskInput = container.querySelector('[data-task-autofocus]');
+      if (taskInput) {
+        taskInput.focus();
+      }
+    }
+  });
 }
