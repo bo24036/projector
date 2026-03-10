@@ -23,11 +23,10 @@ registerHandler('RENAME_PROJECT', (state, action) => {
 
   try {
     Project.renameProject(projectId, newName);
-    return { state };
   } catch (error) {
     console.error('Failed to rename project:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('UPDATE_DESCRIPTION', (state, action) => {
@@ -35,11 +34,10 @@ registerHandler('UPDATE_DESCRIPTION', (state, action) => {
 
   try {
     Project.updateDescription(projectId, description);
-    return { state };
   } catch (error) {
     console.error('Failed to update description:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('DELETE_PROJECT', (state, action) => {
@@ -47,11 +45,10 @@ registerHandler('DELETE_PROJECT', (state, action) => {
 
   try {
     Project.deleteProject(projectId);
-    return { state };
   } catch (error) {
     console.error('Failed to delete project:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('ARCHIVE_PROJECT', (state, action) => {
@@ -59,11 +56,10 @@ registerHandler('ARCHIVE_PROJECT', (state, action) => {
 
   try {
     Project.archiveProject(projectId);
-    return { state };
   } catch (error) {
     console.error('Failed to archive project:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('UNARCHIVE_PROJECT', (state, action) => {
@@ -71,11 +67,10 @@ registerHandler('UNARCHIVE_PROJECT', (state, action) => {
 
   try {
     Project.unarchiveProject(projectId);
-    return { state };
   } catch (error) {
     console.error('Failed to unarchive project:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('TOGGLE_ARCHIVED_PROJECTS', (state) => {
@@ -87,11 +82,10 @@ registerHandler('TOGGLE_FUNDED', (state, action) => {
 
   try {
     Project.toggleFunded(projectId);
-    return { state };
   } catch (error) {
     console.error('Failed to toggle funded:', error.message);
-    return { state };
   }
+  return { state };
 });
 
 registerHandler('START_CREATE_PROJECT', (state, action) => {
