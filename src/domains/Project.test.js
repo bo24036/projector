@@ -56,7 +56,7 @@ describe('Project Factory', () => {
     const project2 = Project.createProject({ name: 'Project 2' });
 
     assert(project1.id !== project2.id, 'Projects have different IDs');
-    assert(typeof project1.id === 'number', 'ID is a number');
+    assert(typeof project1.id === 'string', 'ID is a string (GUID)');
   });
 
   it('rejects empty names', () => {
@@ -446,15 +446,6 @@ describe('Cache Miss (Async Fetch)', () => {
 });
 
 describe('Initialization', () => {
-  it('initializeIdCounter does not throw in Node.js', async () => {
-    try {
-      await Project.initializeIdCounter();
-      assert(true, 'initializeIdCounter does not throw');
-    } catch (error) {
-      assert(false, `initializeIdCounter should not throw: ${error.message}`);
-    }
-  });
-
   it('getAllProjects returns an array', () => {
     const result = Project.getAllProjects();
     assert(Array.isArray(result), 'getAllProjects returns an array');

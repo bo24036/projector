@@ -74,21 +74,3 @@ export async function deleteProject(id) {
     console.error(`Failed to delete project ${id}:`, error.message);
   }
 }
-
-// Fetch the maximum project ID currently stored in IDB.
-// Returns 0 if no projects exist or IDB is unavailable.
-export async function getMaxProjectId() {
-  const database = await getDatabase();
-  if (!database) return 0;
-
-  try {
-    const keys = await database.getAllKeys('projects');
-    if (keys.length === 0) return 0;
-    // Ensure keys are treated as numbers to avoid off-by-one errors
-    const numericKeys = keys.map(k => Number(k));
-    return Math.max(...numericKeys);
-  } catch (error) {
-    console.error('Failed to read project IDs from IDB:', error.message);
-    return 0;
-  }
-}

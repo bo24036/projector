@@ -2,15 +2,19 @@
 import { dispatch } from '../state.js';
 
 // Import IDB operations from service layer (isolates persistence I/O)
-import { getProject as getProjectFromIdb, getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb, getMaxProjectId } from '../services/IdbService.js';
+import { getProject as getProjectFromIdb, getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb } from '../services/IdbService.js';
 
 const projectCache = new Map();
 const writeQueue = new Map(); // Tracks queued IDs to prevent concurrent writes
 const fetchQueue = new Set(); // Tracks IDs currently being fetched (prevents duplicate fetches)
 let projectsLoaded = false; // Tracks if we've already fetched all projects from IDB
-let nextId = 1;
 
 const ERROR_PROJECT_NOT_FOUND = 'Project not found';
+
+// Generate a GUID for unique project IDs (eliminates off-by-one issues)
+function generateId() {
+  return 'proj_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+}
 
 // Queue a write to IDB. If already queued, replaces the previous write.
 // This ensures deduplication: rapid mutations to the same ID result in one final write.
@@ -58,7 +62,7 @@ export function createProject(overrides = {}) {
   }
 
   const project = {
-    id: nextId++,
+    id: generateId(),
     name,
     description: overrides.description || '',
     archived: overrides.archived || false,
@@ -212,22 +216,10 @@ export function toggleFunded(id) {
   return project;
 }
 
-// Initialize: Determine nextId from IDB to ensure new projects don't overwrite existing ones
-export async function initializeIdCounter() {
-  try {
-    const maxId = await getMaxProjectId();
-    if (maxId > 0) {
-      nextId = maxId + 1;
-    }
-  } catch (error) {
-    console.error('Failed to initialize ID counter:', error.message);
-    // Continue with default nextId = 1 if initialization fails
-  }
-}
+// ID initialization no longer needed - GUIDs are generated on demand
 
-// Test utility - clears cache and resets ID counter
+// Test utility - clears cache and resets state
 export function _resetCacheForTesting() {
   projectCache.clear();
   projectsLoaded = false;
-  nextId = 1;
 }

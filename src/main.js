@@ -3,7 +3,6 @@ import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initRouter } from './utils/router.js';
 import { getState, setRootRenderer } from './state.js';
-import { initializeIdCounter } from './domains/Project.js';
 
 function renderApp() {
   const state = getState();
@@ -11,10 +10,7 @@ function renderApp() {
   initProjectDetailConnector('#main-content', state);
 }
 
-async function initApp() {
-  // Initialize ID counter from IDB before creating any new projects
-  await initializeIdCounter();
-
+function initApp() {
   // Register root renderer before router init so initial navigation triggers render
   setRootRenderer(renderApp);
 
