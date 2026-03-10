@@ -60,6 +60,12 @@ export function TaskListItem({ task, isEditing, editName, editDueDate, onToggle,
   const dueDateFormatted = formatDueDate(task.dueDate);
   const urgency = getUrgency(task.dueDate);
 
+  function handleDelete() {
+    if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
+      onDelete();
+    }
+  }
+
   return html`
     <div class="task-list-item ${task.completed ? 'is-completed' : ''} urgency-${urgency}">
       <div class="task-list-item__content">
@@ -79,7 +85,7 @@ export function TaskListItem({ task, isEditing, editName, editDueDate, onToggle,
         <button class="task-list-item__edit" @click=${onEdit} title="Edit">
           ✎
         </button>
-        <button class="task-list-item__delete" @click=${onDelete} title="Delete">
+        <button class="task-list-item__delete" @click=${handleDelete} title="Delete">
           ×
         </button>
       </div>
