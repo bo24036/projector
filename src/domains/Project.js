@@ -39,10 +39,14 @@ function serialize(project, operation) {
 
     writeQueue.delete(id);
 
-    if (queued.operation === 'delete') {
-      await deleteProjectFromIdb(queued.project.id);
-    } else {
-      await putProjectToIdb(queued.project);
+    try {
+      if (queued.operation === 'delete') {
+        await deleteProjectFromIdb(queued.project.id);
+      } else {
+        await putProjectToIdb(queued.project);
+      }
+    } catch (error) {
+      console.error(`[Project.serialize] Error persisting project ${id}:`, error.message);
     }
   });
 }
