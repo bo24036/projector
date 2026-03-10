@@ -31,7 +31,7 @@ export function TaskInput({ onSave, onCancel }) {
   return html`
     <div class="task-list-item task-list-item--creating">
       <input
-        autofocus
+        ?autofocus=${true}
         class="task-input__field task-input__field--name"
         type="text"
         placeholder="[Click to add task...]"
