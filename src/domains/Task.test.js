@@ -69,9 +69,26 @@ function getDaysFromToday(days) {
   return new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime();
 }
 
-// Test: +5 days parsing
+function getBusinessDaysFromToday(businessDays) {
+  const today = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+  const date = new Date(today);
+  let count = 0;
+
+  while (count < businessDays) {
+    date.setDate(date.getDate() + 1);
+    const dayOfWeek = date.getDay();
+    // Skip weekends (0 = Sunday, 6 = Saturday)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      count++;
+    }
+  }
+
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+}
+
+// Test: +5 business days parsing
 const futureTask = Task.createTask(projectId, 'Future', '+5');
-assertEqual(futureTask.dueDate, getDaysFromToday(5), 'Parses "+5" as 5 days from today');
+assertEqual(futureTask.dueDate, getBusinessDaysFromToday(5), 'Parses "+5" as 5 business days from today');
 
 // Test: tomorrow parsing
 const tomorrowTask = Task.createTask(projectId, 'Tomorrow', 'tomorrow');

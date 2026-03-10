@@ -44,6 +44,23 @@ function serialize(task, operation) {
   });
 }
 
+// Helper: add business days (Mon-Fri) to a date
+function addBusinessDays(startDate, businessDays) {
+  const date = new Date(startDate);
+  let count = 0;
+
+  while (count < businessDays) {
+    date.setDate(date.getDate() + 1);
+    const dayOfWeek = date.getDay();
+    // Skip weekends (0 = Sunday, 6 = Saturday)
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      count++;
+    }
+  }
+
+  return date;
+}
+
 // Parse due date from string: "+5", "tomorrow", "2025-02-25"
 function parseDueDate(input) {
   if (!input || typeof input !== 'string') return null;
@@ -53,12 +70,11 @@ function parseDueDate(input) {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-  // "+5" = 5 days from now (check first, before numeric timestamp check)
+  // "+5" = 5 business days from now (check first, before numeric timestamp check)
   if (trimmed.startsWith('+')) {
     const days = parseInt(trimmed.substring(1), 10);
     if (!isNaN(days)) {
-      const date = new Date(today);
-      date.setDate(date.getDate() + days);
+      const date = addBusinessDays(today, days);
       return date.getTime();
     }
   }
