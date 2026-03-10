@@ -21,10 +21,8 @@ async function initApp() {
   setRootRenderer(renderApp);
 
   // Initialize router - this will dispatch initial navigation action
+  // The dispatch will schedule renderApp via rAF, so we don't need to call it explicitly
   initRouter();
-
-  // Render initial state
-  renderApp();
 }
 
 // Wait for DOM to be ready
