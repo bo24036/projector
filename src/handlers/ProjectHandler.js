@@ -1,5 +1,5 @@
 import * as Project from '../domains/Project.js';
-import { registerHandler, dispatch } from '../state.js';
+import { registerHandler } from '../state.js';
 
 // Factory for simple domain mutation handlers that return unchanged state
 function createMutationHandler(actionName, domainFn) {
@@ -28,21 +28,21 @@ registerHandler('CREATE_PROJECT', (state, action) => {
 registerHandler('SELECT_PROJECT', (state, action) => {
   const { projectId } = action.payload;
 
-  // Update state immediately to switch to project page
-  const nextState = { ...state, currentPage: 'project', currentProjectId: projectId };
-
   // Check if project is archived and auto-expand archived section if needed
-  // Return as effect to avoid batching issues with synchronous dispatch
   const project = Project.getProject(projectId);
-  const effects = [];
-  if (project?.archived && !state.showArchivedProjects) {
-    // Project is archived and archived section is not shown; expand it
-    effects.push(() => {
-      dispatch({ type: 'TOGGLE_ARCHIVED_PROJECTS' });
-    });
-  }
+  const showArchived = project?.archived && !state.showArchivedProjects
+    ? true
+    : state.showArchivedProjects;
 
-  return { state: nextState, effects };
+  // Update state in single atomic operation
+  const nextState = {
+    ...state,
+    currentPage: 'project',
+    currentProjectId: projectId,
+    showArchivedProjects: showArchived,
+  };
+
+  return { state: nextState };
 });
 
 registerHandler('SELECT_OVERVIEW', (state) => {
