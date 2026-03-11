@@ -221,14 +221,20 @@
   background-color: var(--color-surface);
 }
 
-.task-list-item__actions {
+/* List item action buttons and containers (shared) */
+.list-item__actions,
+.task-list-item__actions,
+.person-list-item__actions {
   display: flex;
   gap: var(--spacing-xs);
   flex-shrink: 0;
 }
 
+.list-item-action-button,
 .task-list-item__edit,
-.task-list-item__delete {
+.task-list-item__delete,
+.person-list-item__edit,
+.person-list-item__delete {
   padding: var(--spacing-xs) var(--spacing-sm);
   border: none;
   border-radius: var(--border-radius-sm);
@@ -244,26 +250,47 @@
   justify-content: center;
 }
 
-.task-list-item__edit:hover {
+.list-item-action-button--edit,
+.task-list-item__edit,
+.person-list-item__edit {
+}
+
+.list-item-action-button--edit:hover,
+.task-list-item__edit:hover,
+.person-list-item__edit:hover {
   background-color: var(--color-primary-overlay-light);
   color: var(--color-primary);
 }
 
-.task-list-item__delete:hover {
+.list-item-action-button--delete,
+.task-list-item__delete,
+.person-list-item__delete {
+}
+
+.list-item-action-button--delete:hover,
+.task-list-item__delete:hover,
+.person-list-item__delete:hover {
   background-color: var(--color-error-overlay-light);
   color: var(--color-error);
 }
 
-.task-list-item--placeholder {
+/* Placeholder list items */
+.list-item--placeholder,
+.task-list-item--placeholder,
+.person-list-item--placeholder {
   padding: 0;
   background-color: transparent;
 }
 
-.task-list-item--placeholder:hover {
+.list-item--placeholder:hover,
+.task-list-item--placeholder:hover,
+.person-list-item--placeholder:hover {
   background-color: transparent;
 }
 
-.task-list-item__placeholder-button {
+.list-item__placeholder-button,
+.task-list-item__placeholder-button,
+.person-list-item__placeholder-button {
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: left;
@@ -277,14 +304,19 @@
   font-size: var(--font-size-sm);
 }
 
-.task-list-item__placeholder-button:hover {
+.list-item__placeholder-button:hover,
+.task-list-item__placeholder-button:hover,
+.person-list-item__placeholder-button:hover {
   background-color: var(--color-primary-overlay-light);
   color: var(--color-text);
 }
 
-/* Task input (mirrors project input pattern with two fields) */
+/* List item form states (create/edit) */
+.list-item--form-state,
 .task-list-item--creating,
-.task-list-item--editing {
+.task-list-item--editing,
+.person-list-item--creating,
+.person-list-item--editing {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
@@ -293,7 +325,10 @@
   padding: var(--spacing-xs);
 }
 
-.task-input__field {
+/* Input field shared styles */
+.list-item-input__field,
+.task-input__field,
+.person-input__field {
   padding: var(--spacing-xs) var(--spacing-md);
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius-md);
@@ -310,7 +345,19 @@
   flex: 0 0 160px;
 }
 
-.task-input__controls {
+.person-input__field--name {
+  flex: 1;
+  min-width: 0;
+}
+
+.person-input__field--role {
+  flex: 0 0 160px;
+}
+
+/* Input controls shared styles */
+.list-item-input__controls,
+.task-input__controls,
+.person-input__controls {
   display: flex;
   gap: var(--spacing-2xs);
   flex-shrink: 0;
@@ -692,101 +739,5 @@
   padding: 0 var(--spacing-xs);
   border-radius: var(--border-radius-sm);
   background-color: var(--color-background);
-}
-
-.person-list-item__actions {
-  display: flex;
-  gap: var(--spacing-xs);
-  flex-shrink: 0;
-}
-
-.person-list-item__edit,
-.person-list-item__delete {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: none;
-  border-radius: var(--border-radius-sm);
-  background-color: transparent;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
-  font-size: var(--font-size-sm);
-  min-width: 28px;
-  min-height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.person-list-item__edit:hover {
-  background-color: var(--color-primary-overlay-light);
-  color: var(--color-primary);
-}
-
-.person-list-item__delete:hover {
-  background-color: var(--color-error-overlay-light);
-  color: var(--color-error);
-}
-
-.person-list-item--placeholder {
-  padding: 0;
-  background-color: transparent;
-}
-
-.person-list-item--placeholder:hover {
-  background-color: transparent;
-}
-
-.person-list-item__placeholder-button {
-  width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
-  text-align: left;
-  border: none;
-  border-radius: var(--border-radius-md);
-  background-color: transparent;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  font-style: italic;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
-  font-size: var(--font-size-sm);
-}
-
-.person-list-item__placeholder-button:hover {
-  background-color: var(--color-primary-overlay-light);
-  color: var(--color-text);
-}
-
-/* Person input (create/edit form) */
-.person-list-item--creating,
-.person-list-item--editing {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  background-color: var(--color-surface-hover);
-  border-radius: var(--border-radius-md);
-  padding: var(--spacing-xs);
-}
-
-.person-input__field {
-  padding: var(--spacing-xs) var(--spacing-md);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  background-color: var(--color-background);
-  font-size: var(--font-size-sm);
-}
-
-.person-input__field--name {
-  flex: 1;
-  min-width: 0;
-}
-
-.person-input__field--role {
-  flex: 0 0 160px;
-}
-
-.person-input__controls {
-  display: flex;
-  gap: var(--spacing-2xs);
-  flex-shrink: 0;
-  padding-left: var(--spacing-sm);
 }
 
