@@ -1,4 +1,5 @@
 const state = {
+  // currentPage values: 'overview' | 'personal' | 'project'
   currentPage: 'overview',
   currentProjectId: null,
   isCreatingProject: false,
