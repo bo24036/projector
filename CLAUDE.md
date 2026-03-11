@@ -65,10 +65,12 @@
 
 State changes follow a synchronous-to-deferred pipeline to prevent re-entrancy:
 
-- Synchronous state handler: Update state via Modular State Handler (No central root state handler).
+- Synchronous state handler: Pure function that reads current state and returns new values (no awaits).
   - Signature: `(state, action) => { state: nextState, effects: [] }`.
-- Batched Render: Defer DOM updates using `requestAnimationFrame`.
-- Effect Execution: Trigger effects[] via `queueMicrotask`.
+- Synchronous state update: setState **immediately** applies updates to the module-level state object.
+  - This ensures effects and subsequent handlers see current state, not stale values.
+- Batched Render: Defer DOM updates using `requestAnimationFrame` to batch all pending updates.
+- Effect Execution: Trigger effects[] via `queueMicrotask` (runs before rAF, can dispatch actions safely).
   - Rule: Orchestrated effects (cross-domain work, computed UI state) must dispatch a fulfillment action upon completion.
   - Effect Re-Entry Context: Effects triggered in response to user intent must validate context before dispatching (e.g., has user navigated away? is this query still current?).
   - Stale Prevention: If multiple similar effects are in-flight, only the most recent result updates state. Cancel or ignore earlier results.
