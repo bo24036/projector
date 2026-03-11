@@ -1,5 +1,6 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
 import { makeKeyDownHandler, makeBlurHandler, makeDeleteHandler } from '../../utils/inputHandlers.js';
+import { makeDatalistId } from '../../utils/domUtils.js';
 
 export function PersonListItem({ person, isEditing, editName, editRole, onEdit, onDelete, onSave, onCancel, nameOptions = [], roleOptions = [] }) {
   if (isEditing) {
@@ -27,8 +28,8 @@ export function PersonListItem({ person, isEditing, editName, editRole, onEdit, 
       roleValue = event.target.value;
     }
 
-    const nameListId = `person-names-list-edit-${Math.random().toString(36).substr(2, 9)}`;
-    const roleListId = `person-roles-list-edit-${Math.random().toString(36).substr(2, 9)}`;
+    const nameListId = makeDatalistId('person-names-list-edit');
+    const roleListId = makeDatalistId('person-roles-list-edit');
 
     return html`
       <div class="person-list-item person-list-item--editing">

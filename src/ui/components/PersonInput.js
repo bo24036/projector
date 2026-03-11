@@ -1,5 +1,6 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
 import { makeKeyDownHandler, makeBlurHandler } from '../../utils/inputHandlers.js';
+import { makeDatalistId } from '../../utils/domUtils.js';
 
 export function PersonInput({ onSave, onCancel, nameOptions = [], roleOptions = [] }) {
   let nameValue = '';
@@ -26,8 +27,8 @@ export function PersonInput({ onSave, onCancel, nameOptions = [], roleOptions = 
     roleValue = event.target.value;
   }
 
-  const nameListId = `person-names-list-${Math.random().toString(36).substr(2, 9)}`;
-  const roleListId = `person-roles-list-${Math.random().toString(36).substr(2, 9)}`;
+  const nameListId = makeDatalistId('person-names-list');
+  const roleListId = makeDatalistId('person-roles-list');
 
   return html`
     <div class="person-list-item person-list-item--creating">
