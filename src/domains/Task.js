@@ -15,6 +15,12 @@ function generateId() {
   return 'task_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
 }
 
+// Get today's date normalized to midnight (no time component)
+function getNormalizedToday() {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+}
+
 // Queue a write to IDB with deduplication
 function serialize(task, operation) {
   const id = task.id;
@@ -68,7 +74,7 @@ function parseDueDate(input) {
   const trimmed = input.trim().toLowerCase();
 
   const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const today = getNormalizedToday();
 
   // "+5" = 5 business days from now (check first, before numeric timestamp check)
   if (trimmed.startsWith('+')) {
@@ -128,8 +134,7 @@ export function formatDueDate(timestamp) {
   if (!timestamp) return null;
 
   const dueDate = new Date(timestamp);
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const today = getNormalizedToday();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
@@ -156,8 +161,7 @@ export function getUrgency(timestamp) {
   if (!timestamp) return 'gray';
 
   const dueDate = new Date(timestamp);
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const today = getNormalizedToday();
 
   const dueDateNormalized = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
   const diffTime = dueDateNormalized.getTime() - today.getTime();
