@@ -539,37 +539,7 @@
   font-size: var(--font-size-lg);
 }
 
-.overview-personal {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  background-color: var(--color-surface);
-  margin-bottom: var(--spacing-lg);
-}
-
-.overview-personal__header {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.overview-personal__name {
-  flex: 1;
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text);
-  margin: 0;
-}
-
-.overview-personal__tasks {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
+.overview-personal,
 .overview-project {
   display: flex;
   flex-direction: column;
@@ -580,24 +550,36 @@
   background-color: var(--color-surface);
 }
 
+.overview-personal__header,
 .overview-project__header {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
 }
 
+.overview-personal__name,
 .overview-project__name {
   flex: 1;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-text);
   margin: 0;
+}
+
+.overview-project__name {
   cursor: pointer;
   transition: color var(--transition-fast);
 }
 
 .overview-project__name:hover {
   color: var(--color-primary);
+}
+
+.overview-personal__tasks,
+.overview-project__tasks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
 }
 
 .overview-project__badge {
@@ -616,12 +598,6 @@
   font-style: italic;
   border-radius: var(--border-radius-md);
   background-color: var(--color-background);
-}
-
-.overview-project__tasks {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
 }
 
 .overview-task {
