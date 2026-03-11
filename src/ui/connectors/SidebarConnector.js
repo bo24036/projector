@@ -67,19 +67,7 @@ export function initSidebarConnector(containerSelector, state) {
           <span class="sidebar__archived-indicator">${archivedToggleIndicator}</span>
           Archived
         </button>
-        ${state.showArchivedProjects && archivedProjects.length > 0
-          ? html`
-              <div class="sidebar__archived-list">
-                ${archivedProjects.map(project =>
-                  ProjectListItem({
-                    project,
-                    isSelected: state.currentProjectId === project.id,
-                    onSelect: () => navigateToProject(project.id),
-                  })
-                )}
-              </div>
-            `
-          : ''}
+        ${archivedList}
       </div>
     </div>
   `;
