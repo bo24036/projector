@@ -79,7 +79,7 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onAr
           placeholder="Enter project description..."
           ?disabled=${isArchived}
           @change=${handleDescriptionChange}
-          defaultValue=${project.description}
+          .value=${project.description}
         ></textarea>
       </div>
     </div>
