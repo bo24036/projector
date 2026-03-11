@@ -3,6 +3,7 @@ import './handlers/TaskHandler.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';
+import { initPersonalTasksConnector } from './ui/connectors/PersonalTasksConnector.js';
 import { initRouter } from './utils/router.js';
 import { getState, setRootRenderer } from './state.js';
 import { idbReady } from './services/IdbService.js';
@@ -14,6 +15,8 @@ function renderApp() {
 
   if (state.currentPage === 'overview') {
     initOverviewConnector('#main-content', state);
+  } else if (state.currentPage === 'personal') {
+    initPersonalTasksConnector('#main-content', state);
   } else {
     initProjectDetailConnector('#main-content', state);
   }

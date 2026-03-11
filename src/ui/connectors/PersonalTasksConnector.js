@@ -1,0 +1,75 @@
+import { html, render } from 'https://unpkg.com/lit-html@2/lit-html.js';
+import { TaskListItem } from '../components/TaskListItem.js';
+import { TaskInput } from '../components/TaskInput.js';
+import * as Task from '../../domains/Task.js';
+import { formatDueDate, getUrgency } from '../../domains/Task.js';
+import { dispatch } from '../../state.js';
+
+export function initPersonalTasksConnector(containerSelector, state) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+
+  const tasks = Task.getPersonalTasks();
+  const { creatingTask, editingTaskId, editingTaskName, editingTaskDueDate } = state;
+
+  const template = html`
+    <div class="personal-tasks-page">
+      <h1 class="personal-tasks-page__title">My Tasks</h1>
+
+      <div class="personal-tasks-page__tasks">
+        ${tasks.map(task =>
+          TaskListItem({
+            task,
+            dueDateFormatted: formatDueDate(task.dueDate),
+            urgency: getUrgency(task.dueDate),
+            isArchived: false,
+            isEditing: editingTaskId === task.id,
+            editName: editingTaskName,
+            editDueDate: editingTaskDueDate,
+            onToggle: () => {
+              dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: task.id } });
+            },
+            onEdit: () => {
+              dispatch({ type: 'START_EDIT_TASK', payload: { taskId: task.id } });
+            },
+            onDelete: () => {
+              dispatch({ type: 'DELETE_TASK', payload: { taskId: task.id } });
+            },
+            onSave: (name, dueDate) => {
+              dispatch({
+                type: 'UPDATE_TASK',
+                payload: { taskId: task.id, name, dueDate: dueDate || null, completed: task.completed },
+              });
+            },
+            onCancel: () => {
+              dispatch({ type: 'CANCEL_EDIT_TASK' });
+            },
+          })
+        )}
+
+        ${!creatingTask ? html`
+          <div class="task-list-item task-list-item--placeholder">
+            <button
+              class="task-list-item__placeholder-button"
+              @click=${() => dispatch({ type: 'START_CREATE_TASK' })}
+            >
+              [Click to add task...]
+            </button>
+          </div>
+        ` : TaskInput({
+          onSave: (name, dueDate) => {
+            dispatch({
+              type: 'CREATE_TASK',
+              payload: { projectId: null, name, dueDate: dueDate || null },
+            });
+          },
+          onCancel: () => {
+            dispatch({ type: 'CANCEL_CREATE_TASK' });
+          },
+        })}
+      </div>
+    </div>
+  `;
+
+  render(template, container);
+}
