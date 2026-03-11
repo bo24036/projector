@@ -1,6 +1,18 @@
 import * as Project from '../domains/Project.js';
 import { registerHandler, dispatch } from '../state.js';
 
+// Factory for simple domain mutation handlers that return unchanged state
+function createMutationHandler(actionName, domainFn) {
+  return registerHandler(actionName, (state, action) => {
+    try {
+      domainFn(action.payload);
+    } catch (error) {
+      console.error(`Failed to ${actionName.toLowerCase().replace(/_/g, ' ')}:`, error.message);
+    }
+    return { state };
+  });
+}
+
 registerHandler('CREATE_PROJECT', (state, action) => {
   const { name } = action.payload;
 
@@ -37,74 +49,32 @@ registerHandler('SELECT_OVERVIEW', (state) => {
   return { state: { ...state, currentPage: 'overview', currentProjectId: null } };
 });
 
-registerHandler('RENAME_PROJECT', (state, action) => {
-  const { projectId, newName } = action.payload;
-
-  try {
-    Project.renameProject(projectId, newName);
-  } catch (error) {
-    console.error('Failed to rename project:', error.message);
-  }
-  return { state };
+createMutationHandler('RENAME_PROJECT', ({ projectId, newName }) => {
+  Project.renameProject(projectId, newName);
 });
 
-registerHandler('UPDATE_DESCRIPTION', (state, action) => {
-  const { projectId, description } = action.payload;
-
-  try {
-    Project.updateDescription(projectId, description);
-  } catch (error) {
-    console.error('Failed to update description:', error.message);
-  }
-  return { state };
+createMutationHandler('UPDATE_DESCRIPTION', ({ projectId, description }) => {
+  Project.updateDescription(projectId, description);
 });
 
-registerHandler('DELETE_PROJECT', (state, action) => {
-  const { projectId } = action.payload;
-
-  try {
-    Project.deleteProject(projectId);
-  } catch (error) {
-    console.error('Failed to delete project:', error.message);
-  }
-  return { state };
+createMutationHandler('DELETE_PROJECT', ({ projectId }) => {
+  Project.deleteProject(projectId);
 });
 
-registerHandler('ARCHIVE_PROJECT', (state, action) => {
-  const { projectId } = action.payload;
-
-  try {
-    Project.archiveProject(projectId);
-  } catch (error) {
-    console.error('Failed to archive project:', error.message);
-  }
-  return { state };
+createMutationHandler('ARCHIVE_PROJECT', ({ projectId }) => {
+  Project.archiveProject(projectId);
 });
 
-registerHandler('UNARCHIVE_PROJECT', (state, action) => {
-  const { projectId } = action.payload;
-
-  try {
-    Project.unarchiveProject(projectId);
-  } catch (error) {
-    console.error('Failed to unarchive project:', error.message);
-  }
-  return { state };
+createMutationHandler('UNARCHIVE_PROJECT', ({ projectId }) => {
+  Project.unarchiveProject(projectId);
 });
 
 registerHandler('TOGGLE_ARCHIVED_PROJECTS', (state) => {
   return { state: { ...state, showArchivedProjects: !state.showArchivedProjects } };
 });
 
-registerHandler('TOGGLE_FUNDED', (state, action) => {
-  const { projectId } = action.payload;
-
-  try {
-    Project.toggleFunded(projectId);
-  } catch (error) {
-    console.error('Failed to toggle funded:', error.message);
-  }
-  return { state };
+createMutationHandler('TOGGLE_FUNDED', ({ projectId }) => {
+  Project.toggleFunded(projectId);
 });
 
 registerHandler('START_CREATE_PROJECT', (state) => {
