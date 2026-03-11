@@ -22,15 +22,17 @@ export function setRootRenderer(fn) {
 }
 
 function setState(updates) {
-  // Collect updates without applying yet
-  console.log('[setState] Updates before merge:', updates);
-  console.log('[setState] pendingStateUpdates before merge:', pendingStateUpdates);
+  // Synchronously apply updates to state so effects and subsequent handlers see updated values
+  console.log('[setState] Applying updates to state:', updates);
+  Object.assign(state, updates);
+  console.log('[setState] State after sync update:', state);
+
+  // Collect updates for batched render scheduling
   Object.assign(pendingStateUpdates, updates);
-  console.log('[setState] pendingStateUpdates after merge:', pendingStateUpdates);
 
   // If render already scheduled, all pending updates will be applied in the next frame
   if (renderScheduled) {
-    console.log('[setState] Render already scheduled, just collecting updates');
+    console.log('[setState] Render already scheduled, just collected updates');
     return;
   }
 
@@ -38,10 +40,7 @@ function setState(updates) {
   renderScheduled = true;
   console.log('[setState] Scheduling rAF');
   requestAnimationFrame(() => {
-    console.log('[setState] rAF callback executing, applying pendingStateUpdates:', pendingStateUpdates);
-    // Apply all collected updates at once
-    Object.assign(state, pendingStateUpdates);
-    console.log('[setState] Final state after rAF:', state);
+    console.log('[setState] rAF callback executing, clearing tracked updates and calling renderer');
     pendingStateUpdates = {};
     renderScheduled = false;
 
