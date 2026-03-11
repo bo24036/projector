@@ -1,5 +1,6 @@
 import * as Task from '../domains/Task.js';
 import { registerHandler } from '../state.js';
+import { createToggleCreateHandler } from '../utils/handlerFactory.js';
 
 registerHandler('CREATE_TASK', (state, action) => {
   const { projectId, name, dueDate } = action.payload;
@@ -52,13 +53,8 @@ registerHandler('TOGGLE_TASK_COMPLETED', (state, action) => {
   return { state };
 });
 
-registerHandler('START_CREATE_TASK', (state) => {
-  return { state: { ...state, creatingTask: true } };
-});
-
-registerHandler('CANCEL_CREATE_TASK', (state) => {
-  return { state: { ...state, creatingTask: false } };
-});
+// Create START_CREATE_TASK and CANCEL_CREATE_TASK handlers
+createToggleCreateHandler('TASK', 'creatingTask');
 
 registerHandler('START_EDIT_TASK', (state, action) => {
   const { taskId } = action.payload;

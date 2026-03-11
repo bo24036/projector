@@ -1,5 +1,6 @@
 import * as Person from '../domains/Person.js';
 import { registerHandler } from '../state.js';
+import { createToggleCreateHandler } from '../utils/handlerFactory.js';
 
 registerHandler('CREATE_PERSON', (state, action) => {
   const { projectId, name, role } = action.payload;
@@ -40,13 +41,8 @@ registerHandler('DELETE_PERSON', (state, action) => {
   return { state };
 });
 
-registerHandler('START_CREATE_PERSON', (state) => {
-  return { state: { ...state, creatingPerson: true } };
-});
-
-registerHandler('CANCEL_CREATE_PERSON', (state) => {
-  return { state: { ...state, creatingPerson: false } };
-});
+// Create START_CREATE_PERSON and CANCEL_CREATE_PERSON handlers
+createToggleCreateHandler('PERSON', 'creatingPerson');
 
 registerHandler('START_EDIT_PERSON', (state, action) => {
   const { personId } = action.payload;

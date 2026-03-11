@@ -1,5 +1,6 @@
 import * as Project from '../domains/Project.js';
 import { registerHandler } from '../state.js';
+import { createToggleCreateHandler } from '../utils/handlerFactory.js';
 
 // Factory for simple domain mutation handlers that return unchanged state
 function createMutationHandler(actionName, domainFn) {
@@ -77,13 +78,8 @@ createMutationHandler('TOGGLE_FUNDED', ({ projectId }) => {
   Project.toggleFunded(projectId);
 });
 
-registerHandler('START_CREATE_PROJECT', (state) => {
-  return { state: { ...state, isCreatingProject: true } };
-});
-
-registerHandler('CANCEL_CREATE_PROJECT', (state) => {
-  return { state: { ...state, isCreatingProject: false } };
-});
+// Create START_CREATE_PROJECT and CANCEL_CREATE_PROJECT handlers
+createToggleCreateHandler('PROJECT', 'isCreatingProject');
 
 registerHandler('PROJECT_LOADED', (state) => {
   // Project is already in cache from domain's cache-miss fetch.

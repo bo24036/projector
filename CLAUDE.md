@@ -8,6 +8,7 @@
 > - VANILLA LIT-HTML: Use html tagged templates via CDN.
 > - LIBRARY PHILOSOPHY: CDN-ready only. Minimize dependencies. Approved: workbox (Service Workers) and idb (IndexedDB).
 > - ZERO DOMAIN COUPLING: A Domain module must never import another Domain module.
+> - NO MAGIC VALUES: use constants instead of bare values.
 
 ## Project Management & Git
 
