@@ -88,3 +88,13 @@ registerHandler('TASK_LOADED', (state) => {
   // This handler just triggers a re-render via setState.
   return { state };
 });
+
+registerHandler('SELECT_PERSONAL_TASKS', (state) => {
+  return { state: { ...state, currentPage: 'personal', currentProjectId: null } };
+});
+
+registerHandler('PERSONAL_TASKS_LOADED', (state) => {
+  // Personal tasks are already in cache from domain's cache-miss fetch.
+  // This handler just triggers a re-render via setState.
+  return { state };
+});
