@@ -1,5 +1,4 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
-import { formatDueDate, getUrgency } from '../../domains/Task.js';
 
 export function OverviewPage({ projects }) {
   if (projects.length === 0) {
@@ -29,9 +28,7 @@ export function OverviewPage({ projects }) {
             ? html`<div class="overview-project__no-tasks">No incomplete tasks</div>`
             : html`
                 <div class="overview-project__tasks">
-                  ${incompleteTasks.map(({ task, onToggle }) => {
-                    const dueDateFormatted = formatDueDate(task.dueDate);
-                    const urgency = getUrgency(task.dueDate);
+                  ${incompleteTasks.map(({ task, dueDateFormatted, urgency, onToggle }) => {
                     const completedClass = task.completed ? 'is-completed' : '';
 
                     return html`

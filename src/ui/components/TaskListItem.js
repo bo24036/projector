@@ -1,7 +1,6 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
-import { formatDueDate, getUrgency } from '../../domains/Task.js';
 
-export function TaskListItem({ task, isArchived, isEditing, editName, editDueDate, onToggle, onEdit, onDelete, onSave, onCancel }) {
+export function TaskListItem({ task, dueDateFormatted, urgency, isArchived, isEditing, editName, editDueDate, onToggle, onEdit, onDelete, onSave, onCancel }) {
   if (isEditing) {
     let nameValue = editName;
     let dueDateValue = editDueDate;
@@ -73,9 +72,6 @@ export function TaskListItem({ task, isArchived, isEditing, editName, editDueDat
       </div>
     `;
   }
-
-  const dueDateFormatted = formatDueDate(task.dueDate);
-  const urgency = getUrgency(task.dueDate);
 
   function handleDelete() {
     if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {

@@ -2,6 +2,7 @@ import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
 import { TaskListItem } from '../components/TaskListItem.js';
 import { TaskInput } from '../components/TaskInput.js';
 import * as Task from '../../domains/Task.js';
+import { formatDueDate, getUrgency } from '../../domains/Task.js';
 import * as Project from '../../domains/Project.js';
 import { dispatch } from '../../state.js';
 
@@ -18,6 +19,8 @@ export function TaskListConnector({ projectId, state }) {
             ${tasks.map(task =>
               TaskListItem({
                 task,
+                dueDateFormatted: formatDueDate(task.dueDate),
+                urgency: getUrgency(task.dueDate),
                 isArchived,
                 isEditing: editingTaskId === task.id,
                 editName: editingTaskName,
