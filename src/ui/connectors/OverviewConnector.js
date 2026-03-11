@@ -4,7 +4,7 @@ import * as Project from '../../domains/Project.js';
 import * as Task from '../../domains/Task.js';
 import { formatDueDate, getUrgency } from '../../domains/Task.js';
 import { dispatch } from '../../state.js';
-import { navigateToProject } from '../../utils/router.js';
+import { navigateToProject, navigateToPersonal } from '../../utils/router.js';
 
 export function initOverviewConnector(containerSelector, state) {
   const container = document.querySelector(containerSelector);
@@ -12,6 +12,18 @@ export function initOverviewConnector(containerSelector, state) {
 
   // Get all non-archived projects
   const projects = Project.getAllProjects().filter(p => !p.archived);
+
+  // Get personal tasks (incomplete only)
+  const personalTasks = Task.getPersonalTasks()
+    .filter(task => !task.completed)
+    .map(task => ({
+      task,
+      dueDateFormatted: formatDueDate(task.dueDate),
+      urgency: getUrgency(task.dueDate),
+      onToggle: () => {
+        dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: task.id } });
+      },
+    }));
 
   // For each project, get incomplete tasks and pre-format dates
   const projectsWithTasks = projects.map(project => {
@@ -36,7 +48,7 @@ export function initOverviewConnector(containerSelector, state) {
     };
   });
 
-  const template = html`${OverviewPage({ projects: projectsWithTasks })}`;
+  const template = html`${OverviewPage({ personalTasks, projects: projectsWithTasks })}`;
 
   render(template, container);
 }

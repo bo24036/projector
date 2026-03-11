@@ -1,7 +1,7 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
 
-export function OverviewPage({ projects }) {
-  if (projects.length === 0) {
+export function OverviewPage({ personalTasks = [], projects }) {
+  if (personalTasks.length === 0 && projects.length === 0) {
     return html`
       <div class="overview-page">
         <h1 class="overview-page__title">Overview</h1>
@@ -15,6 +15,35 @@ export function OverviewPage({ projects }) {
   return html`
     <div class="overview-page">
       <h1 class="overview-page__title">Overview</h1>
+
+      ${personalTasks.length > 0 ? html`
+        <div class="overview-personal">
+          <div class="overview-personal__header">
+            <h3 class="overview-personal__name">My Tasks</h3>
+          </div>
+          <div class="overview-personal__tasks">
+            ${personalTasks.map(({ task, dueDateFormatted, urgency, onToggle }) => {
+              const completedClass = task.completed ? 'is-completed' : '';
+
+              return html`
+                <div class="overview-task ${completedClass} urgency-${urgency}">
+                  <input
+                    type="checkbox"
+                    class="overview-task__checkbox"
+                    ?checked=${task.completed}
+                    @change=${onToggle}
+                  />
+                  <span class="overview-task__name">${task.name}</span>
+                  ${dueDateFormatted
+                    ? html`<span class="overview-task__due-date">${dueDateFormatted}</span>`
+                    : ''}
+                </div>
+              `;
+            })}
+          </div>
+        </div>
+      ` : ''}
+
       ${projects.map(({ project, incompleteTasks, onProjectClick }) => html`
         <div class="overview-project">
           <div class="overview-project__header">
