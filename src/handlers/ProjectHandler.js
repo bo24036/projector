@@ -1,5 +1,5 @@
 import * as Project from '../domains/Project.js';
-import { registerHandler } from '../state.js';
+import { registerHandler, dispatch } from '../state.js';
 
 registerHandler('CREATE_PROJECT', (state, action) => {
   const { name } = action.payload;
@@ -15,7 +15,24 @@ registerHandler('CREATE_PROJECT', (state, action) => {
 
 registerHandler('SELECT_PROJECT', (state, action) => {
   const { projectId } = action.payload;
-  return { state: { ...state, currentPage: 'project', currentProjectId: projectId } };
+
+  // Update state immediately to switch to project page
+  const nextState = { ...state, currentPage: 'project', currentProjectId: projectId };
+
+  // Queue effect to check if project is archived and auto-expand if needed
+  const effect = async () => {
+    try {
+      const project = await Project.getProjectAsync(projectId);
+      if (project?.archived && !state.showArchivedProjects) {
+        // Project is archived and archived section is not shown; expand it
+        dispatch({ type: 'TOGGLE_ARCHIVED_PROJECTS' });
+      }
+    } catch (error) {
+      console.error('Failed to check project archived status:', error.message);
+    }
+  };
+
+  return { state: nextState, effects: [effect] };
 });
 
 registerHandler('SELECT_OVERVIEW', (state) => {

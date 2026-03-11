@@ -14,15 +14,6 @@ export function initSidebarConnector(containerSelector, state) {
   const activeProjects = allProjects.filter(p => !p.archived);
   const archivedProjects = allProjects.filter(p => p.archived);
 
-  // If currently viewing an archived project, ensure archived section is expanded
-  let showArchived = state.showArchivedProjects;
-  if (state.currentProjectId && state.currentPage === 'project') {
-    const currentProject = allProjects.find(p => p.id === state.currentProjectId);
-    if (currentProject?.archived) {
-      showArchived = true;
-    }
-  }
-
   // Create new project item (Archive button)
   const newProjectItem = state.isCreatingProject
     ? ProjectInput({
@@ -48,7 +39,7 @@ export function initSidebarConnector(containerSelector, state) {
     `
     : html``;
 
-  const archivedToggleIndicator = showArchived ? '▼' : '▶';
+  const archivedToggleIndicator = state.showArchivedProjects ? '▼' : '▶';
 
   const template = html`
     <div class="sidebar">
@@ -76,7 +67,7 @@ export function initSidebarConnector(containerSelector, state) {
           <span class="sidebar__archived-indicator">${archivedToggleIndicator}</span>
           Archived
         </button>
-        ${showArchived && archivedProjects.length > 0
+        ${state.showArchivedProjects && archivedProjects.length > 0
           ? html`
               <div class="sidebar__archived-list">
                 ${archivedProjects.map(project =>

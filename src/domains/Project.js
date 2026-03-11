@@ -140,6 +140,83 @@ export function getAllProjects() {
   return cached;
 }
 
+// Async versions for effects to await
+// These return promises that resolve with the entity once it's available in cache
+
+export async function getProjectAsync(id) {
+  // If in cache, return immediately
+  let cached = projectCache.get(id);
+  if (cached !== undefined) {
+    return cached;
+  }
+
+  // Not in cache: wait for fetch to complete
+  return new Promise((resolve) => {
+    if (!fetchQueue.has(id)) {
+      fetchQueue.add(id);
+      queueMicrotask(async () => {
+        try {
+          const project = await getProjectFromIdb(id);
+          if (project) {
+            projectCache.set(id, project);
+            if (dispatch) {
+              dispatch({ type: 'PROJECT_LOADED', payload: { project } });
+            }
+          }
+          resolve(project || null);
+        } catch (error) {
+          console.error(`Failed to fetch project ${id}:`, error.message);
+          resolve(null);
+        } finally {
+          fetchQueue.delete(id);
+        }
+      });
+    } else {
+      // Already fetching; poll cache until available
+      const checkCache = setInterval(() => {
+        const found = projectCache.get(id);
+        if (found !== undefined) {
+          clearInterval(checkCache);
+          resolve(found);
+        }
+      }, 10);
+    }
+  });
+}
+
+export async function getAllProjectsAsync() {
+  // If already fetched, return immediately
+  if (projectsLoaded) {
+    return Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  }
+
+  // Return current cache if non-empty (partial load)
+  const cached = Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  if (cached.length > 0) {
+    return cached;
+  }
+
+  // Cache miss: wait for fetch to complete
+  return new Promise((resolve) => {
+    projectsLoaded = true;
+    queueMicrotask(async () => {
+      try {
+        const allProjects = await getAllProjectsFromIdb();
+        if (allProjects && allProjects.length > 0) {
+          allProjects.forEach(project => projectCache.set(project.id, project));
+          if (dispatch) {
+            dispatch({ type: 'PROJECTS_LOADED', payload: { projects: allProjects } });
+          }
+        }
+        resolve(allProjects || []);
+      } catch (error) {
+        console.error('Failed to fetch all projects:', error.message);
+        resolve([]);
+      }
+    });
+  });
+}
+
 export function renameProject(id, newName) {
   if (!newName?.trim()) {
     throw new Error('Project name cannot be empty');
