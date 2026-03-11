@@ -1,16 +1,12 @@
 // Import IDB operations from service layer (isolates persistence I/O)
 import { getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb } from '../services/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
+import { generateId } from '../utils/idGenerator.js';
 
 const projectCache = new Map();
 let projectsLoaded = false; // Tracks if we've already fetched all projects from IDB
 
 const ERROR_PROJECT_NOT_FOUND = 'Project not found';
-
-// Generate a GUID for unique project IDs (eliminates off-by-one issues)
-function generateId() {
-  return 'proj_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
-}
 
 // Create persistence queue for write-through IDB operations
 const serialize = createPersistenceQueue(
@@ -36,7 +32,7 @@ export function createProject(overrides = {}) {
   }
 
   const project = {
-    id: generateId(),
+    id: generateId('proj'),
     name,
     description: overrides.description || '',
     archived: overrides.archived || false,

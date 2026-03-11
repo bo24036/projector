@@ -4,16 +4,12 @@ import { dispatch } from '../state.js';
 // Import IDB operations from service layer
 import { getTask as getTaskFromIdb, getTasksByProjectId as getTasksByProjectIdFromIdb, getPersonalTasksFromIdb, putTask as putTaskToIdb, deleteTask as deleteTaskFromIdb } from '../services/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
+import { generateId } from '../utils/idGenerator.js';
 
 const taskCache = new Map();
 const projectIdIndex = new Map(); // Map of projectId -> Set of taskIds
 
 const ERROR_TASK_NOT_FOUND = 'Task not found';
-
-// Generate a GUID for unique task IDs
-function generateId() {
-  return 'task_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
-}
 
 // Get today's date normalized to midnight (no time component)
 function getNormalizedToday() {
@@ -169,7 +165,7 @@ export function createTask(projectId, name, dueDateInput) {
   const normalizedProjectId = projectId ?? null;
 
   const task = {
-    id: generateId(),
+    id: generateId('task'),
     name: taskName,
     projectId: normalizedProjectId,
     completed: false,

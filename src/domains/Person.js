@@ -4,17 +4,13 @@ import { dispatch } from '../state.js';
 // Import IDB operations from service layer
 import { getPersonFromIdb, getPeopleByProjectIdFromIdb, getAllPeopleFromIdb, putPersonToIdb, deletePersonFromIdb } from '../services/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
+import { generateId } from '../utils/idGenerator.js';
 
 const personCache = new Map();
 const projectIdIndex = new Map(); // Map of projectId -> Set of personIds
 let _allPeopleLoaded = false;
 
 const ERROR_PERSON_NOT_FOUND = 'Person not found';
-
-// Generate a GUID for unique person IDs
-function generateId() {
-  return 'person_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
-}
 
 // Create persistence queue for write-through IDB operations
 const serialize = createPersistenceQueue(
@@ -38,7 +34,7 @@ export function createPerson(projectId, name, role, overrides) {
   const personRole = (role || '').trim();
 
   const person = {
-    id: generateId(),
+    id: generateId('person'),
     projectId,
     name: personName,
     role: personRole,
