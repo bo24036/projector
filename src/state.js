@@ -23,18 +23,25 @@ export function setRootRenderer(fn) {
 
 function setState(updates) {
   // Collect updates without applying yet
+  console.log('[setState] Updates before merge:', updates);
+  console.log('[setState] pendingStateUpdates before merge:', pendingStateUpdates);
   Object.assign(pendingStateUpdates, updates);
+  console.log('[setState] pendingStateUpdates after merge:', pendingStateUpdates);
 
   // If render already scheduled, all pending updates will be applied in the next frame
   if (renderScheduled) {
+    console.log('[setState] Render already scheduled, just collecting updates');
     return;
   }
 
   // Schedule render for next animation frame
   renderScheduled = true;
+  console.log('[setState] Scheduling rAF');
   requestAnimationFrame(() => {
+    console.log('[setState] rAF callback executing, applying pendingStateUpdates:', pendingStateUpdates);
     // Apply all collected updates at once
     Object.assign(state, pendingStateUpdates);
+    console.log('[setState] Final state after rAF:', state);
     pendingStateUpdates = {};
     renderScheduled = false;
 
@@ -46,6 +53,7 @@ function setState(updates) {
 }
 
 export function dispatch(action) {
+  console.log('[dispatch] Action:', action.type, 'Current renderScheduled:', renderScheduled);
   const handler = handlers[action.type];
   if (!handler) {
     console.error(`Unknown action type: ${action.type}`);
@@ -53,9 +61,11 @@ export function dispatch(action) {
   }
 
   const { state: nextState, effects } = handler(state, action);
+  console.log('[dispatch] Handler returned state:', nextState);
   setState(nextState);
 
   effects?.forEach(effect => {
+    console.log('[dispatch] Queueing microtask effect for:', action.type);
     queueMicrotask(effect);
   });
 }
