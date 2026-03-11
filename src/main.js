@@ -10,7 +10,6 @@ import * as Project from './domains/Project.js';
 
 function renderApp() {
   const state = getState();
-  console.log('[renderApp] Rendering with state:', { currentPage: state.currentPage, currentProjectId: state.currentProjectId, showArchivedProjects: state.showArchivedProjects });
   initSidebarConnector('#sidebar', state);
 
   if (state.currentPage === 'overview') {

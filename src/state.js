@@ -23,24 +23,19 @@ export function setRootRenderer(fn) {
 
 function setState(updates) {
   // Synchronously apply updates to state so effects and subsequent handlers see updated values
-  console.log('[setState] Applying updates to state:', updates);
   Object.assign(state, updates);
-  console.log('[setState] State after sync update:', state);
 
   // Collect updates for batched render scheduling
   Object.assign(pendingStateUpdates, updates);
 
   // If render already scheduled, all pending updates will be applied in the next frame
   if (renderScheduled) {
-    console.log('[setState] Render already scheduled, just collected updates');
     return;
   }
 
   // Schedule render for next animation frame
   renderScheduled = true;
-  console.log('[setState] Scheduling rAF');
   requestAnimationFrame(() => {
-    console.log('[setState] rAF callback executing, clearing tracked updates and calling renderer');
     pendingStateUpdates = {};
     renderScheduled = false;
 
@@ -52,7 +47,6 @@ function setState(updates) {
 }
 
 export function dispatch(action) {
-  console.log('[dispatch] Action:', action.type, 'Current renderScheduled:', renderScheduled);
   const handler = handlers[action.type];
   if (!handler) {
     console.error(`Unknown action type: ${action.type}`);
@@ -60,11 +54,9 @@ export function dispatch(action) {
   }
 
   const { state: nextState, effects } = handler(state, action);
-  console.log('[dispatch] Handler returned state:', nextState);
   setState(nextState);
 
   effects?.forEach(effect => {
-    console.log('[dispatch] Queueing microtask effect for:', action.type);
     queueMicrotask(effect);
   });
 }
