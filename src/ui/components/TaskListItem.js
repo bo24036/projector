@@ -1,5 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
-import { makeKeyDownHandler, makeBlurHandler } from '../../utils/inputHandlers.js';
+import { makeKeyDownHandler, makeBlurHandler, makeDeleteHandler } from '../../utils/inputHandlers.js';
 
 export function TaskListItem({ task, dueDateFormatted, urgency, isArchived, isEditing, editName, editDueDate, onToggle, onEdit, onDelete, onSave, onCancel }) {
   if (isEditing) {
@@ -65,11 +65,10 @@ export function TaskListItem({ task, dueDateFormatted, urgency, isArchived, isEd
     `;
   }
 
-  function handleDelete() {
-    if (window.confirm(`Are you sure you want to delete "${task.name}"?`)) {
-      onDelete();
-    }
-  }
+  const handleDelete = makeDeleteHandler({
+    entityName: task.name,
+    onDelete,
+  });
 
   return html`
     <div class="task-list-item ${task.completed ? 'is-completed' : ''} urgency-${urgency}">

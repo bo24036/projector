@@ -72,3 +72,25 @@ export function makeBlurHandler({
     }
   };
 }
+
+/**
+ * Creates a delete handler with confirmation dialog.
+ * Shows confirmation with entity name, calls onDelete only if confirmed.
+ *
+ * @param {object} config
+ * @param {string} config.entityName - Name of the entity to display in confirmation
+ * @param {function} config.onDelete - Called if deletion is confirmed
+ *
+ * @example
+ * const handleDelete = makeDeleteHandler({
+ *   entityName: task.name,
+ *   onDelete: () => dispatch({ type: 'DELETE_TASK', payload: { taskId: task.id } }),
+ * });
+ */
+export function makeDeleteHandler({ entityName, onDelete }) {
+  return () => {
+    if (window.confirm(`Are you sure you want to delete "${entityName}"?`)) {
+      onDelete();
+    }
+  };
+}

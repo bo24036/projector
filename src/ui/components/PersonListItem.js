@@ -1,5 +1,5 @@
 import { html } from 'https://unpkg.com/lit-html@2/lit-html.js';
-import { makeKeyDownHandler, makeBlurHandler } from '../../utils/inputHandlers.js';
+import { makeKeyDownHandler, makeBlurHandler, makeDeleteHandler } from '../../utils/inputHandlers.js';
 
 export function PersonListItem({ person, isEditing, editName, editRole, onEdit, onDelete, onSave, onCancel, nameOptions = [], roleOptions = [] }) {
   if (isEditing) {
@@ -76,11 +76,10 @@ export function PersonListItem({ person, isEditing, editName, editRole, onEdit, 
     `;
   }
 
-  function handleDelete() {
-    if (window.confirm(`Are you sure you want to delete "${person.name}"?`)) {
-      onDelete();
-    }
-  }
+  const handleDelete = makeDeleteHandler({
+    entityName: person.name,
+    onDelete,
+  });
 
   return html`
     <div class="person-list-item">
