@@ -492,7 +492,8 @@
 }
 
 /* Sidebar overview button */
-.sidebar__overview-btn {
+.sidebar__overview-btn,
+.sidebar__personal-btn {
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: left;
   border-radius: var(--border-radius-md);
@@ -504,11 +505,13 @@
   transition: background-color var(--transition-fast);
 }
 
-.sidebar__overview-btn:hover {
+.sidebar__overview-btn:hover,
+.sidebar__personal-btn:hover {
   background-color: var(--color-surface-hover);
 }
 
-.sidebar__overview-btn.is-active {
+.sidebar__overview-btn.is-active,
+.sidebar__personal-btn.is-active {
   background-color: var(--color-primary);
   color: var(--color-text-light);
 }
