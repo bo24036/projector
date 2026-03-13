@@ -62,8 +62,17 @@ createMutationHandler('DELETE_PROJECT', ({ projectId }) => {
   Project.deleteProject(projectId);
 });
 
-createMutationHandler('ARCHIVE_PROJECT', ({ projectId }) => {
-  Project.archiveProject(projectId);
+registerHandler('ARCHIVE_PROJECT', (state, action) => {
+  const { projectId } = action.payload;
+
+  try {
+    Project.archiveProject(projectId);
+    // Keep project selected and expand archived section to show it
+    return { state: { ...state, showArchivedProjects: true } };
+  } catch (error) {
+    console.error('Failed to archive project:', error.message);
+    return { state };
+  }
 });
 
 createMutationHandler('UNARCHIVE_PROJECT', ({ projectId }) => {
