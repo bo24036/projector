@@ -771,6 +771,7 @@
 .suppress-modal {
   width: min(400px, 90vw);
   max-height: 80vh;
+  margin: auto;
   border: var(--border-width) solid var(--color-border);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-lg);
