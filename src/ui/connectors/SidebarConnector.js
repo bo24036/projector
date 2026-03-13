@@ -2,7 +2,9 @@ import { html, render } from 'https://unpkg.com/lit-html@2/lit-html.js';
 import { ProjectListItem } from '../components/ProjectListItem.js';
 import { ProjectNewItem } from '../components/ProjectNewItem.js';
 import { ProjectInput } from '../components/ProjectInput.js';
+import { SuppressNamesModal } from '../components/SuppressNamesModal.js';
 import * as Project from '../../domains/Project.js';
+import * as Person from '../../domains/Person.js';
 import { dispatch } from '../../state.js';
 import { navigateToProject, navigateToOverview, navigateToPersonal } from '../../utils/router.js';
 
@@ -13,6 +15,9 @@ export function initSidebarConnector(containerSelector, state) {
   const allProjects = Project.getAllProjects() || [];
   const activeProjects = allProjects.filter(p => !p.archived);
   const archivedProjects = allProjects.filter(p => p.archived);
+
+  const allNames = Person.getAllUniquePersonNamesRaw() || [];
+  const suppressedNames = Person.getSuppressedNames();
 
   // Create new project item (Archive button)
   const newProjectItem = state.isCreatingProject
@@ -73,10 +78,37 @@ export function initSidebarConnector(containerSelector, state) {
         </button>
         ${archivedList}
       </div>
+
+      <div class="sidebar__footer">
+        <button class="sidebar__suppress-btn"
+          @click=${() => dispatch({ type: 'OPEN_SUPPRESS_NAMES_MODAL' })}>
+          Manage Suppressed Names
+        </button>
+      </div>
     </div>
+
+    ${state.showSuppressNamesModal
+      ? SuppressNamesModal({
+          allNames,
+          suppressedNames,
+          onSave: (names) => dispatch({ type: 'UPDATE_SUPPRESSED_NAMES', payload: { names } }),
+          onClose: () => dispatch({ type: 'CLOSE_SUPPRESS_NAMES_MODAL' }),
+        })
+      : ''
+    }
   `;
 
   render(template, container);
+
+  // Call showModal() on the dialog when it's visible
+  requestAnimationFrame(() => {
+    if (state.showSuppressNamesModal) {
+      const dialog = container.querySelector('.suppress-modal');
+      if (dialog && !dialog.open) {
+        dialog.showModal();
+      }
+    }
+  });
 
   function handleSave(name) {
     dispatch({ type: 'CREATE_PROJECT', payload: { name } });

@@ -2,13 +2,15 @@
 import { dispatch } from '../state.js';
 
 // Import IDB operations from service layer
-import { getPersonFromIdb, getPeopleByProjectIdFromIdb, getAllPeopleFromIdb, putPersonToIdb, deletePersonFromIdb } from '../services/IdbService.js';
+import { getPersonFromIdb, getPeopleByProjectIdFromIdb, getAllPeopleFromIdb, putPersonToIdb, deletePersonFromIdb, getSettingFromIdb, putSettingToIdb } from '../services/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 
 const personCache = new Map();
 const projectIdIndex = new Map(); // Map of projectId -> Set of personIds
+const suppressedNamesCache = new Set();
 let _allPeopleLoaded = false;
+let _suppressedNamesLoaded = false;
 
 const ERROR_PERSON_NOT_FOUND = 'Person not found';
 
@@ -147,7 +149,8 @@ export function getAllPeopleForAutocomplete() {
   }
 
   // Extract unique names and roles from current cache
-  const names = [...new Set([...personCache.values()].map(p => p.name))];
+  const allNames = [...new Set([...personCache.values()].map(p => p.name))];
+  const names = allNames.filter(n => !suppressedNamesCache.has(n));
   const roles = [...new Set([...personCache.values()].map(p => p.role).filter(r => r))];
 
   return { names, roles };
@@ -212,9 +215,42 @@ export function deletePerson(id) {
   return true;
 }
 
+export function getSuppressedNames() {
+  return suppressedNamesCache;
+}
+
+export function setSuppressedNames(namesArray) {
+  suppressedNamesCache.clear();
+  (namesArray || []).forEach(name => suppressedNamesCache.add(name));
+
+  // Fire-and-forget persist to IDB
+  serialize({ id: 'suppressed-names', value: namesArray || [] }, 'put');
+}
+
+export function getAllUniquePersonNamesRaw() {
+  const allPeople = Array.from(personCache.values());
+  return [...new Set(allPeople.map(p => p.name))];
+}
+
+export async function preloadSuppressedNames() {
+  if (_suppressedNamesLoaded) return;
+
+  try {
+    const setting = await getSettingFromIdb('suppressed-names');
+    if (setting && setting.value && Array.isArray(setting.value)) {
+      setting.value.forEach(name => suppressedNamesCache.add(name));
+    }
+    _suppressedNamesLoaded = true;
+  } catch (error) {
+    console.error('Failed to preload suppressed names:', error.message);
+  }
+}
+
 // Test utility - clears cache and resets state
 export function _resetCacheForTesting() {
   personCache.clear();
   projectIdIndex.clear();
+  suppressedNamesCache.clear();
   _allPeopleLoaded = false;
+  _suppressedNamesLoaded = false;
 }

@@ -58,3 +58,17 @@ createEditHandlers('PERSON', {
 
 // Create no-op handler that triggers re-render when person is loaded
 createNoOpLoadedHandler('PERSON_LOADED');
+
+// Modal handlers for suppress names feature
+registerHandler('OPEN_SUPPRESS_NAMES_MODAL', (state) => {
+  return { state: { ...state, showSuppressNamesModal: true } };
+});
+
+registerHandler('CLOSE_SUPPRESS_NAMES_MODAL', (state) => {
+  return { state: { ...state, showSuppressNamesModal: false } };
+});
+
+registerHandler('UPDATE_SUPPRESSED_NAMES', (state, action) => {
+  Person.setSuppressedNames(action.payload.names);
+  return { state: { ...state, showSuppressNamesModal: false } };
+});

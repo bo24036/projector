@@ -24,7 +24,7 @@ async function getDatabase() {
 
   if (db) return db;
 
-  db = await openDB('projector', 3, {
+  db = await openDB('projector', 4, {
     upgrade(db) {
       if (!db.objectStoreNames.contains('projects')) {
         db.createObjectStore('projects', { keyPath: 'id' });
@@ -34,6 +34,9 @@ async function getDatabase() {
       }
       if (!db.objectStoreNames.contains('people')) {
         db.createObjectStore('people', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('settings')) {
+        db.createObjectStore('settings', { keyPath: 'id' });
       }
     },
   });
@@ -184,6 +187,27 @@ export async function deletePersonFromIdb(id) {
     await database.delete('people', id);
   } catch (error) {
     console.error(`Failed to delete person ${id}:`, error.message);
+  }
+}
+
+// Fetch a single setting from IDB. Returns undefined if not found.
+// In Node.js test environment where IDB is unavailable, returns undefined.
+export async function getSettingFromIdb(id) {
+  const database = await getDatabase();
+  if (!database) return undefined;
+  return database.get('settings', id);
+}
+
+// Save a setting to IDB. Fire-and-forget; errors logged to console.
+// In Node.js test environment where IDB is unavailable, returns immediately.
+export async function putSettingToIdb(setting) {
+  const database = await getDatabase();
+  if (!database) return;
+
+  try {
+    await database.put('settings', setting);
+  } catch (error) {
+    console.error(`Failed to persist setting ${setting.id}:`, error.message);
   }
 }
 

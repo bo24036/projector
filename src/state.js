@@ -12,6 +12,7 @@ const state = {
   editingPersonId: null,
   editingPersonName: '',
   editingPersonRole: '',
+  showSuppressNamesModal: false,
 };
 
 let renderScheduled = false;

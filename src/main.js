@@ -37,6 +37,10 @@ async function initApp() {
   // This ensures people names/roles are available synchronously for autocomplete
   await Person.preloadAllPeople();
 
+  // Pre-load suppressed names from IDB
+  // This ensures suppressed names are loaded before autocomplete is rendered
+  await Person.preloadSuppressedNames();
+
   // Register root renderer before router init so initial navigation triggers render
   setRootRenderer(renderApp);
 
