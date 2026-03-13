@@ -82,6 +82,28 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onAr
           .value=${project.description}
         ></textarea>
       </div>
+
+      <div class="project-detail__metadata">
+        <div class="project-detail__metadata-item">
+          <span class="project-detail__metadata-label">Created:</span>
+          <span class="project-detail__metadata-value">${formatISODate(project.createdAt)}</span>
+        </div>
+        ${project.archivedAt
+          ? html`
+            <div class="project-detail__metadata-item">
+              <span class="project-detail__metadata-label">Archived:</span>
+              <span class="project-detail__metadata-value">${formatISODate(project.archivedAt)}</span>
+            </div>
+          `
+          : ''
+        }
+      </div>
     </div>
   `;
+}
+
+function formatISODate(isoString) {
+  if (!isoString) return '';
+  const date = new Date(isoString);
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }

@@ -510,6 +510,32 @@
   font-family: inherit;
 }
 
+.project-detail__metadata {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background-color: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+}
+
+.project-detail__metadata-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-detail__metadata-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+}
+
+.project-detail__metadata-value {
+  color: var(--color-text);
+}
+
 .project-detail__tasks-section {
   display: flex;
   flex-direction: column;

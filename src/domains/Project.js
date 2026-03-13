@@ -38,6 +38,7 @@ export function createProject(overrides = {}) {
     archived: overrides.archived || false,
     funded: overrides.funded || false,
     createdAt: overrides.createdAt || new Date().toISOString(),
+    archivedAt: overrides.archivedAt || null,
   };
 
   projectCache.set(project.id, project);
@@ -132,6 +133,7 @@ export function archiveProject(id) {
   }
 
   project.archived = true;
+  project.archivedAt = new Date().toISOString();
   serialize(project, 'put');
   return project;
 }
@@ -143,6 +145,7 @@ export function unarchiveProject(id) {
   }
 
   project.archived = false;
+  project.archivedAt = null;
   serialize(project, 'put');
   return project;
 }
