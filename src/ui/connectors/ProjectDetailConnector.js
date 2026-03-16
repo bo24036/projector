@@ -3,6 +3,8 @@ import { ProjectDetail } from '../components/ProjectDetail.js';
 import { TaskListConnector } from './TaskListConnector.js';
 import { PersonInput } from '../components/PersonInput.js';
 import { PersonListItem } from '../components/PersonListItem.js';
+import { NotesDisplay } from '../components/NotesDisplay.js';
+import { NotesInput } from '../components/NotesInput.js';
 import * as Project from '../../domains/Project.js';
 import * as Person from '../../domains/Person.js';
 import { dispatch } from '../../state.js';
@@ -26,7 +28,7 @@ export function initProjectDetailConnector(containerSelector, state) {
 
   const people = Person.getPeopleByProjectId(project.id) || [];
   const { names: allNames, roles: allRoles } = Person.getAllPeopleForAutocomplete();
-  const { creatingPerson, editingPersonId, editingPersonName, editingPersonRole } = state;
+  const { creatingPerson, editingPersonId, editingPersonName, editingPersonRole, editingNotes } = state;
 
   const template = html`
     <div class="project-detail-container">
@@ -90,6 +92,30 @@ export function initProjectDetailConnector(containerSelector, state) {
                 roleOptions: allRoles,
                 onSave: (name, role) => dispatch({ type: 'CREATE_PERSON', payload: { projectId: project.id, name, role } }),
                 onCancel: () => dispatch({ type: 'CANCEL_CREATE_PERSON' }),
+              })
+          }
+        </div>
+      </div>
+
+      <div class="project-detail__notes-section">
+        <h3 class="project-detail__section-title">Notes</h3>
+        <div class="project-detail__notes">
+          ${editingNotes
+            ? NotesInput({
+                notes: project.notes,
+                link: project.link,
+                onSave: (notes, link) => {
+                  dispatch({ type: 'UPDATE_NOTES', payload: { projectId: project.id, notes } });
+                  dispatch({ type: 'UPDATE_LINK', payload: { projectId: project.id, link } });
+                  dispatch({ type: 'CANCEL_EDIT_NOTES' });
+                },
+                onCancel: () => dispatch({ type: 'CANCEL_EDIT_NOTES' }),
+              })
+            : NotesDisplay({
+                notes: project.notes,
+                link: project.link,
+                isArchived: project.archived,
+                onEdit: () => dispatch({ type: 'START_EDIT_NOTES' }),
               })
           }
         </div>

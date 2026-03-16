@@ -211,5 +211,40 @@ export async function putSettingToIdb(setting) {
   }
 }
 
+// Migrate existing projects to add missing notes and link fields
+// Returns number of projects that were migrated
+export async function migrateProjectFields() {
+  const database = await getDatabase();
+  if (!database) return 0;
+
+  try {
+    const projects = await database.getAll('projects');
+    let migrationCount = 0;
+
+    for (const project of projects) {
+      let needsUpdate = false;
+
+      if (project.notes === undefined) {
+        project.notes = '';
+        needsUpdate = true;
+      }
+      if (project.link === undefined) {
+        project.link = '';
+        needsUpdate = true;
+      }
+
+      if (needsUpdate) {
+        await database.put('projects', project);
+        migrationCount++;
+      }
+    }
+
+    return migrationCount;
+  } catch (error) {
+    console.error('Failed to migrate projects:', error.message);
+    return 0;
+  }
+}
+
 // Export promise that resolves when idb module is ready
 export { idbReady };

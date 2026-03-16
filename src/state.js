@@ -12,6 +12,7 @@ const state = {
   editingPersonId: null,
   editingPersonName: '',
   editingPersonRole: '',
+  editingNotes: false,
   showSuppressNamesModal: false,
 };
 
