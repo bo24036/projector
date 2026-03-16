@@ -14,6 +14,7 @@ const state = {
   editingPersonRole: '',
   editingNotes: false,
   showSuppressNamesModal: false,
+  lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action
 };
 
 let renderScheduled = false;
@@ -69,10 +70,8 @@ export function dispatch(action) {
     });
   } catch (error) {
     console.error(`Handler error for action ${action.type}:`, error.message);
-    // Dispatch error action to allow UI to recover or notify user
-    if (handlers['HANDLER_ERROR']) {
-      dispatch({ type: 'HANDLER_ERROR', payload: { actionType: action.type, error: error.message } });
-    }
+    // Dispatch error action to notify user and allow recovery
+    dispatch({ type: 'SET_ERROR', payload: { actionType: action.type, message: error.message } });
   }
 }
 
@@ -81,3 +80,23 @@ const handlers = {};
 export function registerHandler(actionType, handler) {
   handlers[actionType] = handler;
 }
+
+// Error handling
+registerHandler('SET_ERROR', (state, action) => {
+  const { actionType, message, entityId } = action.payload;
+  return {
+    state: {
+      ...state,
+      lastError: {
+        actionType,
+        message,
+        entityId,
+        timestamp: Date.now(),
+      },
+    },
+  };
+});
+
+registerHandler('CLEAR_ERROR', (state) => {
+  return { state: { ...state, lastError: null } };
+});

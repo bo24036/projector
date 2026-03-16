@@ -9,8 +9,17 @@ registerHandler('CREATE_PERSON', (state, action) => {
     Person.createPerson(projectId, name, role);
     return { state: { ...state, creatingPerson: false } };
   } catch (error) {
-    alert(error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'CREATE_PERSON',
+          message: error.message,
+          entityId: projectId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 
@@ -25,8 +34,17 @@ registerHandler('UPDATE_PERSON', (state, action) => {
     Person.updatePerson(personId, updates);
     return { state: { ...state, editingPersonId: null, editingPersonName: '', editingPersonRole: '' } };
   } catch (error) {
-    console.error('Failed to update person:', error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'UPDATE_PERSON',
+          message: error.message,
+          entityId: personId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 
@@ -35,10 +53,20 @@ registerHandler('DELETE_PERSON', (state, action) => {
 
   try {
     Person.deletePerson(personId);
+    return { state };
   } catch (error) {
-    console.error('Failed to delete person:', error.message);
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'DELETE_PERSON',
+          message: error.message,
+          entityId: personId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
-  return { state };
 });
 
 // Create START_CREATE_PERSON and CANCEL_CREATE_PERSON handlers
@@ -69,6 +97,19 @@ registerHandler('CLOSE_SUPPRESS_NAMES_MODAL', (state) => {
 });
 
 registerHandler('UPDATE_SUPPRESSED_NAMES', (state, action) => {
-  Person.setSuppressedNames(action.payload.names);
-  return { state: { ...state, showSuppressNamesModal: false } };
+  try {
+    Person.setSuppressedNames(action.payload.names);
+    return { state: { ...state, showSuppressNamesModal: false } };
+  } catch (error) {
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'UPDATE_SUPPRESSED_NAMES',
+          message: error.message,
+          timestamp: Date.now(),
+        },
+      },
+    };
+  }
 });

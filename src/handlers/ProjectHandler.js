@@ -2,15 +2,26 @@ import * as Project from '../domains/Project.js';
 import { registerHandler } from '../state.js';
 import { createToggleCreateHandler, createNoOpLoadedHandler } from '../utils/handlerFactory.js';
 
-// Factory for simple domain mutation handlers that return unchanged state
+// Factory for simple domain mutation handlers with error handling
 function createMutationHandler(actionName, domainFn) {
   return registerHandler(actionName, (state, action) => {
     try {
       domainFn(action.payload);
+      return { state };
     } catch (error) {
-      console.error(`Failed to ${actionName.toLowerCase().replace(/_/g, ' ')}:`, error.message);
+      // Dispatch error action to notify user
+      return {
+        state: {
+          ...state,
+          lastError: {
+            actionType: actionName,
+            message: error.message,
+            entityId: action.payload.projectId,
+            timestamp: Date.now(),
+          },
+        },
+      };
     }
-    return { state };
   });
 }
 
@@ -21,8 +32,16 @@ registerHandler('CREATE_PROJECT', (state, action) => {
     const project = Project.createProject({ name });
     return { state: { ...state, currentProjectId: project.id, isCreatingProject: false } };
   } catch (error) {
-    alert(error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'CREATE_PROJECT',
+          message: error.message,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 
@@ -78,8 +97,17 @@ registerHandler('ARCHIVE_PROJECT', (state, action) => {
     // Keep project selected and expand archived section to show it
     return { state: { ...state, showArchivedProjects: true } };
   } catch (error) {
-    console.error('Failed to archive project:', error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'ARCHIVE_PROJECT',
+          message: error.message,
+          entityId: projectId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 

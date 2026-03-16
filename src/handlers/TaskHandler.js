@@ -9,8 +9,17 @@ registerHandler('CREATE_TASK', (state, action) => {
     Task.createTask(projectId, name, dueDate);
     return { state: { ...state, creatingTask: false } };
   } catch (error) {
-    alert(error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'CREATE_TASK',
+          message: error.message,
+          entityId: projectId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 
@@ -26,8 +35,17 @@ registerHandler('UPDATE_TASK', (state, action) => {
     Task.updateTask(taskId, updates);
     return { state: { ...state, editingTaskId: null, editingTaskName: '', editingTaskDueDate: '' } };
   } catch (error) {
-    console.error('Failed to update task:', error.message);
-    return { state };
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'UPDATE_TASK',
+          message: error.message,
+          entityId: taskId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
 });
 
@@ -36,10 +54,20 @@ registerHandler('DELETE_TASK', (state, action) => {
 
   try {
     Task.deleteTask(taskId);
+    return { state };
   } catch (error) {
-    console.error('Failed to delete task:', error.message);
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'DELETE_TASK',
+          message: error.message,
+          entityId: taskId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
-  return { state };
 });
 
 registerHandler('TOGGLE_TASK_COMPLETED', (state, action) => {
@@ -47,10 +75,20 @@ registerHandler('TOGGLE_TASK_COMPLETED', (state, action) => {
 
   try {
     Task.toggleTaskCompleted(taskId);
+    return { state };
   } catch (error) {
-    console.error('Failed to toggle task:', error.message);
+    return {
+      state: {
+        ...state,
+        lastError: {
+          actionType: 'TOGGLE_TASK_COMPLETED',
+          message: error.message,
+          entityId: taskId,
+          timestamp: Date.now(),
+        },
+      },
+    };
   }
-  return { state };
 });
 
 // Create START_CREATE_TASK and CANCEL_CREATE_TASK handlers
