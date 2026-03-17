@@ -1,29 +1,6 @@
 import * as Project from '../domains/Project.js';
 import { registerHandler } from '../state.js';
-import { createToggleCreateHandler, createNoOpLoadedHandler } from '../utils/handlerFactory.js';
-
-// Factory for simple domain mutation handlers with error handling
-function createMutationHandler(actionName, domainFn) {
-  return registerHandler(actionName, (state, action) => {
-    try {
-      domainFn(action.payload);
-      return { state };
-    } catch (error) {
-      // Dispatch error action to notify user
-      return {
-        state: {
-          ...state,
-          lastError: {
-            actionType: actionName,
-            message: error.message,
-            entityId: action.payload.projectId,
-            timestamp: Date.now(),
-          },
-        },
-      };
-    }
-  });
-}
+import { createToggleCreateHandler, createNoOpLoadedHandler, createMutationHandler } from '../utils/handlerFactory.js';
 
 registerHandler('CREATE_PROJECT', (state, action) => {
   const { name } = action.payload;
