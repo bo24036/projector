@@ -11,7 +11,7 @@
  */
 
 // Import IDB operations from service layer (isolates persistence I/O)
-import { getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb } from '../services/IdbService.js';
+import { getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 

@@ -13,7 +13,7 @@
  */
 
 import { dispatch } from '../state.js';
-import { getNoteFromIdb, getNotesByProjectIdFromIdb, putNoteToIdb, deleteNoteFromIdb } from '../services/IdbService.js';
+import { getNoteFromIdb, getNotesByProjectIdFromIdb, putNoteToIdb, deleteNoteFromIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 

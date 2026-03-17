@@ -19,7 +19,7 @@
 import { dispatch } from '../state.js';
 
 // Import IDB operations from service layer
-import { getTask as getTaskFromIdb, getTasksByProjectId as getTasksByProjectIdFromIdb, getPersonalTasksFromIdb, putTask as putTaskToIdb, deleteTask as deleteTaskFromIdb } from '../services/IdbService.js';
+import { getTask as getTaskFromIdb, getTasksByProjectId as getTasksByProjectIdFromIdb, getPersonalTasksFromIdb, putTask as putTaskToIdb, deleteTask as deleteTaskFromIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 

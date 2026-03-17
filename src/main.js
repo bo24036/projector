@@ -10,7 +10,7 @@ import { ErrorNotification } from './ui/components/ErrorNotification.js';
 import { render } from 'https://unpkg.com/lit-html@2/lit-html.js';
 import { initRouter } from './utils/router.js';
 import { getState, setRootRenderer } from './state.js';
-import { idbReady } from './services/IdbService.js';
+import { idbReady } from './utils/IdbService.js';
 import * as Project from './domains/Project.js';
 import * as Person from './domains/Person.js';
 

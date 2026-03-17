@@ -23,7 +23,7 @@
 import { dispatch } from '../state.js';
 
 // Import IDB operations from service layer
-import { getPersonFromIdb, getPeopleByProjectIdFromIdb, getAllPeopleFromIdb, putPersonToIdb, deletePersonFromIdb, getSettingFromIdb, putSettingToIdb } from '../services/IdbService.js';
+import { getPersonFromIdb, getPeopleByProjectIdFromIdb, getAllPeopleFromIdb, putPersonToIdb, deletePersonFromIdb, getSettingFromIdb, putSettingToIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 
