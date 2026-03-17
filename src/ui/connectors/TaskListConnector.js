@@ -10,7 +10,8 @@ export function TaskListConnector({ projectId, state }) {
   const tasks = Task.getTasksByProjectId(projectId);
   const project = Project.getProject(projectId);
   const isArchived = project?.archived ?? false;
-  const { creatingTask, editingTaskId, editingTaskName, editingTaskDueDate } = state;
+  const { creatingTask, editingTaskId } = state;
+  const editingTask = editingTaskId ? Task.getTask(editingTaskId) : null;
 
   return html`
     <div class="task-list">
@@ -24,8 +25,8 @@ export function TaskListConnector({ projectId, state }) {
                 urgency,
                 isArchived,
                 isEditing: editingTaskId === task.id,
-                editName: editingTaskName,
-                editDueDate: editingTaskDueDate,
+                editName: editingTask?.name ?? '',
+                editDueDate: editingTask?.dueDate ? Task.formatDueDate(editingTask.dueDate) : '',
                 onToggle: () => {
                   dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: task.id } });
                 },

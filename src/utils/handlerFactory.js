@@ -2,6 +2,37 @@
 import { registerHandler } from '../state.js';
 
 /**
+ * Creates a handler for simple domain mutations with consistent error handling.
+ *
+ * @param {string} actionName - Action type to register (e.g., 'RENAME_PROJECT')
+ * @param {function} domainFn - Function receiving action.payload; should call domain mutation
+ *
+ * @example
+ * createMutationHandler('RENAME_PROJECT', ({ projectId, newName }) => {
+ *   Project.renameProject(projectId, newName);
+ * });
+ */
+export function createMutationHandler(actionName, domainFn) {
+  registerHandler(actionName, (state, action) => {
+    try {
+      domainFn(action.payload);
+      return { state };
+    } catch (error) {
+      return {
+        state: {
+          ...state,
+          lastError: {
+            actionType: actionName,
+            message: error.message,
+            timestamp: Date.now(),
+          },
+        },
+      };
+    }
+  });
+}
+
+/**
  * Creates START and CANCEL handlers for a creation toggle state.
  * Automatically registers both handlers with naming convention:
  * - START_CREATE_{entityType}
@@ -26,33 +57,25 @@ export function createToggleCreateHandler(entityType, stateKey) {
 
 /**
  * Creates START_EDIT and CANCEL_EDIT handlers for an entity type.
- * Automatically registers both handlers with naming convention:
- * - START_EDIT_{entityType}
- * - CANCEL_EDIT_{entityType}
+ * Only manages the entity ID in state; field values are derived from the
+ * domain cache in connectors at render time (state holds IDs only, not text).
  *
  * @param {string} entityType - Entity type (TASK, PERSON) for action names
  * @param {object} config - Configuration object
  * @param {function} config.getter - Domain getter function (e.g., Task.getTask)
  * @param {string} config.idPayloadKey - Action payload key for the entity ID (e.g., 'taskId')
  * @param {string} config.stateIdKey - State key for the entity ID (e.g., 'editingTaskId')
- * @param {array} config.stateKeys - All state keys to clear on cancel (e.g., ['editingTaskId', 'editingTaskName', 'editingTaskDueDate'])
- * @param {function} config.buildFieldState - Function that takes entity and returns object of state field updates
  *
  * @example
  * createEditHandlers('TASK', {
  *   getter: Task.getTask,
  *   idPayloadKey: 'taskId',
  *   stateIdKey: 'editingTaskId',
- *   stateKeys: ['editingTaskId', 'editingTaskName', 'editingTaskDueDate'],
- *   buildFieldState: (task) => ({
- *     editingTaskName: task.name,
- *     editingTaskDueDate: task.dueDate ? Task.formatDueDate(task.dueDate) : '',
- *   }),
  * });
  * // Registers: START_EDIT_TASK and CANCEL_EDIT_TASK
  */
 export function createEditHandlers(entityType, config) {
-  const { getter, idPayloadKey, stateIdKey, stateKeys, buildFieldState } = config;
+  const { getter, idPayloadKey, stateIdKey } = config;
 
   registerHandler(`START_EDIT_${entityType}`, (state, action) => {
     const id = action.payload[idPayloadKey];
@@ -63,24 +86,11 @@ export function createEditHandlers(entityType, config) {
       return { state };
     }
 
-    const fieldState = buildFieldState(entity);
-
-    return {
-      state: {
-        ...state,
-        [stateIdKey]: id,
-        ...fieldState,
-      },
-    };
-  });
-
-  const resetState = {};
-  stateKeys.forEach((key) => {
-    resetState[key] = null;
+    return { state: { ...state, [stateIdKey]: id } };
   });
 
   registerHandler(`CANCEL_EDIT_${entityType}`, (state) => {
-    return { state: { ...state, ...resetState } };
+    return { state: { ...state, [stateIdKey]: null } };
   });
 }
 

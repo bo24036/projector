@@ -6,12 +6,8 @@ const state = {
   showArchivedProjects: false,
   creatingTask: false,
   editingTaskId: null,
-  editingTaskName: '',
-  editingTaskDueDate: '',
   creatingPerson: false,
   editingPersonId: null,
-  editingPersonName: '',
-  editingPersonRole: '',
   editingNotes: false,
   showSuppressNamesModal: false,
   lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action

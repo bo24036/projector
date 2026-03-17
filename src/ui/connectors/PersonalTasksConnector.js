@@ -10,7 +10,8 @@ export function initPersonalTasksConnector(containerSelector, state) {
   if (!container) return;
 
   const tasks = Task.getPersonalTasks();
-  const { creatingTask, editingTaskId, editingTaskName, editingTaskDueDate } = state;
+  const { creatingTask, editingTaskId } = state;
+  const editingTask = editingTaskId ? Task.getTask(editingTaskId) : null;
 
   const template = html`
     <div class="personal-tasks-page">
@@ -25,8 +26,8 @@ export function initPersonalTasksConnector(containerSelector, state) {
             urgency,
             isArchived: false,
             isEditing: editingTaskId === task.id,
-            editName: editingTaskName,
-            editDueDate: editingTaskDueDate,
+            editName: editingTask?.name ?? '',
+            editDueDate: editingTask?.dueDate ? Task.formatDueDate(editingTask.dueDate) : '',
             onToggle: () => {
               dispatch({ type: 'TOGGLE_TASK_COMPLETED', payload: { taskId: task.id } });
             },

@@ -32,7 +32,7 @@ registerHandler('UPDATE_PERSON', (state, action) => {
 
   try {
     Person.updatePerson(personId, updates);
-    return { state: { ...state, editingPersonId: null, editingPersonName: '', editingPersonRole: '' } };
+    return { state: { ...state, editingPersonId: null } };
   } catch (error) {
     return {
       state: {
@@ -77,11 +77,6 @@ createEditHandlers('PERSON', {
   getter: Person.getPerson,
   idPayloadKey: 'personId',
   stateIdKey: 'editingPersonId',
-  stateKeys: ['editingPersonId', 'editingPersonName', 'editingPersonRole'],
-  buildFieldState: (person) => ({
-    editingPersonName: person.name,
-    editingPersonRole: person.role,
-  }),
 });
 
 // Create no-op handler that triggers re-render when person is loaded

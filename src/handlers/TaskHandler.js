@@ -33,7 +33,7 @@ registerHandler('UPDATE_TASK', (state, action) => {
 
   try {
     Task.updateTask(taskId, updates);
-    return { state: { ...state, editingTaskId: null, editingTaskName: '', editingTaskDueDate: '' } };
+    return { state: { ...state, editingTaskId: null } };
   } catch (error) {
     return {
       state: {
@@ -99,11 +99,6 @@ createEditHandlers('TASK', {
   getter: Task.getTask,
   idPayloadKey: 'taskId',
   stateIdKey: 'editingTaskId',
-  stateKeys: ['editingTaskId', 'editingTaskName', 'editingTaskDueDate'],
-  buildFieldState: (task) => ({
-    editingTaskName: task.name,
-    editingTaskDueDate: task.dueDate ? Task.formatDueDate(task.dueDate) : '',
-  }),
 });
 
 // Create no-op handlers that trigger re-renders when data is loaded

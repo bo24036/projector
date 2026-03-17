@@ -28,7 +28,8 @@ export function initProjectDetailConnector(containerSelector, state) {
 
   const people = Person.getPeopleByProjectId(project.id) || [];
   const { names: allNames, roles: allRoles } = Person.getAllPeopleForAutocomplete();
-  const { creatingPerson, editingPersonId, editingPersonName, editingPersonRole, editingNotes } = state;
+  const { creatingPerson, editingPersonId, editingNotes } = state;
+  const editingPerson = editingPersonId ? Person.getPerson(editingPersonId) : null;
 
   const template = html`
     <div class="project-detail-container">
@@ -71,8 +72,8 @@ export function initProjectDetailConnector(containerSelector, state) {
           ${people.map(person => PersonListItem({
             person,
             isEditing: editingPersonId === person.id,
-            editName: editingPersonName,
-            editRole: editingPersonRole,
+            editName: editingPerson?.name ?? '',
+            editRole: editingPerson?.role ?? '',
             nameOptions: allNames,
             roleOptions: allRoles,
             onEdit: () => dispatch({ type: 'START_EDIT_PERSON', payload: { personId: person.id } }),
