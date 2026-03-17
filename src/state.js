@@ -8,7 +8,8 @@ const state = {
   editingTaskId: null,
   creatingPerson: false,
   editingPersonId: null,
-  editingNotes: false,
+  creatingNote: false,
+  editingNoteId: null,
   showSuppressNamesModal: false,
   lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action
 };

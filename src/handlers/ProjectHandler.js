@@ -54,13 +54,6 @@ createMutationHandler('UPDATE_DESCRIPTION', ({ projectId, description }) => {
   Project.updateDescription(projectId, description);
 });
 
-createMutationHandler('UPDATE_NOTES', ({ projectId, notes }) => {
-  Project.updateNotes(projectId, notes);
-});
-
-createMutationHandler('UPDATE_LINK', ({ projectId, link }) => {
-  Project.updateLink(projectId, link);
-});
 
 createMutationHandler('DELETE_PROJECT', ({ projectId }) => {
   Project.deleteProject(projectId);
@@ -103,13 +96,6 @@ createMutationHandler('TOGGLE_FUNDED', ({ projectId }) => {
 // Create START_CREATE_PROJECT and CANCEL_CREATE_PROJECT handlers
 createToggleCreateHandler('PROJECT', 'isCreatingProject');
 
-registerHandler('START_EDIT_NOTES', (state) => {
-  return { state: { ...state, editingNotes: true } };
-});
-
-registerHandler('CANCEL_EDIT_NOTES', (state) => {
-  return { state: { ...state, editingNotes: false } };
-});
 
 // Create no-op handlers that trigger re-renders when projects are loaded
 createNoOpLoadedHandler('PROJECT_LOADED');

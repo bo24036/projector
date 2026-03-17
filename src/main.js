@@ -1,6 +1,7 @@
 import './handlers/ProjectHandler.js';
 import './handlers/TaskHandler.js';
 import './handlers/PersonHandler.js';
+import './handlers/NoteHandler.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';

@@ -11,7 +11,7 @@
  */
 
 // Import IDB operations from service layer (isolates persistence I/O)
-import { getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb, migrateProjectFields } from '../services/IdbService.js';
+import { getAllProjects as getAllProjectsFromIdb, putProject as putProjectToIdb, deleteProject as deleteProjectFromIdb } from '../services/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 
@@ -47,8 +47,6 @@ export function createProject(overrides = {}) {
     id: generateId('proj'),
     name,
     description: overrides.description || '',
-    notes: overrides.notes || '',
-    link: overrides.link || '',
     archived: overrides.archived || false,
     funded: overrides.funded || false,
     createdAt: overrides.createdAt || new Date().toISOString(),
@@ -83,17 +81,9 @@ export async function getAllProjectsAsync() {
   projectsLoaded = true;
 
   try {
-    // Migrate existing projects to add missing notes and link fields
-    await migrateProjectFields();
-
     const allProjects = await getAllProjectsFromIdb();
     if (allProjects && allProjects.length > 0) {
-      allProjects.forEach(project => {
-        // Ensure fields exist (in case migration didn't run for some reason)
-        if (project.notes === undefined) project.notes = '';
-        if (project.link === undefined) project.link = '';
-        projectCache.set(project.id, project);
-      });
+      allProjects.forEach(project => projectCache.set(project.id, project));
     }
     return allProjects || [];
   } catch (error) {
@@ -133,28 +123,6 @@ export function updateDescription(id, description) {
   }
 
   project.description = description || '';
-  serialize(project, 'put');
-  return project;
-}
-
-export function updateNotes(id, notes) {
-  const project = getProject(id);
-  if (!project) {
-    throw new Error(ERROR_PROJECT_NOT_FOUND);
-  }
-
-  project.notes = notes || '';
-  serialize(project, 'put');
-  return project;
-}
-
-export function updateLink(id, link) {
-  const project = getProject(id);
-  if (!project) {
-    throw new Error(ERROR_PROJECT_NOT_FOUND);
-  }
-
-  project.link = link || '';
   serialize(project, 'put');
   return project;
 }
