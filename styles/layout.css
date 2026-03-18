@@ -1072,7 +1072,8 @@
 .note-list-item--editing {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: var(--spacing-xs);
+  row-gap: var(--spacing-sm);
+  column-gap: var(--spacing-xs);
   background-color: var(--color-surface-hover);
   border-radius: var(--border-radius-md);
   padding: var(--spacing-xs);
