@@ -383,6 +383,27 @@
 }
 
 
+/* Sidebar overview/personal urgency color coding */
+.sidebar__overview-btn.urgency-red,
+.sidebar__personal-btn.urgency-red {
+  border-left: 3px solid var(--color-error);
+}
+
+.sidebar__overview-btn.urgency-orange,
+.sidebar__personal-btn.urgency-orange {
+  border-left: 3px solid var(--color-warning);
+}
+
+.sidebar__overview-btn.urgency-yellow,
+.sidebar__personal-btn.urgency-yellow {
+  border-left: 3px solid #FBC02D;
+}
+
+.sidebar__overview-btn.urgency-gray,
+.sidebar__personal-btn.urgency-gray {
+  border-left: 3px solid transparent;
+}
+
 /* Sidebar project urgency color coding */
 .project-list-item.urgency-red {
   border-left: 3px solid var(--color-error);

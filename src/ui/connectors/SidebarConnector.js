@@ -20,6 +20,11 @@ export function initSidebarConnector(containerSelector, state) {
   const personalTaskCount = Task.getOpenTaskCount(null);
   const overviewTaskCount = activeProjects.reduce((sum, p) => sum + Task.getOpenTaskCount(p.id), 0) + personalTaskCount;
 
+  const URGENCY_RANK = { red: 0, orange: 1, yellow: 2, gray: 3 };
+  const personalUrgency = Task.getProjectUrgency(null);
+  const overviewUrgency = [...activeProjects.map(p => Task.getProjectUrgency(p.id)), personalUrgency]
+    .reduce((worst, u) => URGENCY_RANK[u] < URGENCY_RANK[worst] ? u : worst, 'gray');
+
   const allNames = Person.getAllUniquePersonNamesRaw() || [];
   const suppressedNames = Person.getSuppressedNames();
 
@@ -56,12 +61,12 @@ export function initSidebarConnector(containerSelector, state) {
         <h1 class="sidebar__title">Projects</h1>
       </div>
 
-      <button class="sidebar__overview-btn ${state.currentPage === 'overview' ? 'is-active' : ''}" @click=${navigateToOverview}>
+      <button class="sidebar__overview-btn urgency-${overviewUrgency} ${state.currentPage === 'overview' ? 'is-active' : ''}" @click=${navigateToOverview}>
         Overview
         ${overviewTaskCount > 0 ? html`<span class="sidebar__count">${overviewTaskCount}</span>` : ''}
       </button>
 
-      <button class="sidebar__personal-btn ${state.currentPage === 'personal' ? 'is-active' : ''}" @click=${navigateToPersonal}>
+      <button class="sidebar__personal-btn urgency-${personalUrgency} ${state.currentPage === 'personal' ? 'is-active' : ''}" @click=${navigateToPersonal}>
         My Tasks
         ${personalTaskCount > 0 ? html`<span class="sidebar__count">${personalTaskCount}</span>` : ''}
       </button>
