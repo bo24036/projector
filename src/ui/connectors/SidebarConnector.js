@@ -100,6 +100,13 @@ export function initSidebarConnector(containerSelector, state) {
 
   render(template, container);
 
+  requestAnimationFrame(() => {
+    if (state.isCreatingProject) {
+      const projectInput = container.querySelector('[data-project-autofocus]');
+      if (projectInput) projectInput.focus();
+    }
+  });
+
   // Call showModal() on the dialog when it's visible
   requestAnimationFrame(() => {
     if (state.showSuppressNamesModal) {

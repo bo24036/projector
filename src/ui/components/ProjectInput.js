@@ -14,6 +14,7 @@ export function ProjectInput({ onSave, onCancel }) {
   const handleBlur = makeBlurHandler({
     primaryFieldGetter: () => inputValue,
     onCancel,
+    itemSelector: '.project-list-item',
   });
 
   function handleInput(event) {
@@ -23,7 +24,8 @@ export function ProjectInput({ onSave, onCancel }) {
   return html`
     <div class="project-list-item project-list-item--editing">
       <input
-        autofocus
+        ?autofocus=${true}
+        data-project-autofocus
         class="project-input__field"
         type="text"
         placeholder="New project name..."
