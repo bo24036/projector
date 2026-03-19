@@ -31,7 +31,7 @@ export function TaskListItem({ task, dueDateFormatted, urgency, isArchived, isEd
       <div class="task-list-item task-list-item--editing">
         <input
           ?autofocus=${true}
-          data-task-autofocus
+          data-autofocus
           class="task-input__field task-input__field--name"
           type="text"
           placeholder="Task name..."

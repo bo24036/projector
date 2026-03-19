@@ -34,7 +34,7 @@ export function PersonInput({ onSave, onCancel, nameOptions = [], roleOptions = 
     <div class="person-list-item person-list-item--creating">
       <input
         ?autofocus=${true}
-        data-person-autofocus
+        data-autofocus
         class="person-input__field person-input__field--name"
         type="text"
         placeholder="Name..."

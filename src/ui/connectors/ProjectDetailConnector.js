@@ -1,4 +1,5 @@
 import { html, render } from '/vendor/lit-html/lit-html.js';
+import { focusAutofocusElement } from '../../utils/domHelpers.js';
 import { ProjectDetail } from '../components/ProjectDetail.js';
 import { TaskListConnector } from './TaskListConnector.js';
 import { PersonInput } from '../components/PersonInput.js';
@@ -107,26 +108,5 @@ export function initProjectDetailConnector(containerSelector, state) {
 
   render(template, container);
 
-  // Explicitly focus input when creation form or edit form is shown
-  // Use rAF to ensure focus happens after browser has painted the new DOM
-  requestAnimationFrame(() => {
-    if (state.creatingTask || state.editingTaskId) {
-      const taskInput = container.querySelector('[data-task-autofocus]');
-      if (taskInput) {
-        taskInput.focus();
-      }
-    }
-    if (state.creatingPerson || state.editingPersonId) {
-      const personInput = container.querySelector('[data-person-autofocus]');
-      if (personInput) {
-        personInput.focus();
-      }
-    }
-    if (state.creatingNote || state.editingNoteId) {
-      const noteInput = container.querySelector('[data-note-autofocus]');
-      if (noteInput) {
-        noteInput.focus();
-      }
-    }
-  });
+  focusAutofocusElement(container);
 }

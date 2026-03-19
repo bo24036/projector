@@ -29,7 +29,7 @@ export function NoteInput({ onSave, onCancel }) {
   return html`
     <div class="note-list-item note-list-item--creating">
       <input
-        data-note-autofocus
+        data-autofocus
         class="note-input__field note-input__field--content"
         type="text"
         placeholder="[Click to add note...]"

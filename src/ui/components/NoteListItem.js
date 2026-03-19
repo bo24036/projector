@@ -30,7 +30,7 @@ export function NoteListItem({ note, isEditing, editContent, editLink, isArchive
     return html`
       <div class="note-list-item note-list-item--editing">
         <input
-          data-note-autofocus
+          data-autofocus
           class="note-input__field note-input__field--content"
           type="text"
           placeholder="Note content..."

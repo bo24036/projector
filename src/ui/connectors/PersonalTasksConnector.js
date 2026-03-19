@@ -1,4 +1,5 @@
 import { html, render } from '/vendor/lit-html/lit-html.js';
+import { focusAutofocusElement } from '../../utils/domHelpers.js';
 import { TaskListItem } from '../components/TaskListItem.js';
 import { TaskInput } from '../components/TaskInput.js';
 import * as Task from '../../domains/Task.js';
@@ -75,10 +76,5 @@ export function initPersonalTasksConnector(containerSelector, state) {
 
   render(template, container);
 
-  requestAnimationFrame(() => {
-    if (state.creatingTask || state.editingTaskId) {
-      const taskInput = container.querySelector('[data-task-autofocus]');
-      if (taskInput) taskInput.focus();
-    }
-  });
+  focusAutofocusElement(container);
 }

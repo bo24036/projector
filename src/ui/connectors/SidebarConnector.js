@@ -1,4 +1,5 @@
 import { html, render } from '/vendor/lit-html/lit-html.js';
+import { focusAutofocusElement } from '../../utils/domHelpers.js';
 import { ProjectListItem } from '../components/ProjectListItem.js';
 import { ProjectNewItem } from '../components/ProjectNewItem.js';
 import { ProjectInput } from '../components/ProjectInput.js';
@@ -125,12 +126,7 @@ export function initSidebarConnector(containerSelector, state) {
 
   render(template, container);
 
-  requestAnimationFrame(() => {
-    if (state.isCreatingProject) {
-      const projectInput = container.querySelector('[data-project-autofocus]');
-      if (projectInput) projectInput.focus();
-    }
-  });
+  focusAutofocusElement(container);
 
   // Call showModal() on the dialog when it's visible
   requestAnimationFrame(() => {

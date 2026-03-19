@@ -25,7 +25,7 @@ export function ProjectInput({ onSave, onCancel }) {
     <div class="project-list-item project-list-item--editing">
       <input
         ?autofocus=${true}
-        data-project-autofocus
+        data-autofocus
         class="project-input__field"
         type="text"
         placeholder="New project name..."
