@@ -64,6 +64,7 @@
   text-align: left;
   border-radius: var(--border-radius-md);
   color: var(--color-text);
+  font-weight: var(--font-weight-medium);
   transition: background-color var(--transition-fast);
 }
 
@@ -85,7 +86,6 @@
 .project-list-item.is-selected .project-list-item__button {
   background-color: var(--color-primary);
   color: var(--color-text-light);
-  font-weight: var(--font-weight-medium);
 }
 
 /* Editing state for project list item */
