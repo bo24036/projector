@@ -51,7 +51,7 @@ export function OverviewPage({ personalTasks = [], projects }) {
             <h3 class="overview-project__name" @click=${onProjectClick} role="button" tabindex="0">
               ${project.name}
             </h3>
-            ${project.funded ? html`<span class="overview-project__badge">Funded</span>` : ''}
+            ${project.funded ? html`<span class="overview-project__badge" title="Funded">$</span>` : ''}
           </div>
 
           ${incompleteTasks.length === 0
