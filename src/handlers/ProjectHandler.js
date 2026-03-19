@@ -1,13 +1,17 @@
 import * as Project from '../domains/Project.js';
 import { registerHandler } from '../state.js';
 import { createToggleCreateHandler, createNoOpLoadedHandler, createMutationHandler } from '../utils/handlerFactory.js';
+import { navigateToProject } from '../utils/router.js';
 
 registerHandler('CREATE_PROJECT', (state, action) => {
   const { name } = action.payload;
 
   try {
     const project = Project.createProject({ name });
-    return { state: { ...state, currentProjectId: project.id, isCreatingProject: false } };
+    return {
+      state: { ...state, currentProjectId: project.id, isCreatingProject: false },
+      effects: [() => navigateToProject(project.id)],
+    };
   } catch (error) {
     return {
       state: {
