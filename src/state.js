@@ -64,7 +64,7 @@ export function dispatch(action) {
     setState(nextState);
 
     effects?.forEach(effect => {
-      queueMicrotask(effect);
+      requestAnimationFrame(effect);
     });
   } catch (error) {
     console.error(`Handler error for action ${action.type}:`, error.message);

@@ -9,7 +9,7 @@ registerHandler('CREATE_TASK', (state, action) => {
     Task.createTask(projectId, name, dueDate);
     return {
       state: { ...state, creatingTask: false },
-      effects: [() => setTimeout(() => dispatch({ type: 'START_CREATE_TASK' }), 0)],
+      effects: [() => dispatch({ type: 'START_CREATE_TASK' })],
     };
   } catch (error) {
     return {
