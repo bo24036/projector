@@ -38,6 +38,7 @@ export function PersonInput({ onSave, onCancel, nameOptions = [], roleOptions = 
         class="person-input__field person-input__field--name"
         type="text"
         placeholder="Name..."
+        .value=${nameValue}
         list=${nameListId}
         @input=${handleNameInput}
         @keydown=${handleKeyDown}
@@ -50,6 +51,7 @@ export function PersonInput({ onSave, onCancel, nameOptions = [], roleOptions = 
         class="person-input__field person-input__field--role"
         type="text"
         placeholder="Role..."
+        .value=${roleValue}
         list=${roleListId}
         @input=${handleRoleInput}
         @keydown=${handleKeyDown}

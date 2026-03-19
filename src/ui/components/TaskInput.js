@@ -34,6 +34,7 @@ export function TaskInput({ onSave, onCancel }) {
         class="task-input__field task-input__field--name"
         type="text"
         placeholder="[Click to add task...]"
+        .value=${nameValue}
         @input=${handleNameInput}
         @keydown=${handleKeyDown}
         @blur=${handleBlur}
@@ -42,6 +43,7 @@ export function TaskInput({ onSave, onCancel }) {
         class="task-input__field task-input__field--due-date"
         type="text"
         placeholder="Due date..."
+        .value=${dueDateValue}
         @input=${handleDueDateInput}
         @keydown=${handleKeyDown}
         @blur=${handleBlur}

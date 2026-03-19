@@ -33,6 +33,7 @@ export function NoteInput({ onSave, onCancel }) {
         class="note-input__field note-input__field--content"
         type="text"
         placeholder="[Click to add note...]"
+        .value=${contentValue}
         @input=${handleContentInput}
         @keydown=${handleKeyDown}
         @blur=${handleBlur}
@@ -41,6 +42,7 @@ export function NoteInput({ onSave, onCancel }) {
         class="note-input__field note-input__field--link"
         type="text"
         placeholder="Link or [label](url)..."
+        .value=${linkValue}
         @input=${handleLinkInput}
         @keydown=${handleKeyDown}
         @blur=${handleBlur}
