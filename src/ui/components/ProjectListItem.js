@@ -16,7 +16,7 @@ export function ProjectListItem({ project, isSelected, openTaskCount, urgency, p
           ? html`<span class="project-list-item__hold-icon ${isReviewDue ? 'project-list-item__hold-icon--review-due' : ''}">⏸</span>`
           : html`<span class="project-list-item__meta">
               ${openTaskCount > 0 ? html`<span class="sidebar__count">${openTaskCount}</span>` : ''}
-              ${progress !== null ? html`<span class="project-progress-ring" style="--progress: ${progress}"></span>` : ''}
+              ${progress !== null ? html`<span class="project-progress-ring-border"><span class="project-progress-ring" style="--progress: ${progress}"></span></span>` : ''}
             </span>`
         }
       </button>

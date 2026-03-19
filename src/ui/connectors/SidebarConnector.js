@@ -78,7 +78,7 @@ export function initSidebarConnector(containerSelector, state) {
         Overview
         <span class="project-list-item__meta">
           ${overviewTaskCount > 0 ? html`<span class="sidebar__count">${overviewTaskCount}</span>` : ''}
-          ${overviewProgress !== null ? html`<span class="project-progress-ring" style="--progress: ${overviewProgress}"></span>` : ''}
+          ${overviewProgress !== null ? html`<span class="project-progress-ring-border"><span class="project-progress-ring" style="--progress: ${overviewProgress}"></span></span>` : ''}
         </span>
       </button>
 
@@ -86,7 +86,7 @@ export function initSidebarConnector(containerSelector, state) {
         My Tasks
         <span class="project-list-item__meta">
           ${personalTaskCount > 0 ? html`<span class="sidebar__count">${personalTaskCount}</span>` : ''}
-          ${personalProgress !== null ? html`<span class="project-progress-ring" style="--progress: ${personalProgress}"></span>` : ''}
+          ${personalProgress !== null ? html`<span class="project-progress-ring-border"><span class="project-progress-ring" style="--progress: ${personalProgress}"></span></span>` : ''}
         </span>
       </button>
 
