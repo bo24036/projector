@@ -7,7 +7,10 @@ registerHandler('CREATE_NOTE', (state, action) => {
 
   try {
     Note.createNote(projectId, content, link);
-    return { state: { ...state, creatingNote: true } };
+    return {
+      state: { ...state, creatingNote: false },
+      effects: [() => setTimeout(() => dispatch({ type: 'START_CREATE_NOTE' }), 0)],
+    };
   } catch (error) {
     return {
       state: {

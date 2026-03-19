@@ -8,7 +8,10 @@ registerHandler('CREATE_PERSON', (state, action) => {
 
   try {
     Person.createPerson(projectId, name, role);
-    return { state: { ...state, creatingPerson: true } };
+    return {
+      state: { ...state, creatingPerson: false },
+      effects: [() => setTimeout(() => dispatch({ type: 'START_CREATE_PERSON' }), 0)],
+    };
   } catch (error) {
     return {
       state: {
