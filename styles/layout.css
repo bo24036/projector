@@ -53,6 +53,7 @@
 /* Project list item */
 .project-list-item {
   display: flex;
+  border-radius: var(--border-radius-md);
 }
 
 .project-list-item__button {
