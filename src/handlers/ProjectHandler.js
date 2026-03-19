@@ -103,7 +103,16 @@ createMutationHandler('HOLD_PROJECT', ({ projectId }) => {
 });
 
 registerHandler('SHOW_RESTORE_MODAL', (state, action) => {
-  return { state: { ...state, restoringProjectId: action.payload.projectId ?? null } };
+  const { projectId } = action.payload;
+  if (!projectId) return { state: { ...state, restoringProjectId: null } };
+
+  const hasDueDates = Task.getTasksByProjectId(projectId).some(t => t.dueDate !== null);
+  if (!hasDueDates) {
+    Project.restoreProject(projectId);
+    return { state: { ...state, restoringProjectId: null } };
+  }
+
+  return { state: { ...state, restoringProjectId: projectId } };
 });
 
 registerHandler('RESTORE_PROJECT', (state, action) => {
