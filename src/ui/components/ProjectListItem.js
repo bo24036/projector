@@ -1,6 +1,6 @@
 import { html } from '/vendor/lit-html/lit-html.js';
 
-export function ProjectListItem({ project, isSelected, openTaskCount, urgency, progress, isHeld, isReviewDue, onSelect }) {
+export function ProjectListItem({ project, isSelected, openTaskCount, urgency, isHeld, isReviewDue, onSelect }) {
   const classes = [
     'project-list-item',
     isSelected ? 'is-selected' : '',
@@ -14,10 +14,7 @@ export function ProjectListItem({ project, isSelected, openTaskCount, urgency, p
         ${project.name}
         ${isHeld
           ? html`<span class="project-list-item__hold-icon ${isReviewDue ? 'project-list-item__hold-icon--review-due' : ''}">⏸</span>`
-          : html`<span class="project-list-item__meta">
-              ${openTaskCount > 0 ? html`<span class="sidebar__count">${openTaskCount}</span>` : ''}
-              ${progress !== null ? html`<span class="project-progress-ring-border"><span class="project-progress-ring" style="--progress: ${progress}"></span></span>` : ''}
-            </span>`
+          : openTaskCount > 0 ? html`<span class="sidebar__count">${openTaskCount}</span>` : ''
         }
       </button>
     </div>

@@ -81,48 +81,6 @@
   color: var(--color-text);
 }
 
-.project-list-item__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-xs);
-  flex-shrink: 0;
-}
-
-.project-progress-ring-border {
-  display: flex;
-  border-radius: 50%;
-  border: 2px solid var(--color-text-secondary);
-  flex-shrink: 0;
-}
-
-.project-list-item.is-selected .project-progress-ring-border,
-.sidebar__overview-btn.is-active .project-progress-ring-border,
-.sidebar__personal-btn.is-active .project-progress-ring-border {
-  border-color: rgba(0, 0, 0, 0.3);
-}
-
-.project-progress-ring {
-  --ring-fill: var(--color-primary);
-  --ring-track: rgba(128, 128, 128, 0.55);
-  display: block;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: conic-gradient(
-    var(--ring-fill) calc(var(--progress) * 1%),
-    var(--ring-track) 0
-  );
-  mask: radial-gradient(farthest-side, transparent 50%, black 50%);
-  -webkit-mask: radial-gradient(farthest-side, transparent 50%, black 50%);
-  flex-shrink: 0;
-}
-
-.project-list-item.is-selected .project-progress-ring,
-.sidebar__overview-btn.is-active .project-progress-ring,
-.sidebar__personal-btn.is-active .project-progress-ring {
-  --ring-fill: rgba(255, 255, 255, 0.95);
-  --ring-track: rgba(255, 255, 255, 0.4);
-}
 
 .project-list-item.is-selected .project-list-item__button {
   background-color: var(--color-primary);
@@ -811,6 +769,18 @@
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-medium);
   flex-shrink: 0;
+}
+
+.urgency-red .sidebar__count {
+  color: var(--color-error);
+}
+
+.urgency-orange .sidebar__count {
+  color: var(--color-warning);
+}
+
+.urgency-yellow .sidebar__count {
+  color: #FBC02D;
 }
 
 .project-list-item.is-selected .sidebar__count,
