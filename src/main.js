@@ -9,6 +9,7 @@ import { initPersonalTasksConnector } from './ui/connectors/PersonalTasksConnect
 import { ErrorNotification } from './ui/components/ErrorNotification.js';
 import { render } from '/vendor/lit-html/lit-html.js';
 import { initRouter } from './utils/router.js';
+import { initKeyboardShortcuts } from './utils/keyboardShortcuts.js';
 import { getState, setRootRenderer } from './state.js';
 import { idbReady } from './utils/IdbService.js';
 import * as Project from './domains/Project.js';
@@ -61,6 +62,9 @@ async function initApp() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js');
   }
+
+  // Register global keyboard shortcuts
+  initKeyboardShortcuts();
 
   // Initialize router - this will dispatch initial navigation action
   // The dispatch will schedule renderApp via rAF, so we don't need to call it explicitly

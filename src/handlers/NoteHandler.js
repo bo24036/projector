@@ -7,7 +7,7 @@ registerHandler('CREATE_NOTE', (state, action) => {
 
   try {
     Note.createNote(projectId, content, link);
-    return { state: { ...state, creatingNote: false } };
+    return { state: { ...state, creatingNote: true } };
   } catch (error) {
     return {
       state: {
