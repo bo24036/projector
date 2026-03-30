@@ -23,9 +23,14 @@ C:\Program Files\Projector\
 
 > **Requirement:** Python 3 must be installed. If you see an error, download Python from [python.org](https://python.org) — check "Add Python to PATH" during setup — then try again.
 
-## Step 3 — Pin to Taskbar
+## Step 3 — Create a pinnable shortcut
 
-While Projector is open, right-click the Chrome icon in the taskbar → **Pin to taskbar**. From then on, clicking it starts the server (if not already running) and opens Projector in Chrome.
+1. Right-click **setup-shortcut.ps1** → **Run with PowerShell**
+2. If prompted about execution policy, type `Y` and press Enter
+3. A **Projector** shortcut appears on your Desktop
+4. Right-click that shortcut → **Pin to taskbar**
+
+From then on, clicking the taskbar icon starts the server (if not already running) and opens Projector in Chrome. You can delete the Desktop shortcut after pinning if you like.
 
 ## Step 4 — Start automatically on login (recommended)
 
