@@ -21,6 +21,7 @@ rsync -a \
   --include="favicon.ico" \
   --include="manifest.json" \
   --include="INSTALL.md" \
+  --include="UPDATING.md" \
   --exclude="*" \
   "$ROOT/" "$DEPLOY/"
 
