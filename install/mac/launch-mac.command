@@ -5,9 +5,14 @@ APP_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 URL="http://localhost:$PORT"
 
+close_terminal() {
+  osascript -e 'tell application "Terminal" to close (every window whose name contains "launch-mac")' > /dev/null 2>&1
+}
+
 # If server already running, just open Chrome
 if lsof -ti tcp:$PORT > /dev/null 2>&1; then
   "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
+  close_terminal
   exit 0
 fi
 
@@ -49,3 +54,4 @@ while ! lsof -ti tcp:$PORT > /dev/null 2>&1; do
   fi
 done
 "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
+close_terminal
