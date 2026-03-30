@@ -788,7 +788,9 @@
   border-top: var(--border-width) solid var(--color-border);
 }
 
-.sidebar__suppress-btn {
+.sidebar__suppress-btn,
+.sidebar__export-btn,
+.sidebar__import-btn {
   width: 100%;
   padding: var(--spacing-sm) var(--spacing-md);
   text-align: left;
@@ -801,9 +803,15 @@
   transition: background-color var(--transition-fast);
 }
 
-.sidebar__suppress-btn:hover {
+.sidebar__suppress-btn:hover,
+.sidebar__export-btn:hover,
+.sidebar__import-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text);
+}
+
+.sidebar__import-input {
+  display: none;
 }
 
 /* Overview page */
