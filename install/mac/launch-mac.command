@@ -15,7 +15,7 @@ cd "$APP_DIR"
 
 # Start server in background, wait for it to be ready, then open Chrome
 if command -v python3 > /dev/null 2>&1; then
-  python3 -m http.server $PORT --quiet 2>/dev/null &
+  python3 -m http.server $PORT 2>/dev/null &
 elif command -v python > /dev/null 2>&1; then
   python -m SimpleHTTPServer $PORT &
 elif command -v node > /dev/null 2>&1; then

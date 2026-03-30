@@ -18,7 +18,7 @@ cd "$APP_DIR"
 
 if command -v python3 > /dev/null 2>&1; then
   open_chrome
-  python3 -m http.server $PORT --quiet 2>/dev/null
+  python3 -m http.server $PORT 2>/dev/null
 elif command -v python > /dev/null 2>&1; then
   open_chrome
   python -m SimpleHTTPServer $PORT
