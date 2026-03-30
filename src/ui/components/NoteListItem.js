@@ -1,7 +1,7 @@
 import { html } from '/vendor/lit-html/lit-html.js';
 import { makeKeyDownHandler, makeBlurHandler, makeDeleteHandler } from '../../utils/inputHandlers.js';
 
-export function NoteListItem({ note, isEditing, editContent, editLink, isArchived, linkUrl, linkLabel, onEdit, onDelete, onSave, onCancel }) {
+export function NoteListItem({ note, isEditing, editContent, editLink, isArchived, linkUrl, linkLabel, deleteLabel, onEdit, onDelete, onSave, onCancel }) {
   if (isEditing) {
     let contentValue = editContent;
     let linkValue = editLink;
@@ -65,7 +65,7 @@ export function NoteListItem({ note, isEditing, editContent, editLink, isArchive
   }
 
   const handleDelete = makeDeleteHandler({
-    entityName: note.content.slice(0, 40),
+    entityName: deleteLabel,
     onDelete,
   });
 
