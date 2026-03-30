@@ -90,6 +90,7 @@ export function _getHandlerForTesting(actionType) {
 // Error handling
 registerHandler('SET_ERROR', (state, action) => {
   const { actionType, message, entityId } = action.payload;
+  console.error(`[${actionType}]`, message);
   const error = {
     actionType,
     message,
