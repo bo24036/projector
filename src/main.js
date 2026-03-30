@@ -3,6 +3,8 @@ import './handlers/TaskHandler.js';
 import './handlers/PersonHandler.js';
 import './handlers/NoteHandler.js';
 import './handlers/DataTransferHandler.js';
+import { initVersionCheck } from './utils/versionCheck.js';
+import { UpdateBanner } from './ui/components/UpdateBanner.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';
@@ -33,6 +35,14 @@ function renderApp() {
   const errorContainer = document.querySelector('#error-notification');
   if (errorContainer) {
     render(ErrorNotification({ error: state.lastError }), errorContainer);
+  }
+
+  const updateContainer = document.querySelector('#update-banner');
+  if (updateContainer) {
+    render(
+      state.updateAvailable ? UpdateBanner({ onReload: () => location.reload() }) : html``,
+      updateContainer
+    );
   }
 }
 
@@ -65,6 +75,9 @@ async function initApp() {
   // Initialize router - this will dispatch initial navigation action
   // The dispatch will schedule renderApp via rAF, so we don't need to call it explicitly
   initRouter();
+
+  // Start polling for new versions (no-op if version.json not present)
+  initVersionCheck();
 }
 
 // Wait for DOM to be ready
