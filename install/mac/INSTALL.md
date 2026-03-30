@@ -14,17 +14,28 @@ Your folder structure should look like:
   ...
 ```
 
-## Step 2 — First launch
+## Step 2 — One-time Terminal setting
+
+This lets Terminal close its window automatically when Projector finishes launching.
+
+1. Open **Terminal** (you can close it again right after)
+2. Terminal menu → **Settings** → **Profiles** → **Shell** tab
+3. Set "When the shell exits" to **Close if the shell exited cleanly**
+4. Close Terminal settings
+
+You only need to do this once.
+
+## Step 3 — First launch
 
 1. Open `/Applications/Projector/install/mac/` in Finder
 2. Double-click **launch-mac.command**
 3. If you see a security warning: right-click the file → Open → Open (you only need to do this once)
 4. Projector opens in its own Chrome window with no tabs or address bar
-5. A Terminal window will open briefly — you can close it (Cmd+W). If it asks about terminating processes, click **Terminate** — this is harmless and won't affect the running app.
+5. A Terminal window will open briefly, then close automatically once Projector starts.
 
 > **Requirement:** Python 3 must be installed — it almost certainly already is on your Mac. If you get an error, download Python from [python.org](https://python.org).
 
-## Step 3 — Add to Dock
+## Step 4 — Add to Dock
 
 1. Open `/Applications/Projector/install/mac/` in Finder
 2. Drag **launch-mac.command** to the right-hand side of your Dock (the section after the separator, where documents and folders live)
@@ -34,7 +45,7 @@ From then on, clicking it starts the server (if not already running) and opens P
 
 > **Tip:** If you'd prefer it in the app section of the Dock (left of the separator), launch it first so it appears in the Dock, then right-click the bouncing icon → **Options** → **Keep in Dock**.
 
-## Step 4 — Start automatically on login (recommended)
+## Step 5 — Start automatically on login (recommended)
 
 This keeps the server running in the background so Projector is always ready when you click the Dock icon.
 
