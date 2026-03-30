@@ -10,7 +10,7 @@ import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnect
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';
 import { initPersonalTasksConnector } from './ui/connectors/PersonalTasksConnector.js';
 import { ErrorNotification } from './ui/components/ErrorNotification.js';
-import { render } from '/vendor/lit-html/lit-html.js';
+import { render, nothing } from '/vendor/lit-html/lit-html.js';
 import { initRouter } from './utils/router.js';
 import { initKeyboardShortcuts } from './utils/keyboardShortcuts.js';
 import { getState, setRootRenderer } from './state.js';
@@ -40,7 +40,7 @@ function renderApp() {
   const updateContainer = document.querySelector('#update-banner');
   if (updateContainer) {
     render(
-      state.updateAvailable ? UpdateBanner({ onReload: () => location.reload() }) : html``,
+      state.updateAvailable ? UpdateBanner({ onReload: () => location.reload() }) : nothing,
       updateContainer
     );
   }
