@@ -1,23 +1,29 @@
 #!/bin/bash
 PORT=7337
 APP_DIR="$(cd "$(dirname "$0")" && pwd)"
+CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+URL="http://localhost:$PORT"
 
-# Check if already running on this port
+open_chrome() {
+  "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
+}
+
+# If server already running, just open Chrome
 if lsof -ti tcp:$PORT > /dev/null 2>&1; then
-  open "http://localhost:$PORT"
+  open_chrome
   exit 0
 fi
 
 cd "$APP_DIR"
 
 if command -v python3 > /dev/null 2>&1; then
-  open "http://localhost:$PORT"
+  open_chrome
   python3 -m http.server $PORT --quiet 2>/dev/null
 elif command -v python > /dev/null 2>&1; then
-  open "http://localhost:$PORT"
+  open_chrome
   python -m SimpleHTTPServer $PORT
 elif command -v node > /dev/null 2>&1; then
-  open "http://localhost:$PORT"
+  open_chrome
   node -e "
     const http = require('http');
     const fs = require('fs');
