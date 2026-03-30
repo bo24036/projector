@@ -5,19 +5,10 @@ export function TaskInput({ onSave, onCancel }) {
   let nameValue = '';
   let dueDateValue = '';
 
-  function handleSave() {
-    const name = nameValue.trim();
-    const dueDate = dueDateValue.trim();
-    nameValue = '';
-    dueDateValue = '';
-    document.querySelectorAll('.task-list-item--creating input').forEach(el => { el.value = ''; });
-    onSave(name, dueDate);
-  }
-
   const handleKeyDown = makeKeyDownHandler({
     primaryFieldGetter: () => nameValue,
     fieldValuesGetter: () => [nameValue.trim(), dueDateValue.trim()],
-    onSave: handleSave,
+    onSave,
     onCancel,
   });
 
@@ -60,7 +51,7 @@ export function TaskInput({ onSave, onCancel }) {
       <div class="task-input__controls">
         <button
           class="button-ok"
-          @click=${handleSave}
+          @click=${() => onSave(nameValue.trim(), dueDateValue.trim())}
           title="Save"
         >
           ✓
