@@ -29,6 +29,9 @@ export function initProjectDetailConnector(containerSelector, state) {
   }
 
   const isHeld = project.heldAt !== null;
+  const formatDate = (iso) => iso ? new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+  const createdAtFormatted = formatDate(project.createdAt);
+  const archivedAtFormatted = formatDate(project.archivedAt);
   const holdReviewDays = Settings.getHoldReviewDays();
   const isReviewDue = isHeld && (Date.now() - project.heldAt > holdReviewDays * 86400000);
 
@@ -42,6 +45,8 @@ export function initProjectDetailConnector(containerSelector, state) {
       ${ProjectDetail({
         project,
         isReviewDue,
+        createdAtFormatted,
+        archivedAtFormatted,
         onNameChange: (newName) => {
           if (newName.trim() && newName !== project.name) {
             dispatch({ type: 'RENAME_PROJECT', payload: { projectId: project.id, newName } });

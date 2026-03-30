@@ -1,6 +1,6 @@
 import { html } from '/vendor/lit-html/lit-html.js';
 
-export function ProjectDetail({ project, onNameChange, onDescriptionChange, onArchive, onUnarchive, onToggleFunded, onDelete, onHold, onRestore, isReviewDue }) {
+export function ProjectDetail({ project, onNameChange, onDescriptionChange, onArchive, onUnarchive, onToggleFunded, onDelete, onHold, onRestore, isReviewDue, createdAtFormatted, archivedAtFormatted }) {
   if (!project) return html``;
 
   const isArchived = project.archived;
@@ -90,13 +90,13 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onAr
         </div>
         <div class="project-detail__metadata-item project-detail__metadata-item--created">
           <span class="project-detail__metadata-label">Created:</span>
-          <span class="project-detail__metadata-value">${formatISODate(project.createdAt)}</span>
+          <span class="project-detail__metadata-value">${createdAtFormatted}</span>
         </div>
         ${project.archivedAt
           ? html`
             <div class="project-detail__metadata-item project-detail__metadata-item--archived">
               <span class="project-detail__metadata-label">Archived:</span>
-              <span class="project-detail__metadata-value">${formatISODate(project.archivedAt)}</span>
+              <span class="project-detail__metadata-value">${archivedAtFormatted}</span>
             </div>
           `
           : ''
@@ -106,8 +106,3 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onAr
   `;
 }
 
-function formatISODate(isoString) {
-  if (!isoString) return '';
-  const date = new Date(isoString);
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-}
