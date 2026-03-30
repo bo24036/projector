@@ -32,6 +32,27 @@ Copy the new Projector folder over your existing installation, skipping `.chrome
 
 ---
 
+## Security warnings after updating
+
+Replacing files that came from a file share may cause your OS to treat them as newly downloaded and show security warnings again.
+
+### Mac — Gatekeeper
+If you see *"launch-mac.command cannot be opened because it is from an unidentified developer"*:
+- Right-click **launch-mac.command** → **Open** → **Open**
+- You only need to do this once per update
+
+Alternatively, you can strip the quarantine attribute in Terminal before launching:
+```bash
+xattr -d com.apple.quarantine /Applications/Projector/install/mac/launch-mac.command
+```
+
+### Windows — SmartScreen
+If you see *"Windows protected your PC"*:
+- Click **More info** → **Run anyway**
+- You only need to do this once per update
+
+---
+
 ## Your data is safe as long as you don't delete `.chrome-profile/`
 
 All your projects, tasks, people, notes, and settings are stored in `.chrome-profile/` inside your Projector installation folder. This folder is not included in any release, so a normal copy/replace will never affect it.
