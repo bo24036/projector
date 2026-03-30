@@ -1,20 +1,11 @@
 import { html } from '/vendor/lit-html/lit-html.js';
 
 export function SettingsModal({ allNames, suppressedNames, holdReviewDays, onSave, onClose }) {
-  const selection = new Set(suppressedNames);
-  let reviewDays = holdReviewDays;
-
-  const handleCheckboxChange = (e, name) => {
-    if (e.target.checked) {
-      selection.add(name);
-    } else {
-      selection.delete(name);
-    }
-  };
-
-  const handleReviewDaysChange = (e) => {
-    const val = parseInt(e.target.value, 10);
-    if (!isNaN(val) && val > 0) reviewDays = val;
+  const handleSave = (e) => {
+    const dialog = e.target.closest('dialog');
+    const checked = [...dialog.querySelectorAll('.suppress-modal__checkbox:checked')].map(el => el.value);
+    const days = parseInt(dialog.querySelector('.suppress-modal__days-input').value, 10);
+    onSave(checked, isNaN(days) || days < 1 ? holdReviewDays : days);
   };
 
   return html`
@@ -30,7 +21,6 @@ export function SettingsModal({ allNames, suppressedNames, holdReviewDays, onSav
             type="number"
             min="1"
             .value=${String(holdReviewDays)}
-            @change=${handleReviewDaysChange}
           />
           <span>days</span>
         </div>
@@ -46,8 +36,8 @@ export function SettingsModal({ allNames, suppressedNames, holdReviewDays, onSav
                 <input
                   type="checkbox"
                   class="suppress-modal__checkbox"
+                  value=${name}
                   ?checked=${suppressedNames.has(name)}
-                  @change=${(e) => handleCheckboxChange(e, name)}
                 />
                 ${name}
               </label>
@@ -57,7 +47,7 @@ export function SettingsModal({ allNames, suppressedNames, holdReviewDays, onSav
       </section>
 
       <div class="suppress-modal__controls">
-        <button class="button-ok" @click=${() => onSave([...selection], reviewDays)}>Save</button>
+        <button class="button-ok" @click=${handleSave}>Save</button>
         <button class="button-cancel" @click=${onClose}>Cancel</button>
       </div>
     </dialog>
