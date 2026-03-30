@@ -257,5 +257,40 @@ export async function putSettingToIdb(setting) {
   }
 }
 
+// Fetch all tasks from IDB. Returns empty array if none exist.
+export async function getAllTasks() {
+  const database = await getDatabase();
+  if (!database) return [];
+  return (await database.getAll('tasks')) || [];
+}
+
+// Fetch all people from IDB. Returns empty array if none exist.
+export async function getAllPeople() {
+  const database = await getDatabase();
+  if (!database) return [];
+  return (await database.getAll('people')) || [];
+}
+
+// Fetch all notes from IDB. Returns empty array if none exist.
+export async function getAllNotes() {
+  const database = await getDatabase();
+  if (!database) return [];
+  return (await database.getAll('notes')) || [];
+}
+
+// Fetch all settings from IDB. Returns empty array if none exist.
+export async function getAllSettings() {
+  const database = await getDatabase();
+  if (!database) return [];
+  return (await database.getAll('settings')) || [];
+}
+
+// Clear all records from a store. Used during import.
+export async function clearStore(storeName) {
+  const database = await getDatabase();
+  if (!database) return;
+  await database.clear(storeName);
+}
+
 // Export promise that resolves when idb module is ready
 export { idbReady };
