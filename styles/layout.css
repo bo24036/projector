@@ -433,17 +433,22 @@
 }
 
 .project-list-item__hold-icon {
-  font-size: var(--font-size-lg);
-  color: #64748b;
+  font-size: 0.65rem;
+  color: #fff;
+  background: #64748b;
+  border-radius: 999px;
+  padding: 1px 5px;
   flex-shrink: 0;
+  line-height: 1.4;
 }
 
 .project-list-item__hold-icon--review-due {
-  color: #f59e0b;
+  background: #f59e0b;
 }
 
 .project-list-item.is-selected .project-list-item__hold-icon {
-  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
 }
 
 /* Task urgency color coding */
