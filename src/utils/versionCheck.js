@@ -11,14 +11,21 @@ async function fetchVersion() {
   return version;
 }
 
-export async function initVersionCheck() {
-  launchVersion = await fetchVersion();
-  if (!launchVersion) return; // version.json not present (dev environment)
-
-  setInterval(async () => {
+// Effect: check current version against launch version, dispatch if changed,
+// then schedule itself to run again after the interval.
+export function scheduleVersionCheck() {
+  setTimeout(async () => {
     const current = await fetchVersion();
     if (current && current !== launchVersion) {
       dispatch({ type: 'UPDATE_AVAILABLE' });
+    } else {
+      dispatch({ type: 'SCHEDULE_VERSION_CHECK' });
     }
   }, VERSION_CHECK_INTERVAL_MS);
+}
+
+export async function initVersionCheck() {
+  launchVersion = await fetchVersion();
+  if (!launchVersion) return; // version.json not present (dev environment)
+  dispatch({ type: 'SCHEDULE_VERSION_CHECK' });
 }
