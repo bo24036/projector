@@ -15,6 +15,7 @@ const state = {
   showSettingsModal: false,
   restoringProjectId: null,
   lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action
+  updateAvailable: false,
 };
 
 let renderScheduled = false;

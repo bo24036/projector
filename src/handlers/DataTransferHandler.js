@@ -13,3 +13,7 @@ registerHandler('IMPORT_DATA', (state, action) => {
 
 // Triggers a full re-render after caches have been reloaded by importData
 createNoOpLoadedHandler('IMPORT_COMPLETE');
+
+registerHandler('UPDATE_AVAILABLE', (state) => {
+  return { state: { ...state, updateAvailable: true } };
+});
