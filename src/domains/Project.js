@@ -74,6 +74,12 @@ export function getAllProjects() {
 // Eager-load all projects from IDB into the in-memory cache
 // Called at app startup before router initialization
 // Returns promise that resolves once cache is populated
+export async function reloadAllProjects() {
+  projectCache.clear();
+  projectsLoaded = false;
+  return getAllProjectsAsync();
+}
+
 export async function getAllProjectsAsync() {
   if (projectsLoaded) {
     return Array.from(projectCache.values()).sort((a, b) => a.createdAt.localeCompare(b.createdAt));
