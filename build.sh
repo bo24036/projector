@@ -14,6 +14,7 @@ echo "Copying app files..."
 rsync -a \
   --include="src/***" \
   --include="styles/***" \
+  --include="vendor/" \
   --include="vendor/idb/***" \
   --include="vendor/lit-html/***" \
   --include="install/***" \
