@@ -5,29 +5,19 @@ APP_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 URL="http://localhost:$PORT"
 
-close_terminal() {
-  osascript -e 'tell application "Terminal" to close (every window whose name contains "launch-mac")' > /dev/null 2>&1
-}
-
-# If server already running, just open Chrome
+# If server already running, just open Chrome and exit
 if lsof -ti tcp:$PORT > /dev/null 2>&1; then
   "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
-  disown
-  close_terminal
   exit 0
 fi
 
-cd "$APP_DIR"
-
-# Start server in background, wait for it to be ready, then open Chrome
+# Start server fully detached from this shell (new process group, no children here)
 if command -v python3 > /dev/null 2>&1; then
-  python3 -m http.server $PORT 2>/dev/null &
-  disown
+  (cd "$APP_DIR" && nohup python3 -m http.server $PORT > /dev/null 2>&1 &)
 elif command -v python > /dev/null 2>&1; then
-  python -m SimpleHTTPServer $PORT &
-  disown
+  (cd "$APP_DIR" && nohup python -m SimpleHTTPServer $PORT > /dev/null 2>&1 &)
 elif command -v node > /dev/null 2>&1; then
-  node -e "
+  (cd "$APP_DIR" && nohup node -e "
     const http = require('http');
     const fs = require('fs');
     const path = require('path');
@@ -40,8 +30,7 @@ elif command -v node > /dev/null 2>&1; then
         res.end(data);
       });
     }).listen($PORT);
-  " &
-  disown
+  " > /dev/null 2>&1 &)
 else
   osascript -e 'display alert "Projector could not start" message "Python or Node.js is required. Please install Python from python.org and try again."'
   exit 1
@@ -58,5 +47,4 @@ while ! lsof -ti tcp:$PORT > /dev/null 2>&1; do
   fi
 done
 "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
-disown
-close_terminal
+exit 0
