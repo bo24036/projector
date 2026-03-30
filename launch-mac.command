@@ -5,7 +5,7 @@ CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 URL="http://localhost:$PORT"
 
 open_chrome() {
-  "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1 &
+  (sleep 1 && "$CHROME" --app="$URL" --user-data-dir="$APP_DIR/.chrome-profile" > /dev/null 2>&1) &
 }
 
 # If server already running, just open Chrome
