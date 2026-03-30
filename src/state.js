@@ -1,3 +1,5 @@
+const AUTO_DISMISS_MS = 5000;
+
 const state = {
   // currentPage values: 'overview' | 'personal' | 'project'
   currentPage: 'overview',
@@ -102,7 +104,7 @@ registerHandler('SET_ERROR', (state, action) => {
       if (currentState.lastError?.timestamp === error.timestamp) {
         dispatch({ type: 'CLEAR_ERROR' });
       }
-    }, 5000);
+    }, AUTO_DISMISS_MS);
   };
 
   return {

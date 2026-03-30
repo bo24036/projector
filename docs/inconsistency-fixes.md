@@ -12,7 +12,7 @@ Found via codebase audit against CLAUDE.md rules. Working through these one at a
 | 2 | Date formatting logic in dumb component | src/ui/components/ProjectDetail.js | ⬜ TODO |
 | 3 | String manipulation in dumb component | src/ui/components/NoteListItem.js | ⬜ TODO |
 | 4 | Local mutable state in dumb component | src/ui/components/SuppressNamesModal.js | ⬜ TODO |
-| 5 | Magic value `5000` (auto-dismiss timeout) | src/state.js:105 | ⬜ TODO |
+| 5 | Magic value `5000` (auto-dismiss timeout) | src/state.js:105 | ✅ DONE |
 
 ---
 
