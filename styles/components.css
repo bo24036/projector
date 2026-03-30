@@ -56,6 +56,38 @@
   margin-left: 4px;
 }
 
+/* Update banner */
+.update-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--color-primary);
+  color: #fff;
+  font-size: var(--font-size-sm);
+}
+
+.update-banner__reload-btn {
+  padding: var(--spacing-xs) var(--spacing-md);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  color: #fff;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.update-banner__reload-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
 /* Error notification */
 .error-notification {
   position: fixed;
