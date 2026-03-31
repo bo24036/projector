@@ -6,15 +6,17 @@ import * as Person from '../domains/Person.js';
 import * as Note from '../domains/Note.js';
 import * as Settings from '../domains/Settings.js';
 
-async function getVersion() {
-  const res = await fetch('/version.json?t=' + Date.now());
-  if (!res.ok) return null;
-  const deployed = await res.json();
-  return {
-    launch: getLaunchVersion(),
-    deployed: deployed.version,
-    updateAvailable: deployed.version !== getLaunchVersion(),
-  };
+function getVersion() {
+  fetch('/version.json?t=' + Date.now())
+    .then(res => res.ok ? res.json() : null)
+    .then(deployed => {
+      if (!deployed) return;
+      console.log({
+        launch: getLaunchVersion(),
+        deployed: deployed.version,
+        updateAvailable: deployed.version !== getLaunchVersion(),
+      });
+    });
 }
 
 export function initDebug() {
