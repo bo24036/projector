@@ -116,7 +116,10 @@ export function initProjectDetailConnector(containerSelector, state) {
             : PersonInput({
                 nameOptions: allNames,
                 roleOptions: allRoles,
-                onSave: (name, role) => dispatch({ type: 'CREATE_PERSON', payload: { projectId: project.id, name, role } }),
+                onSave: (name, role) => {
+                  document.querySelectorAll('.person-list-item--creating input').forEach(el => { el.value = ''; });
+                  dispatch({ type: 'CREATE_PERSON', payload: { projectId: project.id, name, role } });
+                },
                 onCancel: () => dispatch({ type: 'CANCEL_CREATE_PERSON' }),
               })
           ) : ''}
