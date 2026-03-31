@@ -37,7 +37,7 @@ export function initProjectDetailConnector(containerSelector, state) {
 
   const people = Person.getPeopleByProjectId(project.id) || [];
   const { names: allNames, roles: allRoles } = Person.getAllPeopleForAutocomplete();
-  const { creatingPerson, creatingPersonName, creatingPersonRole, editingPersonId } = state;
+  const { creatingPerson, editingPersonId } = state;
   const editingPerson = editingPersonId ? Person.getPerson(editingPersonId) : null;
 
   const template = html`
@@ -114,8 +114,6 @@ export function initProjectDetailConnector(containerSelector, state) {
                 </button>
               </div>`
             : PersonInput({
-                nameValue: creatingPersonName,
-                roleValue: creatingPersonRole,
                 nameOptions: allNames,
                 roleOptions: allRoles,
                 onSave: (name, role) => dispatch({ type: 'CREATE_PERSON', payload: { projectId: project.id, name, role } }),
