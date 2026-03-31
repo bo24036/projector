@@ -1,14 +1,20 @@
 import { getState, dispatch, getHandlerKeys } from '../state.js';
+import { getLaunchVersion } from './versionCheck.js';
 import * as Project from '../domains/Project.js';
 import * as Task from '../domains/Task.js';
 import * as Person from '../domains/Person.js';
 import * as Note from '../domains/Note.js';
 import * as Settings from '../domains/Settings.js';
 
-async function fetchVersion() {
+async function getVersion() {
   const res = await fetch('/version.json?t=' + Date.now());
   if (!res.ok) return null;
-  return res.json();
+  const deployed = await res.json();
+  return {
+    launch: getLaunchVersion(),
+    deployed: deployed.version,
+    updateAvailable: deployed.version !== getLaunchVersion(),
+  };
 }
 
 export function initDebug() {
@@ -19,7 +25,7 @@ export function initDebug() {
     getHandlers: getHandlerKeys,
 
     // --- Version ---
-    getVersion: fetchVersion,
+    getVersion,
 
     // --- Projects ---
     getAllProjects: Project.getAllProjects,

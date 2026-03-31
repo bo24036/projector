@@ -2,6 +2,10 @@ import { dispatch } from '../state.js';
 
 const VERSION_CHECK_INTERVAL_MS = 60 * 1000; // 1 minute
 
+export function getLaunchVersion() {
+  return launchVersion;
+}
+
 let launchVersion = null;
 
 async function fetchVersion() {
