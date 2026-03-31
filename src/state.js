@@ -1,7 +1,7 @@
 const AUTO_DISMISS_MS = 5000;
 
 const state = {
-  // currentPage values: 'overview' | 'personal' | 'project'
+  // currentPage values: 'overview' | 'personal' | 'project' | 'yearEndReport'
   currentPage: 'overview',
   currentProjectId: null,
   isCreatingProject: false,
@@ -16,6 +16,7 @@ const state = {
   restoringProjectId: null,
   lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action
   updateAvailable: false,
+  yearEndReportYear: new Date().getFullYear() - 1,
 };
 
 let renderScheduled = false;

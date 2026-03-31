@@ -734,7 +734,8 @@
 
 /* Sidebar overview button */
 .sidebar__overview-btn,
-.sidebar__personal-btn {
+.sidebar__personal-btn,
+.sidebar__report-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -750,12 +751,14 @@
 }
 
 .sidebar__overview-btn:hover,
-.sidebar__personal-btn:hover {
+.sidebar__personal-btn:hover,
+.sidebar__report-btn:hover {
   background-color: var(--color-surface-hover);
 }
 
 .sidebar__overview-btn.is-active,
-.sidebar__personal-btn.is-active {
+.sidebar__personal-btn.is-active,
+.sidebar__report-btn.is-active {
   background-color: var(--color-primary);
   color: var(--color-text-light);
 }

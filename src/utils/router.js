@@ -20,6 +20,12 @@ function handleRouteChange() {
     return;
   }
 
+  // Parse #report
+  if (hash === '#report') {
+    dispatch({ type: 'SELECT_YEAR_END_REPORT' });
+    return;
+  }
+
   // Parse #project/projectId/{id} as per UI-SPEC
   if (hash.startsWith('#project/projectId/')) {
     const projectId = hash.replace('#project/projectId/', '');
@@ -43,4 +49,8 @@ export function navigateToPersonal() {
 
 export function navigateToOverview() {
   window.location.hash = '#overview';
+}
+
+export function navigateToReport() {
+  window.location.hash = '#report';
 }

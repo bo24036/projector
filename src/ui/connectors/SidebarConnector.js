@@ -9,7 +9,7 @@ import * as Task from '../../domains/Task.js';
 import * as Person from '../../domains/Person.js';
 import * as Settings from '../../domains/Settings.js';
 import { dispatch } from '../../state.js';
-import { navigateToProject, navigateToOverview, navigateToPersonal } from '../../utils/router.js';
+import { navigateToProject, navigateToOverview, navigateToPersonal, navigateToReport } from '../../utils/router.js';
 
 const MS_PER_DAY = 86400000;
 
@@ -77,6 +77,10 @@ export function initSidebarConnector(containerSelector, state) {
       <button class="sidebar__personal-btn urgency-${personalUrgency} ${state.currentPage === 'personal' ? 'is-active' : ''}" @click=${navigateToPersonal}>
         My Tasks
         ${personalTaskCount > 0 ? html`<span class="sidebar__count">${personalTaskCount}</span>` : ''}
+      </button>
+
+      <button class="sidebar__report-btn ${state.currentPage === 'yearEndReport' ? 'is-active' : ''}" @click=${navigateToReport}>
+        Year-End Report
       </button>
 
       <div class="sidebar__list">

@@ -3,12 +3,14 @@ import './handlers/TaskHandler.js';
 import './handlers/PersonHandler.js';
 import './handlers/NoteHandler.js';
 import './handlers/DataTransferHandler.js';
+import './handlers/ReportHandler.js';
 import { initVersionCheck } from './utils/versionCheck.js';
 import { UpdateBanner } from './ui/components/UpdateBanner.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
 import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnector.js';
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';
 import { initPersonalTasksConnector } from './ui/connectors/PersonalTasksConnector.js';
+import { initYearEndReportConnector } from './ui/connectors/YearEndReportConnector.js';
 import { ErrorNotification } from './ui/components/ErrorNotification.js';
 import { render, nothing } from '/vendor/lit-html/lit-html.js';
 import { initRouter } from './utils/router.js';
@@ -27,6 +29,8 @@ function renderApp() {
     initOverviewConnector('#main-content', state);
   } else if (state.currentPage === 'personal') {
     initPersonalTasksConnector('#main-content', state);
+  } else if (state.currentPage === 'yearEndReport') {
+    initYearEndReportConnector('#main-content', state);
   } else {
     initProjectDetailConnector('#main-content', state);
   }
