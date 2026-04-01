@@ -67,7 +67,6 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
   }
 
   function handleKeyDown(event) {
-    if (event.target.classList.contains('reading-list-input__new-tag')) return;
     if (event.key === 'Enter' && !event.shiftKey && event.target.tagName !== 'TEXTAREA') {
       event.preventDefault();
       handleSave(event);
@@ -142,7 +141,9 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
 
     newTagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
-      if (e.key === ',') { e.preventDefault(); commitNewTagInput(newTagInput, chipsEl); }
+      if (e.key === ',') { e.preventDefault(); commitNewTagInput(newTagInput, chipsEl); return; }
+      if (e.key === 'Enter') { commitNewTagInput(newTagInput, chipsEl); }
+      // Enter bubbles to parent @keydown which calls handleSave
     });
     newTagInput.addEventListener('blur', (e) => {
       const related = e.relatedTarget;
