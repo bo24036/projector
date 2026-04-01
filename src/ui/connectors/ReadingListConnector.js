@@ -65,7 +65,6 @@ export function initReadingListConnector(containerSelector, state) {
       </div>
 
       <div class="reading-list-page__section">
-        <h2 class="reading-list-page__section-header">To Read</h2>
         <div class="reading-list-page__items">
           ${unreadItems.map(renderItem)}
 

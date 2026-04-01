@@ -86,6 +86,8 @@ export function initSidebarConnector(containerSelector, state) {
         ${readingListUnreadCount > 0 ? html`<span class="sidebar__count">${readingListUnreadCount}</span>` : ''}
       </button>
 
+      <div class="sidebar__projects-header">Projects</div>
+
       <div class="sidebar__list">
         ${activeProjects.map(project => {
           const isHeld = project.heldAt !== null;
