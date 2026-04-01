@@ -113,11 +113,10 @@ export function initSidebarConnector(containerSelector, state) {
         ${archivedList}
       </div>
 
-      <button class="sidebar__report-btn ${state.currentPage === 'yearEndReport' ? 'is-active' : ''}" @click=${navigateToReport}>
-        Year-End Report
-      </button>
-
       <div class="sidebar__footer">
+        <button class="sidebar__report-btn ${state.currentPage === 'yearEndReport' ? 'is-active' : ''}" @click=${navigateToReport}>
+          Year-End Report
+        </button>
         <button class="sidebar__suppress-btn"
           @click=${() => dispatch({ type: 'OPEN_SETTINGS_MODAL' })}>
           Settings

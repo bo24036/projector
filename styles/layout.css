@@ -746,8 +746,7 @@
 /* Sidebar overview button */
 .sidebar__overview-btn,
 .sidebar__personal-btn,
-.sidebar__reading-list-btn,
-.sidebar__report-btn {
+.sidebar__reading-list-btn {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -764,15 +763,13 @@
 
 .sidebar__overview-btn:hover,
 .sidebar__personal-btn:hover,
-.sidebar__reading-list-btn:hover,
-.sidebar__report-btn:hover {
+.sidebar__reading-list-btn:hover {
   background-color: var(--color-surface-hover);
 }
 
 .sidebar__overview-btn.is-active,
 .sidebar__personal-btn.is-active,
-.sidebar__reading-list-btn.is-active,
-.sidebar__report-btn.is-active {
+.sidebar__reading-list-btn.is-active {
   background-color: var(--color-primary);
   color: var(--color-text-light);
 }
@@ -811,6 +808,7 @@
   border-top: var(--border-width) solid var(--color-border);
 }
 
+.sidebar__report-btn,
 .sidebar__suppress-btn,
 .sidebar__export-btn,
 .sidebar__import-btn {
@@ -826,11 +824,17 @@
   transition: background-color var(--transition-fast);
 }
 
+.sidebar__report-btn:hover,
 .sidebar__suppress-btn:hover,
 .sidebar__export-btn:hover,
 .sidebar__import-btn:hover {
   background-color: var(--color-surface-hover);
   color: var(--color-text);
+}
+
+.sidebar__report-btn.is-active {
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
 }
 
 .sidebar__import-input {
