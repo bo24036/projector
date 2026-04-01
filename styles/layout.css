@@ -1425,6 +1425,15 @@
   gap: var(--spacing-xs);
 }
 
+.reading-list-page__section-header {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 var(--spacing-xs) 0;
+}
+
 .reading-list-page__read-toggle {
   background: none;
   border: none;
@@ -1468,9 +1477,17 @@
   background-color: var(--color-surface-hover);
 }
 
-.reading-list-item--read .reading-list-item__title {
+.reading-list-item--read .reading-list-item__text {
   text-decoration: line-through;
   color: var(--color-text-secondary);
+}
+
+.reading-list-item__checkbox {
+  flex-shrink: 0;
+  margin-top: 3px;
+  cursor: pointer;
+  width: 15px;
+  height: 15px;
 }
 
 .reading-list-item__content {
@@ -1481,24 +1498,22 @@
   min-width: 0;
 }
 
-.reading-list-item__title {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
+.reading-list-item__text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.reading-list-item__link {
+  font-size: var(--font-size-sm);
   color: var(--color-primary);
   text-decoration: none;
   word-break: break-word;
 }
 
-.reading-list-item__title:hover {
+.reading-list-item__link:hover {
   text-decoration: underline;
-}
-
-.reading-list-item__notes {
-  margin: 0;
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  white-space: pre-wrap;
-  word-break: break-word;
 }
 
 .reading-list-item__meta {
@@ -1535,7 +1550,6 @@
   flex-shrink: 0;
 }
 
-.reading-list-item__read-btn,
 .reading-list-item__edit-btn,
 .reading-list-item__delete-btn {
   background: none;
@@ -1546,15 +1560,6 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   transition: color var(--transition-fast), background-color var(--transition-fast);
-}
-
-.reading-list-item__read-btn:hover {
-  color: var(--color-success);
-  background-color: var(--color-surface-hover);
-}
-
-.reading-list-item__read-btn.is-read {
-  color: var(--color-text-secondary);
 }
 
 .reading-list-item__edit-btn:hover {

@@ -21,9 +21,8 @@ export function initReadingListConnector(containerSelector, state) {
   function matchesSearch(item) {
     if (!query) return true;
     return (
-      item.title.toLowerCase().includes(query) ||
-      item.url.toLowerCase().includes(query) ||
-      item.notes.toLowerCase().includes(query) ||
+      item.content.toLowerCase().includes(query) ||
+      item.link.toLowerCase().includes(query) ||
       item.recommendedBy.toLowerCase().includes(query) ||
       item.tags.some(t => t.toLowerCase().includes(query))
     );
@@ -42,9 +41,9 @@ export function initReadingListConnector(containerSelector, state) {
       onToggleRead: () => dispatch({ type: 'TOGGLE_READING_LIST_ITEM_READ', payload: { itemId: item.id } }),
       onEdit: () => dispatch({ type: 'START_EDIT_READING_LIST_ITEM', payload: { itemId: item.id } }),
       onDelete: () => dispatch({ type: 'DELETE_READING_LIST_ITEM', payload: { itemId: item.id } }),
-      onSave: (url, title, notes, recommendedBy, tags) => dispatch({
+      onSave: (content, link, recommendedBy, tags) => dispatch({
         type: 'UPDATE_READING_LIST_ITEM',
-        payload: { itemId: item.id, url, title, notes, recommendedBy, tags },
+        payload: { itemId: item.id, content, link, recommendedBy, tags },
       }),
       onCancel: () => dispatch({ type: 'CANCEL_EDIT_READING_LIST_ITEM' }),
     });
@@ -66,6 +65,7 @@ export function initReadingListConnector(containerSelector, state) {
       </div>
 
       <div class="reading-list-page__section">
+        <h2 class="reading-list-page__section-header">To Read</h2>
         <div class="reading-list-page__items">
           ${unreadItems.map(renderItem)}
 
@@ -79,22 +79,22 @@ export function initReadingListConnector(containerSelector, state) {
           ` : ReadingListInput({
             recommenderOptions,
             tagOptions,
-            onSave: (url, title, notes, recommendedBy, tags) => dispatch({
+            onSave: (content, link, recommendedBy, tags) => dispatch({
               type: 'CREATE_READING_LIST_ITEM',
-              payload: { url, title, notes, recommendedBy, tags },
+              payload: { content, link, recommendedBy, tags },
             }),
             onCancel: () => dispatch({ type: 'CANCEL_CREATE_READING_LIST_ITEM' }),
           })}
         </div>
       </div>
 
-      ${readItems.length > 0 ? html`
+      ${readItems.length > 0 || (allItems.some(i => i.read) && !query) ? html`
         <div class="reading-list-page__section reading-list-page__section--read">
           <button
             class="reading-list-page__read-toggle"
             @click=${() => dispatch({ type: 'TOGGLE_READING_LIST_READ_VISIBILITY' })}
           >
-            ${showReadingListRead ? '▾' : '▸'} Read (${readItems.length})
+            ${showReadingListRead ? '▾' : '▸'} Read (${allItems.filter(i => i.read).length})
           </button>
           ${showReadingListRead ? html`
             <div class="reading-list-page__items reading-list-page__items--read">

@@ -16,9 +16,9 @@ registerHandler('SELECT_READING_LIST', (state) => {
 });
 
 registerHandler('CREATE_READING_LIST_ITEM', (state, action) => {
-  const { url, title, notes, recommendedBy, tags } = action.payload;
+  const { content, link, recommendedBy, tags } = action.payload;
   try {
-    ReadingList.createReadingListItem(url, title, { notes, recommendedBy, tags });
+    ReadingList.createReadingListItem(content, { link, recommendedBy, tags });
     return { state: { ...state, creatingReadingListItem: false } };
   } catch (error) {
     return {
@@ -30,8 +30,8 @@ registerHandler('CREATE_READING_LIST_ITEM', (state, action) => {
   }
 });
 
-createMutationHandler('UPDATE_READING_LIST_ITEM', ({ itemId, url, title, notes, recommendedBy, tags }) => {
-  ReadingList.updateReadingListItem(itemId, { url, title, notes, recommendedBy, tags });
+createMutationHandler('UPDATE_READING_LIST_ITEM', ({ itemId, content, link, recommendedBy, tags }) => {
+  ReadingList.updateReadingListItem(itemId, { content, link, recommendedBy, tags });
 });
 
 createMutationHandler('DELETE_READING_LIST_ITEM', ({ itemId }) => {

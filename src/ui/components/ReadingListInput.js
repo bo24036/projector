@@ -2,12 +2,11 @@ import { html } from '/vendor/lit-html/lit-html.js';
 import { makeDatalistId } from '../../utils/domUtils.js';
 
 // Dumb component for creating or editing a reading list item.
-// onSave(url, title, notes, recommendedBy, tags) — tags is an array
+// onSave(content, link, recommendedBy, tags) — tags is an array
 // onCancel() — cancel and dismiss
 export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], tagOptions = [], initial = {} }) {
-  let urlValue = initial.url ?? '';
-  let titleValue = initial.title ?? '';
-  let notesValue = initial.notes ?? '';
+  let contentValue = initial.content ?? '';
+  let linkValue = initial.link ?? '';
   let recommendedByValue = initial.recommendedBy ?? '';
   let tagsValue = initial.tags ? initial.tags.join(', ') : '';
 
@@ -19,8 +18,8 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
   }
 
   function handleSave() {
-    if (!urlValue.trim() || !titleValue.trim()) return;
-    onSave(urlValue.trim(), titleValue.trim(), notesValue.trim(), recommendedByValue.trim(), parseTags(tagsValue));
+    if (!contentValue.trim()) return;
+    onSave(contentValue.trim(), linkValue.trim(), recommendedByValue.trim(), parseTags(tagsValue));
   }
 
   function handleKeyDown(event) {
@@ -34,32 +33,24 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
   return html`
     <div class="reading-list-item reading-list-item--editing">
       <div class="reading-list-input__fields">
-        <input
+        <textarea
           ?autofocus=${true}
           data-autofocus
-          class="reading-list-input__field reading-list-input__field--url"
-          type="url"
-          placeholder="URL (required)..."
-          .value=${urlValue}
-          @input=${e => { urlValue = e.target.value; }}
-          @keydown=${handleKeyDown}
-        />
-        <input
-          class="reading-list-input__field reading-list-input__field--title"
-          type="text"
-          placeholder="Title (required)..."
-          .value=${titleValue}
-          @input=${e => { titleValue = e.target.value; }}
-          @keydown=${handleKeyDown}
-        />
-        <textarea
-          class="reading-list-input__field reading-list-input__field--notes"
-          placeholder="Notes..."
-          .value=${notesValue}
-          @input=${e => { notesValue = e.target.value; }}
+          class="reading-list-input__field reading-list-input__field--content"
+          placeholder="Content (required)..."
+          .value=${contentValue}
+          @input=${e => { contentValue = e.target.value; }}
           @keydown=${handleKeyDown}
           rows="2"
         ></textarea>
+        <input
+          class="reading-list-input__field reading-list-input__field--link"
+          type="text"
+          placeholder="Link or [label](url)..."
+          .value=${linkValue}
+          @input=${e => { linkValue = e.target.value; }}
+          @keydown=${handleKeyDown}
+        />
         <input
           class="reading-list-input__field reading-list-input__field--recommended-by"
           type="text"

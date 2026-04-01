@@ -5,9 +5,12 @@
  * Rationale: Reading list is a global (non-project-scoped) list. Like Projects,
  * it must be available immediately for sidebar unread count and page rendering.
  * preloadAll() is called in main.js before router init.
+ *
+ * Schema: content (required, free text), link (optional, plain URL or [label](url)),
+ * recommendedBy (optional, autocomplete), tags (optional array, autocomplete), read (boolean).
+ * No separate title field — content serves as both title and notes.
  */
 
-import { dispatch } from '../state.js';
 import {
   getAllReadingListItemsFromIdb,
   putReadingListItemToIdb,
@@ -19,13 +22,38 @@ import { generateId } from '../utils/idGenerator.js';
 const cache = new Map();
 
 const ERROR_ITEM_NOT_FOUND = 'Reading list item not found';
-const ERROR_URL_REQUIRED = 'URL is required';
-const ERROR_TITLE_REQUIRED = 'Title is required';
+const ERROR_CONTENT_REQUIRED = 'Content is required';
 
 function normalizeUrl(url) {
   if (!url) return url;
   if (/^https?:\/\//i.test(url)) return url;
   return `https://${url}`;
+}
+
+// Normalize a raw link field before storing.
+// Handles plain URLs and markdown [label](url) syntax.
+function normalizeLinkField(raw) {
+  if (!raw?.trim()) return '';
+  const trimmed = raw.trim();
+  const markdownMatch = trimmed.match(/^\[(.+)\]\((.+)\)$/);
+  if (markdownMatch) {
+    const label = markdownMatch[1];
+    const url = normalizeUrl(markdownMatch[2].trim());
+    return `[${label}](${url})`;
+  }
+  return normalizeUrl(trimmed);
+}
+
+// Parse a stored link field for display. Returns { url, label } or null if empty.
+// label is null for plain URLs; a string for markdown [label](url) syntax.
+export function parseLinkField(raw) {
+  if (!raw?.trim()) return null;
+  const trimmed = raw.trim();
+  const markdownMatch = trimmed.match(/^\[(.+)\]\((.+)\)$/);
+  if (markdownMatch) {
+    return { label: markdownMatch[1].trim(), url: markdownMatch[2].trim() };
+  }
+  return { label: null, url: trimmed };
 }
 
 const serialize = createPersistenceQueue(
@@ -45,20 +73,16 @@ export async function preloadAll() {
 }
 
 // Factory: create and persist a new reading list item.
-// url and title are required. overrides may include notes, recommendedBy, tags.
-export function createReadingListItem(url, title, overrides = {}) {
-  const trimmedUrl = url?.trim();
-  const trimmedTitle = title?.trim();
-
-  if (!trimmedUrl) throw new Error(ERROR_URL_REQUIRED);
-  if (!trimmedTitle) throw new Error(ERROR_TITLE_REQUIRED);
+// content is required. overrides may include link, recommendedBy, tags.
+export function createReadingListItem(content, overrides = {}) {
+  const trimmedContent = content?.trim();
+  if (!trimmedContent) throw new Error(ERROR_CONTENT_REQUIRED);
 
   const now = new Date().toISOString();
   const item = {
     id: generateId('rl'),
-    url: normalizeUrl(trimmedUrl),
-    title: trimmedTitle,
-    notes: overrides.notes?.trim() ?? '',
+    content: trimmedContent,
+    link: normalizeLinkField(overrides.link ?? ''),
     recommendedBy: overrides.recommendedBy?.trim() ?? '',
     tags: Array.isArray(overrides.tags) ? overrides.tags.map(t => t.trim()).filter(Boolean) : [],
     read: false,
@@ -81,20 +105,19 @@ export function getAllReadingListItems() {
   return [...cache.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-// Update an existing item. Allowed fields: url, title, notes, recommendedBy, tags.
+// Update an existing item. Allowed fields: content, link, recommendedBy, tags.
 export function updateReadingListItem(id, updates) {
   const item = cache.get(id);
   if (!item) throw new Error(ERROR_ITEM_NOT_FOUND);
 
   const updated = { ...item, updatedAt: new Date().toISOString() };
 
-  if (updates.url !== undefined) updated.url = normalizeUrl(updates.url.trim());
-  if (updates.title !== undefined) {
-    const t = updates.title.trim();
-    if (!t) throw new Error(ERROR_TITLE_REQUIRED);
-    updated.title = t;
+  if (updates.content !== undefined) {
+    const c = updates.content.trim();
+    if (!c) throw new Error(ERROR_CONTENT_REQUIRED);
+    updated.content = c;
   }
-  if (updates.notes !== undefined) updated.notes = updates.notes.trim();
+  if (updates.link !== undefined) updated.link = normalizeLinkField(updates.link);
   if (updates.recommendedBy !== undefined) updated.recommendedBy = updates.recommendedBy.trim();
   if (updates.tags !== undefined) {
     updated.tags = Array.isArray(updates.tags)
