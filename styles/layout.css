@@ -1662,14 +1662,14 @@
 
 .reading-list-input__tags-region {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  flex-direction: column;
   gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  background-color: var(--color-background);
-  min-height: 2rem;
+}
+
+.reading-list-input__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
 }
 
 .reading-list-input__tag-chip {
@@ -1698,13 +1698,14 @@
 }
 
 .reading-list-input__new-tag {
-  border: none;
-  outline: none;
-  background: transparent;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-md);
   font-size: var(--font-size-sm);
+  background-color: var(--color-background);
   color: var(--color-text);
-  min-width: 6rem;
-  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .reading-list-input__controls {

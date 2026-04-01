@@ -20,7 +20,7 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
     return [...tagOptions, ...extra];
   }
 
-  function tagsTemplate() {
+  function chipsTemplate() {
     return html`
       ${allKnownTags().map(tag => html`
         <label class="reading-list-input__tag-chip ${selectedTags.has(tag) ? 'is-selected' : ''}">
@@ -34,53 +34,48 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
               } else {
                 selectedTags.delete(tag);
               }
-              rerenderTagRegion(e.target.closest('.reading-list-input__tags-region'));
+              rerenderChips(e.target.closest('.reading-list-input__chips'));
             }}
           />
           ${tag}
         </label>
       `)}
-      <input
-        type="text"
-        class="reading-list-input__new-tag"
-        placeholder="${allKnownTags().length === 0 ? 'Add tag...' : ''}"
-        @keydown=${(e) => {
-          if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
-          if (e.key === ',') {
-            e.preventDefault();
-            commitNewTag(e.target);
-          }
-          // Enter and all other keys bubble to parent @keydown for save
-        }}
-        @blur=${(e) => commitNewTag(e.target)}
-      />
     `;
   }
 
-  function rerenderTagRegion(region) {
-    if (!region) return;
-    render(tagsTemplate(), region);
+  function rerenderChips(chipsEl) {
+    if (!chipsEl) return;
+    render(chipsTemplate(), chipsEl);
   }
 
-  function commitNewTag(inputEl) {
+  // Commit whatever is in the new-tag input field as chips
+  function commitNewTagInput(inputEl) {
     const val = inputEl.value;
     if (!val.trim()) return;
     val.split(',').map(t => t.trim()).filter(Boolean).forEach(t => selectedTags.add(t));
-    const region = inputEl.closest('.reading-list-input__tags-region');
-    rerenderTagRegion(region);
+    inputEl.value = '';
+    const chipsEl = inputEl.closest('.reading-list-input__tags-region')?.querySelector('.reading-list-input__chips');
+    rerenderChips(chipsEl);
   }
 
-  function handleSave() {
+  // Collect tags: committed chips + whatever is still pending in the text input
+  function collectTags(container) {
+    const pending = container?.querySelector('.reading-list-input__new-tag')?.value ?? '';
+    pending.split(',').map(t => t.trim()).filter(Boolean).forEach(t => selectedTags.add(t));
+    return [...selectedTags];
+  }
+
+  function handleSave(e) {
     if (!contentValue.trim()) return;
-    onSave(contentValue.trim(), linkValue.trim(), recommendedByValue.trim(), [...selectedTags]);
+    const container = e.target.closest('.reading-list-item--editing');
+    onSave(contentValue.trim(), linkValue.trim(), recommendedByValue.trim(), collectTags(container));
   }
 
   function handleKeyDown(event) {
-    // Don't intercept keys from the tag input (it handles its own keydown)
     if (event.target.classList.contains('reading-list-input__new-tag')) return;
     if (event.key === 'Enter' && !event.shiftKey && event.target.tagName !== 'TEXTAREA') {
       event.preventDefault();
-      handleSave();
+      handleSave(event);
     } else if (event.key === 'Escape') {
       onCancel();
     }
@@ -88,7 +83,7 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
 
   function handleTextareaKeyDown(event) {
     if (event.key === 'Escape') { onCancel(); return; }
-    if (event.key === 'Enter' && event.shiftKey) { event.preventDefault(); handleSave(); }
+    if (event.key === 'Enter' && event.shiftKey) { event.preventDefault(); handleSave(event); }
   }
 
   return html`
@@ -124,7 +119,27 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
         </datalist>
 
         <div class="reading-list-input__tags-region">
-          ${tagsTemplate()}
+          <input
+            type="text"
+            class="reading-list-input__new-tag"
+            placeholder="Add tag..."
+            @keydown=${(e) => {
+              if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
+              if (e.key === ',') {
+                e.preventDefault();
+                commitNewTagInput(e.target);
+              }
+            }}
+            @blur=${(e) => {
+              // Skip if focus is moving to the save/cancel buttons — handleSave will collectTags instead
+              const related = e.relatedTarget;
+              if (related && (related.classList.contains('button-ok') || related.classList.contains('button-cancel'))) return;
+              commitNewTagInput(e.target);
+            }}
+          />
+          <div class="reading-list-input__chips">
+            ${chipsTemplate()}
+          </div>
         </div>
       </div>
       <div class="reading-list-input__controls">
