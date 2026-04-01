@@ -32,10 +32,14 @@ export function initReadingListConnector(containerSelector, state) {
   const readItems = allItems.filter(i => i.read && matchesSearch(i));
   const unreadCount = allItems.filter(i => !i.read).length;
 
+  // Track the active ReadingListInput template so we can call _initTags after render
+  let activeInputTemplate = null;
+
   function renderItem(item) {
-    return ReadingListItem({
+    const isEditing = editingReadingListItemId === item.id;
+    const result = ReadingListItem({
       item,
-      isEditing: editingReadingListItemId === item.id,
+      isEditing,
       recommenderOptions,
       tagOptions,
       onToggleRead: () => dispatch({ type: 'TOGGLE_READING_LIST_ITEM_READ', payload: { itemId: item.id } }),
@@ -47,6 +51,22 @@ export function initReadingListConnector(containerSelector, state) {
       }),
       onCancel: () => dispatch({ type: 'CANCEL_EDIT_READING_LIST_ITEM' }),
     });
+    if (isEditing && result?._initTags) activeInputTemplate = result;
+    return result;
+  }
+
+  let createTemplate = null;
+  if (creatingReadingListItem) {
+    createTemplate = ReadingListInput({
+      recommenderOptions,
+      tagOptions,
+      onSave: (content, link, recommendedBy, tags) => dispatch({
+        type: 'CREATE_READING_LIST_ITEM',
+        payload: { content, link, recommendedBy, tags },
+      }),
+      onCancel: () => dispatch({ type: 'CANCEL_CREATE_READING_LIST_ITEM' }),
+    });
+    activeInputTemplate = createTemplate;
   }
 
   const template = html`
@@ -75,15 +95,7 @@ export function initReadingListConnector(containerSelector, state) {
                 @click=${() => dispatch({ type: 'START_CREATE_READING_LIST_ITEM' })}
               >[Add item...]</button>
             </div>
-          ` : ReadingListInput({
-            recommenderOptions,
-            tagOptions,
-            onSave: (content, link, recommendedBy, tags) => dispatch({
-              type: 'CREATE_READING_LIST_ITEM',
-              payload: { content, link, recommendedBy, tags },
-            }),
-            onCancel: () => dispatch({ type: 'CANCEL_CREATE_READING_LIST_ITEM' }),
-          })}
+          ` : createTemplate}
         </div>
       </div>
 
@@ -107,4 +119,11 @@ export function initReadingListConnector(containerSelector, state) {
 
   render(template, container);
   focusAutofocusElement(container);
+
+  // Wire tag chips imperatively after lit-html has rendered the DOM
+  requestAnimationFrame(() => {
+    if (activeInputTemplate?._initTags) {
+      activeInputTemplate._initTags(container);
+    }
+  });
 }

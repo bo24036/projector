@@ -1,64 +1,59 @@
-import { html, render } from '/vendor/lit-html/lit-html.js';
+import { html } from '/vendor/lit-html/lit-html.js';
 import { makeDatalistId } from '../../utils/domUtils.js';
 
 // Dumb component for creating or editing a reading list item.
 // onSave(content, link, recommendedBy, tags) — tags is an array
 // onCancel() — cancel and dismiss
+//
+// Tag chips are wired imperatively after lit-html renders to avoid nested
+// render() calls fighting the outer template. After calling render(), call
+// initReadingListTags(container) where container is the element passed to render().
 export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], tagOptions = [], initial = {} }) {
   let contentValue = initial.content ?? '';
   let linkValue = initial.link ?? '';
   let recommendedByValue = initial.recommendedBy ?? '';
 
-  // selectedTags: Set of currently applied tag strings
   const selectedTags = new Set(initial.tags ?? []);
 
   const recommenderListId = makeDatalistId('rl-recommender-list');
 
-  // All known tags = union of tagOptions + any selectedTags not yet in tagOptions
   function allKnownTags() {
     const extra = [...selectedTags].filter(t => !tagOptions.includes(t));
     return [...tagOptions, ...extra];
   }
 
-  function chipsTemplate() {
-    return html`
-      ${allKnownTags().map(tag => html`
-        <label class="reading-list-input__tag-chip ${selectedTags.has(tag) ? 'is-selected' : ''}">
-          <input
-            type="checkbox"
-            class="reading-list-input__tag-checkbox"
-            ?checked=${selectedTags.has(tag)}
-            @change=${(e) => {
-              if (e.target.checked) {
-                selectedTags.add(tag);
-              } else {
-                selectedTags.delete(tag);
-              }
-              rerenderChips(e.target.closest('.reading-list-input__chips'));
-            }}
-          />
-          ${tag}
-        </label>
-      `)}
-    `;
-  }
-
-  function rerenderChips(chipsEl) {
+  function syncChips(chipsEl) {
     if (!chipsEl) return;
-    render(chipsTemplate(), chipsEl);
+    allKnownTags().forEach(tag => {
+      let chip = chipsEl.querySelector(`[data-tag="${tag.replace(/"/g, '\\"')}"]`);
+      if (!chip) {
+        chip = document.createElement('label');
+        chip.className = 'reading-list-input__tag-chip';
+        chip.dataset.tag = tag;
+        const check = document.createElement('span');
+        check.className = 'reading-list-input__tag-check';
+        check.textContent = '✓';
+        chip.appendChild(check);
+        chip.appendChild(document.createTextNode('\u00a0' + tag));
+        chip.addEventListener('mousedown', (e) => {
+          e.preventDefault(); // prevent blur on new-tag input before click resolves
+          selectedTags.has(tag) ? selectedTags.delete(tag) : selectedTags.add(tag);
+          syncChips(chipsEl);
+        });
+        chipsEl.appendChild(chip);
+      }
+      chip.classList.toggle('is-selected', selectedTags.has(tag));
+    });
   }
 
-  // Commit whatever is in the new-tag input field as chips
-  function commitNewTagInput(inputEl) {
+  function commitNewTagInput(inputEl, chipsEl) {
     const val = inputEl.value;
     if (!val.trim()) return;
     val.split(',').map(t => t.trim()).filter(Boolean).forEach(t => selectedTags.add(t));
     inputEl.value = '';
-    const chipsEl = inputEl.closest('.reading-list-input__tags-region')?.querySelector('.reading-list-input__chips');
-    rerenderChips(chipsEl);
+    syncChips(chipsEl);
   }
 
-  // Collect tags: committed chips + whatever is still pending in the text input
   function collectTags(container) {
     const pending = container?.querySelector('.reading-list-input__new-tag')?.value ?? '';
     pending.split(',').map(t => t.trim()).filter(Boolean).forEach(t => selectedTags.add(t));
@@ -86,7 +81,8 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
     if (event.key === 'Enter' && event.shiftKey) { event.preventDefault(); handleSave(event); }
   }
 
-  return html`
+  // Store init fn on the template result so the connector can call it after render
+  const template = html`
     <div class="reading-list-item reading-list-item--editing" @keydown=${handleKeyDown}>
       <div class="reading-list-input__fields">
         <textarea
@@ -123,23 +119,8 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
             type="text"
             class="reading-list-input__new-tag"
             placeholder="Add tag..."
-            @keydown=${(e) => {
-              if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
-              if (e.key === ',') {
-                e.preventDefault();
-                commitNewTagInput(e.target);
-              }
-            }}
-            @blur=${(e) => {
-              // Skip if focus is moving to the save/cancel buttons — handleSave will collectTags instead
-              const related = e.relatedTarget;
-              if (related && (related.classList.contains('button-ok') || related.classList.contains('button-cancel'))) return;
-              commitNewTagInput(e.target);
-            }}
           />
-          <div class="reading-list-input__chips">
-            ${chipsTemplate()}
-          </div>
+          <div class="reading-list-input__chips"></div>
         </div>
       </div>
       <div class="reading-list-input__controls">
@@ -148,4 +129,27 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
       </div>
     </div>
   `;
+
+  // Attach the init function to the template result for the connector to call after render()
+  template._initTags = (parentEl) => {
+    const editingEl = parentEl.querySelector('.reading-list-item--editing');
+    if (!editingEl) return;
+    const chipsEl = editingEl.querySelector('.reading-list-input__chips');
+    const newTagInput = editingEl.querySelector('.reading-list-input__new-tag');
+    if (!chipsEl || !newTagInput) return;
+
+    syncChips(chipsEl);
+
+    newTagInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
+      if (e.key === ',') { e.preventDefault(); commitNewTagInput(newTagInput, chipsEl); }
+    });
+    newTagInput.addEventListener('blur', (e) => {
+      const related = e.relatedTarget;
+      if (related && (related.classList.contains('button-ok') || related.classList.contains('button-cancel'))) return;
+      commitNewTagInput(newTagInput, chipsEl);
+    });
+  };
+
+  return template;
 }

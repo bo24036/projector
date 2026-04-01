@@ -1693,8 +1693,17 @@
   color: var(--color-on-primary, #fff);
 }
 
-.reading-list-input__tag-checkbox {
-  display: none;
+.reading-list-input__tag-check {
+  font-size: 0.6em;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  transition: opacity 0.1s, width 0.1s;
+}
+
+.reading-list-input__tag-chip.is-selected .reading-list-input__tag-check {
+  opacity: 1;
+  width: auto;
 }
 
 .reading-list-input__new-tag {
