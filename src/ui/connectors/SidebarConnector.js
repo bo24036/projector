@@ -9,7 +9,8 @@ import * as Task from '../../domains/Task.js';
 import * as Person from '../../domains/Person.js';
 import * as Settings from '../../domains/Settings.js';
 import { dispatch } from '../../state.js';
-import { navigateToProject, navigateToOverview, navigateToPersonal, navigateToReport } from '../../utils/router.js';
+import { navigateToProject, navigateToOverview, navigateToPersonal, navigateToReport, navigateToReadingList } from '../../utils/router.js';
+import * as ReadingList from '../../domains/ReadingList.js';
 
 const MS_PER_DAY = 86400000;
 
@@ -26,6 +27,7 @@ export function initSidebarConnector(containerSelector, state) {
   const nonHeldProjects = activeProjects.filter(p => p.heldAt === null);
 
   const personalTaskCount = Task.getOpenTaskCount(null);
+  const readingListUnreadCount = ReadingList.getAllReadingListItems().filter(i => !i.read).length;
   const overviewTaskCount = nonHeldProjects.reduce((sum, p) => sum + Task.getOpenTaskCount(p.id), 0) + personalTaskCount;
 
   const URGENCY_RANK = { red: 0, orange: 1, yellow: 2, gray: 3 };
@@ -77,6 +79,11 @@ export function initSidebarConnector(containerSelector, state) {
       <button class="sidebar__personal-btn urgency-${personalUrgency} ${state.currentPage === 'personal' ? 'is-active' : ''}" @click=${navigateToPersonal}>
         My Tasks
         ${personalTaskCount > 0 ? html`<span class="sidebar__count">${personalTaskCount}</span>` : ''}
+      </button>
+
+      <button class="sidebar__reading-list-btn ${state.currentPage === 'readingList' ? 'is-active' : ''}" @click=${navigateToReadingList}>
+        Reading List
+        ${readingListUnreadCount > 0 ? html`<span class="sidebar__count">${readingListUnreadCount}</span>` : ''}
       </button>
 
       <div class="sidebar__list">

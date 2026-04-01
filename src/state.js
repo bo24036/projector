@@ -1,7 +1,7 @@
 const AUTO_DISMISS_MS = 5000;
 
 const state = {
-  // currentPage values: 'overview' | 'personal' | 'project' | 'yearEndReport'
+  // currentPage values: 'overview' | 'personal' | 'readingList' | 'project' | 'yearEndReport'
   currentPage: 'overview',
   currentProjectId: null,
   isCreatingProject: false,
@@ -12,6 +12,10 @@ const state = {
   editingPersonId: null,
   creatingNote: false,
   editingNoteId: null,
+  creatingReadingListItem: false,
+  editingReadingListItemId: null,
+  showReadingListRead: false,
+  readingListSearch: '',
   showSettingsModal: false,
   restoringProjectId: null,
   lastError: null, // { actionType, message, entityId, timestamp } - cleared when dismissed or on next action

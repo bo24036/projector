@@ -24,7 +24,7 @@ async function getDatabase() {
 
   if (db) return db;
 
-  db = await openDB('projector', 5, {
+  db = await openDB('projector', 6, {
     upgrade(db) {
       if (!db.objectStoreNames.contains('projects')) {
         db.createObjectStore('projects', { keyPath: 'id' });
@@ -40,6 +40,9 @@ async function getDatabase() {
       }
       if (!db.objectStoreNames.contains('notes')) {
         db.createObjectStore('notes', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('readingList')) {
+        db.createObjectStore('readingList', { keyPath: 'id' });
       }
     },
   });
@@ -283,6 +286,44 @@ export async function getAllSettings() {
   const database = await getDatabase();
   if (!database) return [];
   return (await database.getAll('settings')) || [];
+}
+
+// Fetch a single reading list item from IDB. Returns undefined if not found.
+export async function getReadingListItemFromIdb(id) {
+  const database = await getDatabase();
+  if (!database) return undefined;
+  return database.get('readingList', id);
+}
+
+// Fetch all reading list items from IDB. Returns empty array if none exist.
+export async function getAllReadingListItemsFromIdb() {
+  const database = await getDatabase();
+  if (!database) return [];
+  return (await database.getAll('readingList')) || [];
+}
+
+// Save a reading list item to IDB. Fire-and-forget; errors logged to console.
+export async function putReadingListItemToIdb(item) {
+  const database = await getDatabase();
+  if (!database) return;
+
+  try {
+    await database.put('readingList', item);
+  } catch (error) {
+    console.error(`Failed to persist reading list item ${item.id}:`, error.message);
+  }
+}
+
+// Delete a reading list item from IDB. Fire-and-forget; errors logged to console.
+export async function deleteReadingListItemFromIdb(id) {
+  const database = await getDatabase();
+  if (!database) return;
+
+  try {
+    await database.delete('readingList', id);
+  } catch (error) {
+    console.error(`Failed to delete reading list item ${id}:`, error.message);
+  }
 }
 
 // Clear all records from a store. Used during import.

@@ -4,6 +4,7 @@ import './handlers/PersonHandler.js';
 import './handlers/NoteHandler.js';
 import './handlers/DataTransferHandler.js';
 import './handlers/ReportHandler.js';
+import './handlers/ReadingListHandler.js';
 import { initVersionCheck } from './utils/versionCheck.js';
 import { UpdateBanner } from './ui/components/UpdateBanner.js';
 import { initSidebarConnector } from './ui/connectors/SidebarConnector.js';
@@ -11,6 +12,7 @@ import { initProjectDetailConnector } from './ui/connectors/ProjectDetailConnect
 import { initOverviewConnector } from './ui/connectors/OverviewConnector.js';
 import { initPersonalTasksConnector } from './ui/connectors/PersonalTasksConnector.js';
 import { initYearEndReportConnector } from './ui/connectors/YearEndReportConnector.js';
+import { initReadingListConnector } from './ui/connectors/ReadingListConnector.js';
 import { ErrorNotification } from './ui/components/ErrorNotification.js';
 import { render, nothing } from '/vendor/lit-html/lit-html.js';
 import { initRouter } from './utils/router.js';
@@ -21,6 +23,7 @@ import { idbReady } from './utils/IdbService.js';
 import * as Project from './domains/Project.js';
 import * as Person from './domains/Person.js';
 import * as Settings from './domains/Settings.js';
+import * as ReadingList from './domains/ReadingList.js';
 
 function renderApp() {
   const state = getState();
@@ -30,6 +33,8 @@ function renderApp() {
     initOverviewConnector('#main-content', state);
   } else if (state.currentPage === 'personal') {
     initPersonalTasksConnector('#main-content', state);
+  } else if (state.currentPage === 'readingList') {
+    initReadingListConnector('#main-content', state);
   } else if (state.currentPage === 'yearEndReport') {
     initYearEndReportConnector('#main-content', state);
   } else {
@@ -70,6 +75,9 @@ async function initApp() {
 
   // Pre-load app settings from IDB
   await Settings.preloadSettings();
+
+  // Pre-load all reading list items into cache
+  await ReadingList.preloadAll();
 
   // Register root renderer before router init so initial navigation triggers render
   setRootRenderer(renderApp);

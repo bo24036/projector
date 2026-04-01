@@ -735,6 +735,7 @@
 /* Sidebar overview button */
 .sidebar__overview-btn,
 .sidebar__personal-btn,
+.sidebar__reading-list-btn,
 .sidebar__report-btn {
   display: flex;
   align-items: center;
@@ -752,12 +753,14 @@
 
 .sidebar__overview-btn:hover,
 .sidebar__personal-btn:hover,
+.sidebar__reading-list-btn:hover,
 .sidebar__report-btn:hover {
   background-color: var(--color-surface-hover);
 }
 
 .sidebar__overview-btn.is-active,
 .sidebar__personal-btn.is-active,
+.sidebar__reading-list-btn.is-active,
 .sidebar__report-btn.is-active {
   background-color: var(--color-primary);
   color: var(--color-text-light);
@@ -784,7 +787,8 @@
 
 .project-list-item.is-selected .sidebar__count,
 .sidebar__overview-btn.is-active .sidebar__count,
-.sidebar__personal-btn.is-active .sidebar__count {
+.sidebar__personal-btn.is-active .sidebar__count,
+.sidebar__reading-list-btn.is-active .sidebar__count {
   color: rgba(255, 255, 255, 0.75);
 }
 
@@ -1374,3 +1378,250 @@
   background-color: var(--color-surface-hover);
 }
 
+/* =====================================================
+   Reading List Page
+   ===================================================== */
+
+.reading-list-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.reading-list-page__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--spacing-md) 0;
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: var(--spacing-md);
+}
+
+.reading-list-page__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.reading-list-page__search {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.reading-list-page__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.reading-list-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.reading-list-page__read-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-xs) 0;
+  text-align: left;
+}
+
+.reading-list-page__read-toggle:hover {
+  color: var(--color-text);
+}
+
+.reading-list-page__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.reading-list-page__items--read {
+  opacity: 0.65;
+}
+
+/* =====================================================
+   Reading List Item
+   ===================================================== */
+
+.reading-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border: var(--border-width) solid var(--color-border);
+  background-color: var(--color-surface);
+  transition: background-color var(--transition-fast);
+}
+
+.reading-list-item:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.reading-list-item--read .reading-list-item__title {
+  text-decoration: line-through;
+  color: var(--color-text-secondary);
+}
+
+.reading-list-item__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-width: 0;
+}
+
+.reading-list-item__title {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.reading-list-item__title:hover {
+  text-decoration: underline;
+}
+
+.reading-list-item__notes {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.reading-list-item__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.reading-list-item__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+.reading-list-item__tag {
+  font-size: var(--font-size-xs);
+  padding: 2px var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-primary-light);
+  color: var(--color-text-light);
+}
+
+.reading-list-item__recommender {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+.reading-list-item__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+}
+
+.reading-list-item__read-btn,
+.reading-list-item__edit-btn,
+.reading-list-item__delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--spacing-xs);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.reading-list-item__read-btn:hover {
+  color: var(--color-success);
+  background-color: var(--color-surface-hover);
+}
+
+.reading-list-item__read-btn.is-read {
+  color: var(--color-text-secondary);
+}
+
+.reading-list-item__edit-btn:hover {
+  color: var(--color-text);
+  background-color: var(--color-surface-hover);
+}
+
+.reading-list-item__delete-btn:hover {
+  color: var(--color-error);
+  background-color: var(--color-surface-hover);
+}
+
+.reading-list-item--placeholder {
+  border-style: dashed;
+  background-color: transparent;
+}
+
+.reading-list-item__placeholder-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: 0;
+  width: 100%;
+  text-align: left;
+}
+
+.reading-list-item__placeholder-button:hover {
+  color: var(--color-text);
+}
+
+/* =====================================================
+   Reading List Input Form
+   ===================================================== */
+
+.reading-list-item--editing {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.reading-list-input__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.reading-list-input__field {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  font-size: var(--font-size-sm);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.reading-list-input__field--notes {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.reading-list-input__controls {
+  display: flex;
+  gap: var(--spacing-xs);
+  justify-content: flex-end;
+  margin-top: var(--spacing-xs);
+}

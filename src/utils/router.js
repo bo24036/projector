@@ -20,6 +20,12 @@ function handleRouteChange() {
     return;
   }
 
+  // Parse #reading-list
+  if (hash === '#reading-list') {
+    dispatch({ type: 'SELECT_READING_LIST' });
+    return;
+  }
+
   // Parse #report
   if (hash === '#report') {
     dispatch({ type: 'SELECT_YEAR_END_REPORT' });
@@ -53,4 +59,8 @@ export function navigateToOverview() {
 
 export function navigateToReport() {
   window.location.hash = '#report';
+}
+
+export function navigateToReadingList() {
+  window.location.hash = '#reading-list';
 }
