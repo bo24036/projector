@@ -142,8 +142,11 @@ export function ReadingListInput({ onSave, onCancel, recommenderOptions = [], ta
     newTagInput.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
       if (e.key === ',') { e.preventDefault(); commitNewTagInput(newTagInput, chipsEl); return; }
-      if (e.key === 'Enter') { commitNewTagInput(newTagInput, chipsEl); }
-      // Enter bubbles to parent @keydown which calls handleSave
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitNewTagInput(newTagInput, chipsEl);
+        handleSave(e);
+      }
     });
     newTagInput.addEventListener('blur', (e) => {
       const related = e.relatedTarget;
