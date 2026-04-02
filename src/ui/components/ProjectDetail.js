@@ -48,7 +48,7 @@ export function ProjectDetail({ project, onNameChange, onDescriptionChange, onAr
             class="project-detail__funded-checkbox"
             type="checkbox"
             aria-label="Mark project as funded"
-            ?checked=${project.funded}
+            .checked=${project.funded}
             ?disabled=${isArchived}
             @change=${handleToggleFunded}
           />
