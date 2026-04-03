@@ -844,6 +844,9 @@
   align-items: center;
   gap: var(--spacing-md);
   justify-content: space-between;
+  margin-top: var(--spacing-md);
+  padding-top: var(--spacing-md);
+  border-top: var(--border-width) solid var(--color-border);
 }
 
 .suppress-modal__backup-status {

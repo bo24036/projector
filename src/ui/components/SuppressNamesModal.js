@@ -67,9 +67,9 @@ export function SettingsModal({ allNames, suppressedNames, holdReviewDays, onSav
         </div>
         <div class="suppress-modal__backup-row">
           <div class="suppress-modal__backup-status">
-            <span class="suppress-modal__backup-label">Auto-backup</span>
+            <span class="suppress-modal__backup-label">Auto-backup folder</span>
             <span class="suppress-modal__backup-dir">
-              ${backupDirName ? backupDirName : 'No folder set — changes will not be backed up automatically'}
+              ${backupDirName ? `"${backupDirName}" (browser security limits display to folder name only)` : 'No folder set — changes will not be backed up automatically'}
             </span>
           </div>
           <button class="suppress-modal__data-btn" @click=${onSetBackupDir}>
