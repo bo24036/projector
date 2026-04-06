@@ -12,6 +12,8 @@ import * as Settings from '../../domains/Settings.js';
 import { dispatch } from '../../state.js';
 import { navigateToOverview } from '../../utils/router.js';
 
+let lastTaskFormKey = null;
+let lastPersonFormKey = null;
 let lastNoteFormKey = null;
 
 export function initProjectDetailConnector(containerSelector, state) {
@@ -119,7 +121,6 @@ export function initProjectDetailConnector(containerSelector, state) {
                 nameOptions: allNames,
                 roleOptions: allRoles,
                 onSave: (name, role) => {
-                  document.querySelectorAll('.person-list-item--creating input').forEach(el => { el.value = ''; });
                   dispatch({ type: 'CREATE_PERSON', payload: { projectId: project.id, name, role } });
                 },
                 onCancel: () => dispatch({ type: 'CANCEL_CREATE_PERSON' }),
@@ -143,12 +144,21 @@ export function initProjectDetailConnector(containerSelector, state) {
       if (dialog && !dialog.open) dialog.showModal();
     }
 
-    // When a note is saved and another is being created, noteFormKey increments.
-    // Force-focus the content field and clear both inputs for the fresh form.
+    // When an item is saved and the form stays open, *FormKey increments.
+    // Clear all inputs and force-focus the primary field for the fresh form.
+    if (state.creatingTask && state.taskFormKey !== lastTaskFormKey) {
+      lastTaskFormKey = state.taskFormKey;
+      container.querySelectorAll('.task-list-item--creating input').forEach(el => { el.value = ''; });
+      container.querySelector('.task-input__field--name')?.focus();
+    }
+    if (state.creatingPerson && state.personFormKey !== lastPersonFormKey) {
+      lastPersonFormKey = state.personFormKey;
+      container.querySelectorAll('.person-list-item--creating input').forEach(el => { el.value = ''; });
+      container.querySelector('.person-input__field--name')?.focus();
+    }
     if (state.creatingNote && state.noteFormKey !== lastNoteFormKey) {
       lastNoteFormKey = state.noteFormKey;
-      const inputs = container.querySelectorAll('.note-list-item--creating input');
-      inputs.forEach(el => { el.value = ''; });
+      container.querySelectorAll('.note-list-item--creating input').forEach(el => { el.value = ''; });
       container.querySelector('.note-input__field--content')?.focus();
     }
   });

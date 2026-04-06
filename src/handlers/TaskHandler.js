@@ -7,7 +7,7 @@ registerHandler('CREATE_TASK', (state, action) => {
 
   try {
     Task.createTask(projectId, name, dueDate);
-    return { state: { ...state, creatingTask: true } };
+    return { state: { ...state, creatingTask: true, taskFormKey: state.taskFormKey + 1 } };
   } catch (error) {
     return {
       state: {

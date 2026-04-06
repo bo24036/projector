@@ -8,7 +8,7 @@ registerHandler('CREATE_PERSON', (state, action) => {
 
   try {
     Person.createPerson(projectId, name, role);
-    return { state: { ...state, creatingPerson: true } };
+    return { state: { ...state, creatingPerson: true, personFormKey: state.personFormKey + 1 } };
   } catch (error) {
     return {
       state: {

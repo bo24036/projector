@@ -10,8 +10,10 @@ const state = {
   showArchivedProjects: false,
   creatingTask: false,
   editingTaskId: null,
+  taskFormKey: 0, // incremented on each successful CREATE_TASK to force fresh TaskInput closure
   creatingPerson: false,
   editingPersonId: null,
+  personFormKey: 0, // incremented on each successful CREATE_PERSON to force fresh PersonInput closure
   creatingNote: false,
   editingNoteId: null,
   noteFormKey: 0, // incremented on each successful CREATE_NOTE to force fresh NoteInput closure

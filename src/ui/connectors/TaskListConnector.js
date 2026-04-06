@@ -52,7 +52,6 @@ export function TaskListConnector({ projectId, state }) {
 
       ${!isArchived ? (creatingTask ? TaskInput({
         onSave: (name, dueDate) => {
-          document.querySelectorAll('.task-list-item--creating input').forEach(el => { el.value = ''; });
           dispatch({
             type: 'CREATE_TASK',
             payload: { projectId, name, dueDate: dueDate || null },
