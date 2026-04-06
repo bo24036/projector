@@ -22,6 +22,8 @@ import { initDebug } from './utils/debug.js';
 import { idbReady } from './utils/IdbService.js';
 import { initAutoBackup } from './utils/AutoBackup.js';
 import * as Project from './domains/Project.js';
+import * as Task from './domains/Task.js';
+import * as Note from './domains/Note.js';
 import * as Person from './domains/Person.js';
 import * as Settings from './domains/Settings.js';
 import * as ReadingList from './domains/ReadingList.js';
@@ -68,6 +70,12 @@ async function initApp() {
   // Pre-load all projects into cache before router initialization
   // This ensures projects are available synchronously for all handlers and connectors
   await Project.getAllProjectsAsync();
+
+  // Pre-load all tasks and notes so they're available synchronously on first render.
+  // Without this, connectors render empty on initial page load and only populate
+  // after the next user action (lazy cache-miss fetches don't trigger re-renders).
+  await Task.preloadAll();
+  await Note.preloadAll();
 
   // Pre-load all people into cache for autocomplete
   // This ensures people names/roles are available synchronously for autocomplete

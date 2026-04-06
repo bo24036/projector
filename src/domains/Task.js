@@ -19,7 +19,7 @@
 import { dispatch } from '../state.js';
 
 // Import IDB operations from service layer
-import { getTask as getTaskFromIdb, getTasksByProjectId as getTasksByProjectIdFromIdb, getPersonalTasksFromIdb, putTask as putTaskToIdb, deleteTask as deleteTaskFromIdb } from '../utils/IdbService.js';
+import { getTask as getTaskFromIdb, getTasksByProjectId as getTasksByProjectIdFromIdb, getPersonalTasksFromIdb, getAllTasks as getAllTasksFromIdb, putTask as putTaskToIdb, deleteTask as deleteTaskFromIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 
@@ -368,6 +368,23 @@ export function deleteTask(id) {
 
 // Returns a snapshot of all tasks currently in the in-memory cache.
 export function snapshotCache() { return Array.from(taskCache.values()); }
+
+// Eagerly loads all tasks from IDB into cache. Called at startup before router init
+// so tasks are available synchronously on first render (same pattern as Projects/People).
+export async function preloadAll() {
+  try {
+    const tasks = await getAllTasksFromIdb();
+    for (const task of tasks) {
+      taskCache.set(task.id, task);
+      if (!projectIdIndex.has(task.projectId)) {
+        projectIdIndex.set(task.projectId, new Set());
+      }
+      projectIdIndex.get(task.projectId).add(task.id);
+    }
+  } catch (error) {
+    console.error('Failed to preload tasks:', error.message);
+  }
+}
 
 // Test utility - clears cache and resets state
 export function _resetCacheForTesting() {

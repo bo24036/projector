@@ -13,7 +13,7 @@
  */
 
 import { dispatch } from '../state.js';
-import { getNoteFromIdb, getNotesByProjectIdFromIdb, putNoteToIdb, deleteNoteFromIdb } from '../utils/IdbService.js';
+import { getNoteFromIdb, getNotesByProjectIdFromIdb, getAllNotes as getAllNotesFromIdb, putNoteToIdb, deleteNoteFromIdb } from '../utils/IdbService.js';
 import { createPersistenceQueue } from '../utils/PersistenceQueue.js';
 import { generateId } from '../utils/idGenerator.js';
 
@@ -201,6 +201,23 @@ export function deleteNote(id) {
 
 // Returns a snapshot of all notes currently in the in-memory cache.
 export function snapshotCache() { return Array.from(noteCache.values()); }
+
+// Eagerly loads all notes from IDB into cache. Called at startup before router init
+// so notes are available synchronously on first render (same pattern as Projects/People).
+export async function preloadAll() {
+  try {
+    const notes = await getAllNotesFromIdb();
+    for (const note of notes) {
+      noteCache.set(note.id, note);
+      if (!projectIdIndex.has(note.projectId)) {
+        projectIdIndex.set(note.projectId, new Set());
+      }
+      projectIdIndex.get(note.projectId).add(note.id);
+    }
+  } catch (error) {
+    console.error('Failed to preload notes:', error.message);
+  }
+}
 
 // Test utility - clears cache and resets state
 export function _resetCacheForTesting() {
