@@ -14,6 +14,7 @@ const state = {
   editingPersonId: null,
   creatingNote: false,
   editingNoteId: null,
+  noteFormKey: 0, // incremented on each successful CREATE_NOTE to force fresh NoteInput closure
   creatingReadingListItem: false,
   editingReadingListItemId: null,
   showReadingListRead: false,

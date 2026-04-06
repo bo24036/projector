@@ -33,10 +33,7 @@ export function NoteListConnector({ projectId, state }) {
       })}
 
       ${!isArchived ? (creatingNote ? NoteInput({
-        onSave: (content, link) => {
-          document.querySelectorAll('.note-list-item--creating input').forEach(el => { el.value = ''; });
-          dispatch({ type: 'CREATE_NOTE', payload: { projectId, content, link } });
-        },
+        onSave: (content, link) => dispatch({ type: 'CREATE_NOTE', payload: { projectId, content, link } }),
         onCancel: () => dispatch({ type: 'CANCEL_CREATE_NOTE' }),
       }) : html`
         <div class="note-list-item note-list-item--placeholder">

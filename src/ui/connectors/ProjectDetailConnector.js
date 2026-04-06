@@ -12,6 +12,8 @@ import * as Settings from '../../domains/Settings.js';
 import { dispatch } from '../../state.js';
 import { navigateToOverview } from '../../utils/router.js';
 
+let lastNoteFormKey = null;
+
 export function initProjectDetailConnector(containerSelector, state) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
@@ -139,6 +141,15 @@ export function initProjectDetailConnector(containerSelector, state) {
     if (state.restoringProjectId === project.id) {
       const dialog = container.querySelector('.restore-modal');
       if (dialog && !dialog.open) dialog.showModal();
+    }
+
+    // When a note is saved and another is being created, noteFormKey increments.
+    // Force-focus the content field and clear both inputs for the fresh form.
+    if (state.creatingNote && state.noteFormKey !== lastNoteFormKey) {
+      lastNoteFormKey = state.noteFormKey;
+      const inputs = container.querySelectorAll('.note-list-item--creating input');
+      inputs.forEach(el => { el.value = ''; });
+      container.querySelector('.note-input__field--content')?.focus();
     }
   });
 
