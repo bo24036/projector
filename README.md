@@ -12,6 +12,7 @@ The app, at present, has a place to put
   * Notes with optional links (I use it to keep track of all the loops, murals, confluence pages, etc. every project seems to have)
 
 Other features
+* There is an overview page that shows all your currently open tasks.
 * Tasks can have a due date. Try typing +n to set a due date n business days out. You can also just type in a date
 * You can use markdown syntax on links in the Tasks and reading lists to give a friendlier label rather than just showing the raw url
 * On a project page, if you aren't in an input field, you can type 't' to quickly add a task, 'p' to quickly add a person, or 'n' to quickly add a note
