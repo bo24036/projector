@@ -19,7 +19,7 @@ registerHandler('CREATE_READING_LIST_ITEM', (state, action) => {
   const { content, link, recommendedBy, tags } = action.payload;
   try {
     ReadingList.createReadingListItem(content, { link, recommendedBy, tags });
-    return { state: { ...state, creatingReadingListItem: false } };
+    return { state: { ...state, creatingReadingListItem: true, readingListFormKey: state.readingListFormKey + 1 } };
   } catch (error) {
     return {
       state: {

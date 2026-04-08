@@ -18,6 +18,7 @@ const state = {
   editingNoteId: null,
   noteFormKey: 0, // incremented on each successful CREATE_NOTE to force fresh NoteInput closure
   creatingReadingListItem: false,
+  readingListFormKey: 0, // incremented on each successful CREATE_READING_LIST_ITEM
   editingReadingListItemId: null,
   showReadingListRead: false,
   readingListSearch: '',

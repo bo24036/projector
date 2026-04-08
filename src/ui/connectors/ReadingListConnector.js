@@ -1,4 +1,5 @@
 import { html, render } from '/vendor/lit-html/lit-html.js';
+import { keyed } from '/vendor/lit-html/directives/keyed.js';
 import { focusAutofocusElement } from '../../utils/domHelpers.js';
 import { ReadingListItem } from '../components/ReadingListItem.js';
 import { ReadingListInput } from '../components/ReadingListInput.js';
@@ -9,7 +10,7 @@ export function initReadingListConnector(containerSelector, state) {
   const container = document.querySelector(containerSelector);
   if (!container) return;
 
-  const { creatingReadingListItem, editingReadingListItemId, showReadingListRead } = state;
+  const { creatingReadingListItem, editingReadingListItemId, showReadingListRead, readingListFormKey } = state;
 
   const allItems = ReadingList.getAllReadingListItems();
   const recommenderOptions = ReadingList.getRecommenderOptions();
@@ -57,7 +58,7 @@ export function initReadingListConnector(containerSelector, state) {
 
   let createTemplate = null;
   if (creatingReadingListItem) {
-    createTemplate = ReadingListInput({
+    const rawTemplate = ReadingListInput({
       recommenderOptions,
       tagOptions,
       onSave: (content, link, recommendedBy, tags) => dispatch({
@@ -66,7 +67,8 @@ export function initReadingListConnector(containerSelector, state) {
       }),
       onCancel: () => dispatch({ type: 'CANCEL_CREATE_READING_LIST_ITEM' }),
     });
-    activeInputTemplate = createTemplate;
+    activeInputTemplate = rawTemplate;
+    createTemplate = keyed(readingListFormKey, rawTemplate);
   }
 
   const template = html`
