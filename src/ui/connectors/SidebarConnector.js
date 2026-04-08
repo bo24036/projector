@@ -120,7 +120,7 @@ export function initSidebarConnector(containerSelector, state) {
         </button>
         <button class="sidebar__suppress-btn"
           @click=${() => dispatch({ type: 'OPEN_SETTINGS_MODAL' })}>
-          Settings
+          Settings…
         </button>
       </div>
     </div>
