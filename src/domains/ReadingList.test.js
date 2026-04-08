@@ -28,8 +28,6 @@ assert(item1.id.startsWith('rl_'), 'createReadingListItem id has rl_ prefix');
 assertEqual(item1.content, 'Great article about JS', 'Item has correct content');
 assertEqual(item1.link, '', 'Item link defaults to empty string');
 assertEqual(item1.recommendedBy, '', 'Item recommendedBy defaults to empty string');
-assert(Array.isArray(item1.tags), 'Item tags defaults to an array');
-assertEqual(item1.tags.length, 0, 'Item tags defaults to empty array');
 assertEqual(item1.read, false, 'Item read defaults to false');
 assert(typeof item1.createdAt === 'string', 'Item has createdAt string');
 assert(typeof item1.updatedAt === 'string', 'Item has updatedAt string');
@@ -42,13 +40,9 @@ assertEqual(trimmed.content, 'Trimmed Content', 'createReadingListItem trims con
 const withOverrides = ReadingList.createReadingListItem('Full item', {
   link: 'https://example.com',
   recommendedBy: 'Alice',
-  tags: ['javascript', 'web'],
 });
 assertEqual(withOverrides.link, 'https://example.com', 'createReadingListItem accepts link override');
 assertEqual(withOverrides.recommendedBy, 'Alice', 'createReadingListItem accepts recommendedBy override');
-assertEqual(withOverrides.tags.length, 2, 'createReadingListItem accepts tags override');
-assertEqual(withOverrides.tags[0], 'javascript', 'createReadingListItem stores first tag');
-assertEqual(withOverrides.tags[1], 'web', 'createReadingListItem stores second tag');
 
 // Validation: missing content
 try {
@@ -175,7 +169,6 @@ ReadingList._resetCacheForTesting();
 const toUpdate = ReadingList.createReadingListItem('Original content', {
   link: 'https://original.com',
   recommendedBy: 'Bob',
-  tags: ['tag1'],
 });
 
 const updated = ReadingList.updateReadingListItem(toUpdate.id, { content: 'Updated content' });
@@ -187,10 +180,6 @@ assertEqual(updatedLink.link, 'https://new.com', 'updateReadingListItem normaliz
 
 const updatedRecommender = ReadingList.updateReadingListItem(toUpdate.id, { recommendedBy: 'Carol' });
 assertEqual(updatedRecommender.recommendedBy, 'Carol', 'updateReadingListItem updates recommendedBy');
-
-const updatedTags = ReadingList.updateReadingListItem(toUpdate.id, { tags: ['a', 'b', 'c'] });
-assertEqual(updatedTags.tags.length, 3, 'updateReadingListItem updates tags');
-assertEqual(updatedTags.tags[0], 'a', 'updateReadingListItem stores first updated tag');
 
 const clearedLink = ReadingList.updateReadingListItem(toUpdate.id, { link: '' });
 assertEqual(clearedLink.link, '', 'updateReadingListItem can clear link to empty string');
@@ -237,9 +226,9 @@ console.log('\n=== Autocomplete Tests ===');
 
 ReadingList._resetCacheForTesting();
 
-ReadingList.createReadingListItem('Item A', { recommendedBy: 'Alice', tags: ['js', 'web'] });
-ReadingList.createReadingListItem('Item B', { recommendedBy: 'Bob', tags: ['web', 'css'] });
-ReadingList.createReadingListItem('Item C', { recommendedBy: 'Alice', tags: ['js'] });
+ReadingList.createReadingListItem('Item A', { recommendedBy: 'Alice' });
+ReadingList.createReadingListItem('Item B', { recommendedBy: 'Bob' });
+ReadingList.createReadingListItem('Item C', { recommendedBy: 'Alice' });
 ReadingList.createReadingListItem('Item D', { recommendedBy: '' });
 
 const recommenders = ReadingList.getRecommenderOptions();
@@ -249,19 +238,12 @@ assertEqual(recommenders[0], 'Alice', 'getRecommenderOptions sorted: Alice first
 assertEqual(recommenders[1], 'Bob', 'getRecommenderOptions sorted: Bob second');
 assert(!recommenders.includes(''), 'getRecommenderOptions excludes empty strings');
 
-const tags = ReadingList.getTagOptions();
-assert(Array.isArray(tags), 'getTagOptions returns array');
-assertEqual(tags.length, 3, 'getTagOptions deduplicates tags across items');
-assertEqual(tags[0], 'css', 'getTagOptions sorted: css first');
-assertEqual(tags[1], 'js', 'getTagOptions sorted: js second');
-assertEqual(tags[2], 'web', 'getTagOptions sorted: web third');
-
 // --- _resetCacheForTesting Tests ---
 console.log('\n=== Reset Tests ===');
 
 ReadingList._resetCacheForTesting();
 assertEqual(ReadingList.getAllReadingListItems().length, 0, '_resetCacheForTesting clears all items');
-assertEqual(ReadingList.getRecommenderOptions().length, 0, '_resetCacheForTesting clears autocomplete options');
+assertEqual(ReadingList.getRecommenderOptions().length, 0, '_resetCacheForTesting clears recommender options');
 
 // --- Summary ---
 console.log(`\n=== Test Summary ===`);

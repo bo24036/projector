@@ -14,7 +14,6 @@ export function initReadingListConnector(containerSelector, state) {
 
   const allItems = ReadingList.getAllReadingListItems();
   const recommenderOptions = ReadingList.getRecommenderOptions();
-  const tagOptions = ReadingList.getTagOptions();
 
   const searchQuery = state.readingListSearch ?? '';
   const query = searchQuery.toLowerCase();
@@ -24,8 +23,7 @@ export function initReadingListConnector(containerSelector, state) {
     return (
       item.content.toLowerCase().includes(query) ||
       item.link.toLowerCase().includes(query) ||
-      item.recommendedBy.toLowerCase().includes(query) ||
-      item.tags.some(t => t.toLowerCase().includes(query))
+      item.recommendedBy.toLowerCase().includes(query)
     );
   }
 
@@ -33,42 +31,33 @@ export function initReadingListConnector(containerSelector, state) {
   const readItems = allItems.filter(i => i.read && matchesSearch(i));
   const unreadCount = allItems.filter(i => !i.read).length;
 
-  // Track the active ReadingListInput template so we can call _initTags after render
-  let activeInputTemplate = null;
-
   function renderItem(item) {
     const isEditing = editingReadingListItemId === item.id;
-    const result = ReadingListItem({
+    return ReadingListItem({
       item,
       isEditing,
       recommenderOptions,
-      tagOptions,
       onToggleRead: () => dispatch({ type: 'TOGGLE_READING_LIST_ITEM_READ', payload: { itemId: item.id } }),
       onEdit: () => dispatch({ type: 'START_EDIT_READING_LIST_ITEM', payload: { itemId: item.id } }),
       onDelete: () => dispatch({ type: 'DELETE_READING_LIST_ITEM', payload: { itemId: item.id } }),
-      onSave: (content, link, recommendedBy, tags) => dispatch({
+      onSave: (content, link, recommendedBy) => dispatch({
         type: 'UPDATE_READING_LIST_ITEM',
-        payload: { itemId: item.id, content, link, recommendedBy, tags },
+        payload: { itemId: item.id, content, link, recommendedBy },
       }),
       onCancel: () => dispatch({ type: 'CANCEL_EDIT_READING_LIST_ITEM' }),
     });
-    if (isEditing && result?._initTags) activeInputTemplate = result;
-    return result;
   }
 
   let createTemplate = null;
   if (creatingReadingListItem) {
-    const rawTemplate = ReadingListInput({
+    createTemplate = keyed(readingListFormKey, ReadingListInput({
       recommenderOptions,
-      tagOptions,
-      onSave: (content, link, recommendedBy, tags) => dispatch({
+      onSave: (content, link, recommendedBy) => dispatch({
         type: 'CREATE_READING_LIST_ITEM',
-        payload: { content, link, recommendedBy, tags },
+        payload: { content, link, recommendedBy },
       }),
       onCancel: () => dispatch({ type: 'CANCEL_CREATE_READING_LIST_ITEM' }),
-    });
-    activeInputTemplate = rawTemplate;
-    createTemplate = keyed(readingListFormKey, rawTemplate);
+    }));
   }
 
   const template = html`
@@ -121,11 +110,4 @@ export function initReadingListConnector(containerSelector, state) {
 
   render(template, container);
   focusAutofocusElement(container);
-
-  // Wire tag chips imperatively after lit-html has rendered the DOM
-  requestAnimationFrame(() => {
-    if (activeInputTemplate?._initTags) {
-      activeInputTemplate._initTags(container);
-    }
-  });
 }

@@ -3,14 +3,10 @@ import { makeDeleteHandler } from '../../utils/inputHandlers.js';
 import { parseLinkField } from '../../domains/ReadingList.js';
 import { ReadingListInput } from './ReadingListInput.js';
 
-// Dumb component for a single reading list item.
-// Display mode: checkbox, content text, link (with optional label), tags, recommender, edit/delete.
-// Edit mode: inline ReadingListInput prefilled with current values.
 export function ReadingListItem({
   item,
   isEditing,
   recommenderOptions,
-  tagOptions,
   onToggleRead,
   onEdit,
   onDelete,
@@ -22,12 +18,10 @@ export function ReadingListItem({
       onSave,
       onCancel,
       recommenderOptions,
-      tagOptions,
       initial: {
         content: item.content,
         link: item.link,
         recommendedBy: item.recommendedBy,
-        tags: item.tags,
       },
     });
   }
@@ -59,11 +53,6 @@ export function ReadingListItem({
           >${parsedLink.label ?? parsedLink.url}</a>
         ` : ''}
         <div class="reading-list-item__meta">
-          ${item.tags.length > 0 ? html`
-            <span class="reading-list-item__tags">
-              ${item.tags.map(tag => html`<span class="reading-list-item__tag">${tag}</span>`)}
-            </span>
-          ` : ''}
           ${item.recommendedBy ? html`
             <span class="reading-list-item__recommender">via ${item.recommendedBy}</span>
           ` : ''}

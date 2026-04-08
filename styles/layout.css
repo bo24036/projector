@@ -1589,20 +1589,6 @@
   gap: var(--spacing-xs);
 }
 
-.reading-list-item__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
-}
-
-.reading-list-item__tag {
-  font-size: var(--font-size-xs);
-  padding: 2px var(--spacing-xs);
-  border-radius: var(--border-radius-sm);
-  background-color: var(--color-primary-light);
-  color: var(--color-text-light);
-}
-
 .reading-list-item__recommender {
   font-size: var(--font-size-xs);
   color: var(--color-text-secondary);
@@ -1688,63 +1674,6 @@
 .reading-list-input__field--notes {
   resize: vertical;
   font-family: inherit;
-}
-
-.reading-list-input__tags-region {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
-
-.reading-list-input__chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--spacing-xs);
-}
-
-.reading-list-input__tag-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.1rem 0.5rem;
-  border-radius: 999px;
-  font-size: var(--font-size-xs);
-  border: var(--border-width) solid var(--color-border);
-  background-color: var(--color-surface);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.1s, color 0.1s, border-color 0.1s;
-}
-
-.reading-list-input__tag-chip.is-selected {
-  background-color: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-on-primary, #fff);
-}
-
-.reading-list-input__tag-check {
-  font-size: 0.6em;
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  transition: opacity 0.1s, width 0.1s;
-}
-
-.reading-list-input__tag-chip.is-selected .reading-list-input__tag-check {
-  opacity: 1;
-  width: auto;
-}
-
-.reading-list-input__new-tag {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius-md);
-  font-size: var(--font-size-sm);
-  background-color: var(--color-background);
-  color: var(--color-text);
-  width: 100%;
-  box-sizing: border-box;
 }
 
 .reading-list-input__controls {

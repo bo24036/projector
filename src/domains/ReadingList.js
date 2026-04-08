@@ -7,7 +7,7 @@
  * preloadAll() is called in main.js before router init.
  *
  * Schema: content (required, free text), link (optional, plain URL or [label](url)),
- * recommendedBy (optional, autocomplete), tags (optional array, autocomplete), read (boolean).
+ * recommendedBy (optional, autocomplete), read (boolean).
  * No separate title field — content serves as both title and notes.
  */
 
@@ -73,7 +73,7 @@ export async function preloadAll() {
 }
 
 // Factory: create and persist a new reading list item.
-// content is required. overrides may include link, recommendedBy, tags.
+// content is required. overrides may include link, recommendedBy.
 export function createReadingListItem(content, overrides = {}) {
   const trimmedContent = content?.trim();
   if (!trimmedContent) throw new Error(ERROR_CONTENT_REQUIRED);
@@ -84,7 +84,6 @@ export function createReadingListItem(content, overrides = {}) {
     content: trimmedContent,
     link: normalizeLinkField(overrides.link ?? ''),
     recommendedBy: overrides.recommendedBy?.trim() ?? '',
-    tags: Array.isArray(overrides.tags) ? overrides.tags.map(t => t.trim()).filter(Boolean) : [],
     read: false,
     createdAt: now,
     updatedAt: now,
@@ -105,7 +104,7 @@ export function getAllReadingListItems() {
   return [...cache.values()].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-// Update an existing item. Allowed fields: content, link, recommendedBy, tags.
+// Update an existing item. Allowed fields: content, link, recommendedBy.
 export function updateReadingListItem(id, updates) {
   const item = cache.get(id);
   if (!item) throw new Error(ERROR_ITEM_NOT_FOUND);
@@ -119,11 +118,6 @@ export function updateReadingListItem(id, updates) {
   }
   if (updates.link !== undefined) updated.link = normalizeLinkField(updates.link);
   if (updates.recommendedBy !== undefined) updated.recommendedBy = updates.recommendedBy.trim();
-  if (updates.tags !== undefined) {
-    updated.tags = Array.isArray(updates.tags)
-      ? updates.tags.map(t => t.trim()).filter(Boolean)
-      : [];
-  }
 
   cache.set(id, updated);
   serialize(updated, 'put');
@@ -163,17 +157,6 @@ export function getRecommenderOptions() {
   const seen = new Set();
   for (const item of cache.values()) {
     if (item.recommendedBy) seen.add(item.recommendedBy);
-  }
-  return [...seen].sort((a, b) => a.localeCompare(b));
-}
-
-// Returns a sorted, deduplicated list of all tags used across all items.
-export function getTagOptions() {
-  const seen = new Set();
-  for (const item of cache.values()) {
-    for (const tag of item.tags) {
-      if (tag) seen.add(tag);
-    }
   }
   return [...seen].sort((a, b) => a.localeCompare(b));
 }

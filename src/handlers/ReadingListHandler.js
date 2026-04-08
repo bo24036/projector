@@ -16,9 +16,9 @@ registerHandler('SELECT_READING_LIST', (state) => {
 });
 
 registerHandler('CREATE_READING_LIST_ITEM', (state, action) => {
-  const { content, link, recommendedBy, tags } = action.payload;
+  const { content, link, recommendedBy } = action.payload;
   try {
-    ReadingList.createReadingListItem(content, { link, recommendedBy, tags });
+    ReadingList.createReadingListItem(content, { link, recommendedBy });
     return { state: { ...state, creatingReadingListItem: true, readingListFormKey: state.readingListFormKey + 1 } };
   } catch (error) {
     return {
@@ -31,9 +31,9 @@ registerHandler('CREATE_READING_LIST_ITEM', (state, action) => {
 });
 
 registerHandler('UPDATE_READING_LIST_ITEM', (state, action) => {
-  const { itemId, content, link, recommendedBy, tags } = action.payload;
+  const { itemId, content, link, recommendedBy } = action.payload;
   try {
-    ReadingList.updateReadingListItem(itemId, { content, link, recommendedBy, tags });
+    ReadingList.updateReadingListItem(itemId, { content, link, recommendedBy });
     return { state: { ...state, editingReadingListItemId: null } };
   } catch (error) {
     return {
