@@ -2,4 +2,4 @@
 
 - [x] When inline form reopens for adding another note, the focus needs to be moved back to the notes field if it's currently in the link field
 
-- [ ] Having to use save/cancel buttons on a dialog that I'm accessing to export or import a backup is awkward. Also, when the list of people to consider suppressing becomes long, this isn't going to scale visually very well.
+- [x] Having to use save/cancel buttons on a dialog that I'm accessing to export or import a backup is awkward. Also, when the list of people to consider suppressing becomes long, this isn't going to scale visually very well.
