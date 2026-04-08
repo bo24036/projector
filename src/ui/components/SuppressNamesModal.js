@@ -10,6 +10,8 @@ export function SettingsModal({
 }) {
   let filterValue = '';
 
+  // Imperative DOM visibility toggle — intentional exception to dumb component rule.
+  // See docs/adr/0001-settings-filter-imperative-dom.md for rationale.
   function handleFilterInput(e) {
     filterValue = e.target.value;
     const q = filterValue.toLowerCase();
